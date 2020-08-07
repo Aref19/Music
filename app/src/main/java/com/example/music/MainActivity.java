@@ -64,6 +64,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Toast.makeText(this,"onPause",Toast.LENGTH_LONG).show();
+        sekk(seekBar);
+        buttonClick();
+        current();
+
+    }
+
+
+
+
     private void getallsong() {
         songinfos = new ArrayList<>();
         Uri allsong = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
@@ -91,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 listView.setAdapter(adabter);
                 list(listView, songinfos);
             }
-            crusor.close();
+            //crusor.close();
         }
     }
 
@@ -187,9 +200,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mediaPlayer.pause();
                 if(sorstop){
+                    current();
+                    mediaPlayer.start();
                     bause.setImageResource(R.drawable.start);
+                    sorstop=false;
                 }else{
                     bause.setImageResource(R.drawable.stop);
+                    sorstop=true;
+
                 }
 
             }
@@ -248,6 +266,55 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        mediaPlayer=new MediaPlayer();
+        sekk(seekBar);
+        current();
+        Toast.makeText(this,"onStop",Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        seekBar = findViewById(R.id.laufm);
+        listView = findViewById(R.id.liedlist);
+        handler = new Handler();
+        handel = new Handler();
+        Uri allsong = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String selection = MediaStore.Audio.Media.IS_MUSIC + "!=0";
+        crusor = managedQuery(allsong, null, selection, null, null);
+
+        sekk(seekBar);
+        bause = findViewById(R.id.pause);
+        start = findViewById(R.id.start);
+        stop = findViewById(R.id.stop);
+        buttonClick();
+        Toast.makeText(this,"onRestart",Toast.LENGTH_LONG).show();
+        current();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getallsong();
+        sekk(seekBar);
+        buttonClick();
+        Toast.makeText(this,"onStart",Toast.LENGTH_LONG).show();
+        current();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        seekBar = findViewById(R.id.laufm);
+        listView = findViewById(R.id.liedlist);
+        handler = new Handler();
+        handel = new Handler();
+
+        sekk(seekBar);
+        bause = findViewById(R.id.pause);
+        start = findViewById(R.id.start);
+        stop = findViewById(R.id.stop);
+        buttonClick();
+        Toast.makeText(this,"onRestart",Toast.LENGTH_LONG).show();
+        current();
     }
 }
