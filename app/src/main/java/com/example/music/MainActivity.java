@@ -1,5 +1,6 @@
 package com.example.music;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,10 +19,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -37,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Songinfo> songinfos;
     ListView listView;
     int prmistion = 1, postion, prograss;
-    Button  start, stop;
+    ImageButton start, stop;
     Runnable runnable, runn;
     Handler handler, handel;
     boolean sorstop;
@@ -67,14 +70,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Toast.makeText(this,"onPause",Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "onPause", Toast.LENGTH_LONG).show();
         sekk(seekBar);
         buttonClick();
         current();
 
     }
-
-
 
 
     private void getallsong() {
@@ -199,14 +200,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mediaPlayer.pause();
-                if(sorstop){
+                if (sorstop) {
                     current();
                     mediaPlayer.start();
                     bause.setImageResource(R.drawable.start);
-                    sorstop=false;
-                }else{
+                    sorstop = false;
+                } else {
                     bause.setImageResource(R.drawable.stop);
-                    sorstop=true;
+                    sorstop = true;
 
                 }
 
@@ -216,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mediaPlayer.stop();
-                mediaPlayer=new MediaPlayer();
+                mediaPlayer = new MediaPlayer();
                 bause.setImageResource(R.drawable.stop);
                 seekBar.setProgress(0);
             }
@@ -246,8 +247,8 @@ public class MainActivity extends AppCompatActivity {
     private void media() {
         try {
             prograss += 1;
-            if(prograss>=songinfos.size()){
-                prograss=0;
+            if (prograss >= songinfos.size()) {
+                prograss = 0;
             }
             mediaPlayer.stop();
             mediaPlayer = new MediaPlayer();
@@ -268,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         sekk(seekBar);
         current();
-        Toast.makeText(this,"onStop",Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "onStop", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -287,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
         start = findViewById(R.id.start);
         stop = findViewById(R.id.stop);
         buttonClick();
-        Toast.makeText(this,"onRestart",Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "onRestart", Toast.LENGTH_LONG).show();
         current();
     }
 
@@ -297,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
         getallsong();
         sekk(seekBar);
         buttonClick();
-        Toast.makeText(this,"onStart",Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "onStart", Toast.LENGTH_LONG).show();
         current();
     }
 
@@ -314,7 +315,13 @@ public class MainActivity extends AppCompatActivity {
         start = findViewById(R.id.start);
         stop = findViewById(R.id.stop);
         buttonClick();
-        Toast.makeText(this,"onRestart",Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "onRestart", Toast.LENGTH_LONG).show();
         current();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.person_daten,menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }
