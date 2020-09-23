@@ -24,12 +24,12 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
+            <ImageButton
                 android:id="@+id/start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="start" />
+                android:src="@drawable/ic_baseline_navigate_before_24" />
 
             <ImageView
                 android:id="@+id/pause"
@@ -38,19 +38,61 @@
                 android:layout_weight="1"
                 app:srcCompat="@drawable/stop" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/stop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="stop" />
+                android:src="@drawable/ic_baseline_navigate_next_24"/>
 
         </LinearLayout>
 
         <ListView
             android:id="@+id/liedlist"
             android:layout_width="match_parent"
+            android:scrollbars="none"
             android:layout_height="match_parent" />
+
     </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:gravity="center">
+        <ImageButton
+            android:src="@drawable/ic_baseline_live_tv_24"
+        android:id="@+id/button"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/buton"
+        android:text="Button" />
+        <ImageButton
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_missed_video_call_24"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/buton"
+        android:text="Button" />
+        <!--
+        <ImageButton
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_music_note_24"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/buton"
+            android:text="Button" />
+            -->
+    </LinearLayout>
+
 
 </RelativeLayout>
