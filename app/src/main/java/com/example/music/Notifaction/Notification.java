@@ -39,6 +39,7 @@ public class Notification {
        // Bitmap icon= BitmapFactory.decodeResource(context.getResources(),tarck.getImage());
         PendingIntent pendingIntent;
         int drw_privous;
+        int drw_next ;
         if(pos==0){
             pendingIntent=null;
             drw_privous=0;
@@ -46,18 +47,21 @@ public class Notification {
             Intent intent=new Intent(context, NotificationService.class).setAction(Action);
             pendingIntent=PendingIntent.getBroadcast(context,0,intent,PendingIntent.FLAG_CANCEL_CURRENT);
             drw_privous=R.drawable.ic_baseline_skip_previous_24;
+
         }
-          Intent intent=new Intent(context, NotificationService.class).setAction(actionplay);
-          PendingIntent pendingIntentplay=PendingIntent.getBroadcast(context,0,intent,PendingIntent.FLAG_CANCEL_CURRENT);
-          drw_privous=R.drawable.ic_baseline_play_circle_outline_24;
+        Intent intent1=new Intent(context, NotificationService.class).setAction(actionplay);
+        PendingIntent pendingIntentplay=PendingIntent.getBroadcast(context,0,intent1,PendingIntent.FLAG_CANCEL_CURRENT);
+
+
         PendingIntent pendingIntentnext ;
         if(pos==size){
-pendingIntentnext=null;
+           pendingIntentnext=null;
+           drw_next=0;
 
         }else{
             Intent intentnext=new Intent(context, NotificationService.class).setAction(actionnext);
              pendingIntentnext=PendingIntent.getBroadcast(context,0,intentnext,PendingIntent.FLAG_CANCEL_CURRENT);
-            drw_privous=R.drawable.ic_baseline_skip_next_24;
+            drw_next=R.drawable.ic_baseline_skip_next_24;
         }
 
         android.app.Notification builder = new NotificationCompat.Builder(context, c)
@@ -69,13 +73,13 @@ pendingIntentnext=null;
                 .setShowWhen(false)
                 .addAction(drw_privous,"privous",pendingIntent)
                 .addAction(playbutton,"play",pendingIntentplay)
-                .addAction(drw_privous,"next",pendingIntentnext)
+                .addAction(drw_next,"next",pendingIntentnext)
                 .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                 .setShowActionsInCompactView(0,1,2)
                 .setMediaSession(mediaSessionCompat.getSessionToken()))
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .build();
-
+        Log.i("pla", "greatNafi: "+playbutton);
         //notificationManager.notify(id, builder);
        notificationManagerCompat.notify(1,builder);
 

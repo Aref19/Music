@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -414,9 +415,8 @@ public class MainActivity extends AppCompatActivity implements Playble {
         mediaPlayer.start();
         bause.setImageResource(R.drawable.start);
         onTaskplay();
-
         notification.creatchanel();
-        notification.greatNafi(0, songinfos.get(postion), R.drawable.stop, postion, tarcks.size() - 1);
+        notification.greatNafi(0, songinfos.get(postion), R.drawable.start, postion, tarcks.size() - 1);
         isplaing = true;
 
 
@@ -426,7 +426,7 @@ public class MainActivity extends AppCompatActivity implements Playble {
     public void onTaskprovis() {
         postion--;
         notification.creatchanel();
-        notification.greatNafi(0, songinfos.get(postion), R.drawable.stop, postion, songinfos.size() - 1);
+        notification.greatNafi(0, songinfos.get(postion), R.drawable.ic_stopmusic, postion, songinfos.size() - 1);
 
     }
 
@@ -434,7 +434,7 @@ public class MainActivity extends AppCompatActivity implements Playble {
     public void onTaskNext() {
         postion++;
         notification.creatchanel();
-        notification.greatNafi(0, songinfos.get(postion), R.drawable.stop, postion, songinfos.size() - 1);
+        notification.greatNafi(0, songinfos.get(postion), R.drawable.ic_stopmusic, postion, songinfos.size() - 1);
 
     }
 
@@ -453,7 +453,7 @@ public class MainActivity extends AppCompatActivity implements Playble {
 
         }
         notification.creatchanel();
-        notification.greatNafi(0,songinfos.get(postion),R.drawable.stop,postion,songinfos.size()-1);
+        notification.greatNafi(0,songinfos.get(postion),R.drawable.start,postion,songinfos.size()-1);
         isplaing=false;
 
     }
