@@ -5,12 +5,17 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaPlayer;
@@ -37,12 +42,13 @@ import android.widget.Toast;
 
 import com.example.music.Notifaction.Notification;
 import com.example.music.Notifaction.Tarck;
+import com.example.music.NotificationServiceAction.onClearFromRecentServic;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Playble {
     SeekBar seekBar;
     MediaPlayer mediaPlayer = new MediaPlayer();
     Cursor crusor;
@@ -55,7 +61,9 @@ public class MainActivity extends AppCompatActivity {
     boolean sorstop;
     ImageView bause;
     RelativeLayout relativeLayout;
-    List<Tarck>tarcks;
+    List<Tarck> tarcks;
+    boolean isplaing;
+    Notification notification;
 
 
     @Override
@@ -71,11 +79,13 @@ public class MainActivity extends AppCompatActivity {
         getallsong();
         sekk(seekBar);
         bause = findViewById(R.id.pause);
-        relativeLayout=findViewById(R.id.relative);
+        relativeLayout = findViewById(R.id.relative);
         start = findViewById(R.id.start);
         stop = findViewById(R.id.stop);
         buttonClick();
         current();
+        registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        startService(new Intent(getBaseContext(), onClearFromRecentServic.class));
 
 
     }
@@ -138,6 +148,9 @@ public class MainActivity extends AppCompatActivity {
                     bause.setImageResource(R.drawable.start);
 
                     seekBar.setMax(mediaPlayer.getDuration());
+                    notification = new Notification(getApplication());
+                    notification.creatchanel();
+                    notification.greatNafi(0, songinfos.get(postion), R.drawable.stop, postion, songinfos.size());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -214,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mediaPlayer.pause();
                 if (sorstop) {
+
                     current();
                     mediaPlayer.start();
                     bause.setImageResource(R.drawable.start);
@@ -229,6 +243,7 @@ public class MainActivity extends AppCompatActivity {
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                onTaskpause();
                 mediaPlayer.stop();
                 mediaPlayer = new MediaPlayer();
                 bause.setImageResource(R.drawable.stop);
@@ -238,12 +253,11 @@ public class MainActivity extends AppCompatActivity {
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 mediaPlayer.start();
                 bause.setImageResource(R.drawable.start);
+                onTaskplay();
 
-                Notification notification=new Notification(getApplication());
-                notification.creatchanel();
-                notification.greatNafi(0,tarcks.get(0));
 
             }
         });
@@ -340,18 +354,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.background,menu);
+        getMenuInflater().inflate(R.menu.background, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId()==R.id.back){
-        imageholen();
+        if (item.getItemId() == R.id.back) {
+            imageholen();
 
         }
         return super.onOptionsItemSelected(item);
     }
+
     private void imageholen() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -361,14 +376,96 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
-        Log.i("imageee", "startActivityForResult: "+intent.getData());
+        Log.i("imageee", "startActivityForResult: " + intent.getData());
         super.startActivityForResult(intent, requestCode);
     }
-    private  void tarcks(){
-        tarcks=new ArrayList<>();
-        tarcks.add(new Tarck("ers","asd",R.drawable.music));
-        tarcks.add(new Tarck("zwe","asd",R.drawable.music));
-        tarcks.add(new Tarck("dritte","asd",R.drawable.music));
+
+    private void tarcks() {
+        tarcks = new ArrayList<>();
+        tarcks.add(new Tarck("ers", "asd", R.drawable.music));
+        tarcks.add(new Tarck("zwe", "asd", R.drawable.music));
+        tarcks.add(new Tarck("dritte", "asd", R.drawable.music));
     }
 
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getExtras().getString("action");
+            switch (action) {
+                case Notification.Action:
+                    onTaskprovis();
+                    break;
+                case Notification.actionplay:
+                    if (isplaing) {
+                        onPause();
+                    } else {
+                        onTaskplay();
+                    }
+                    break;
+                case Notification.actionnext:
+                    onTaskNext();
+                    break;
+            }
+        }
+    };
+
+    @Override
+    public void onTaskplay() {
+        mediaPlayer.start();
+        bause.setImageResource(R.drawable.start);
+        onTaskplay();
+
+        notification.creatchanel();
+        notification.greatNafi(0, songinfos.get(postion), R.drawable.stop, postion, tarcks.size() - 1);
+        isplaing = true;
+
+
+    }
+
+    @Override
+    public void onTaskprovis() {
+        postion--;
+        notification.creatchanel();
+        notification.greatNafi(0, songinfos.get(postion), R.drawable.stop, postion, songinfos.size() - 1);
+
+    }
+
+    @Override
+    public void onTaskNext() {
+        postion++;
+        notification.creatchanel();
+        notification.greatNafi(0, songinfos.get(postion), R.drawable.stop, postion, songinfos.size() - 1);
+
+    }
+
+    @Override
+    public void onTaskpause() {
+        mediaPlayer.pause();
+        if (sorstop) {
+
+            current();
+            mediaPlayer.start();
+            bause.setImageResource(R.drawable.start);
+            sorstop = false;
+        } else {
+            bause.setImageResource(R.drawable.stop);
+            sorstop = true;
+
+        }
+        notification.creatchanel();
+        notification.greatNafi(0,songinfos.get(postion),R.drawable.stop,postion,songinfos.size()-1);
+        isplaing=false;
+
+    }
+
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        NotificationManager notificationManager= null;
+        notificationManager.cancelAll();
+        unregisterReceiver(broadcastReceiver);
+
+    }
 }

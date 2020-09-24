@@ -1,9 +1,10 @@
 package com.example.music.Notifaction;
 
-import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -13,12 +14,17 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.example.music.NotificationServiceAction.NotificationService;
 import com.example.music.R;
+import com.example.music.Songinfo;
 
 public class Notification {
     private NotificationManager notificationManager;
     Context context;
     public static final String c = "chanel";
+    public static final String actionplay = "actionplay";
+    public static final String actionnext = "actionnext";
+    public static final String Action = "Actionprevious";
 
 
     public Notification(Context context) {
@@ -27,17 +33,46 @@ public class Notification {
 
     }
 
-    public void greatNafi(int id,Tarck  tarck) {
+    public void greatNafi(int id, Songinfo tarck, int playbutton, int pos, int size) {
         NotificationManagerCompat notificationManagerCompat=NotificationManagerCompat.from(context);
         MediaSessionCompat mediaSessionCompat=new MediaSessionCompat(context,"tag");
-        Bitmap icon= BitmapFactory.decodeResource(context.getResources(),tarck.getImage());
+       // Bitmap icon= BitmapFactory.decodeResource(context.getResources(),tarck.getImage());
+        PendingIntent pendingIntent;
+        int drw_privous;
+        if(pos==0){
+            pendingIntent=null;
+            drw_privous=0;
+        }else {
+            Intent intent=new Intent(context, NotificationService.class).setAction(Action);
+            pendingIntent=PendingIntent.getBroadcast(context,0,intent,PendingIntent.FLAG_CANCEL_CURRENT);
+            drw_privous=R.drawable.ic_baseline_skip_previous_24;
+        }
+          Intent intent=new Intent(context, NotificationService.class).setAction(actionplay);
+          PendingIntent pendingIntentplay=PendingIntent.getBroadcast(context,0,intent,PendingIntent.FLAG_CANCEL_CURRENT);
+          drw_privous=R.drawable.ic_baseline_play_circle_outline_24;
+        PendingIntent pendingIntentnext ;
+        if(pos==size){
+pendingIntentnext=null;
+
+        }else{
+            Intent intentnext=new Intent(context, NotificationService.class).setAction(actionnext);
+             pendingIntentnext=PendingIntent.getBroadcast(context,0,intentnext,PendingIntent.FLAG_CANCEL_CURRENT);
+            drw_privous=R.drawable.ic_baseline_skip_next_24;
+        }
+
         android.app.Notification builder = new NotificationCompat.Builder(context, c)
-                .setContentTitle(tarck.getTitel())
-                .setContentText(tarck.getArtist())
-                .setLargeIcon(icon)
+                .setContentTitle(tarck.getSong_name())
+                .setContentText(tarck.getAltist())
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.drawable.music))
                 .setSmallIcon(R.drawable.app)
                 .setOnlyAlertOnce(true)
                 .setShowWhen(false)
+                .addAction(drw_privous,"privous",pendingIntent)
+                .addAction(playbutton,"play",pendingIntentplay)
+                .addAction(drw_privous,"next",pendingIntentnext)
+                .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
+                .setShowActionsInCompactView(0,1,2)
+                .setMediaSession(mediaSessionCompat.getSessionToken()))
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .build();
 
