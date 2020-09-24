@@ -1,16 +1,13 @@
 package com.example.music;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.NotificationManager;
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,10 +15,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -30,10 +25,8 @@ import android.view.Menu;
 
 import android.view.MenuItem;
 
-import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -55,8 +48,8 @@ public class MainActivity extends AppCompatActivity implements Playble {
     Cursor crusor;
     ArrayList<Songinfo> songinfos;
     ListView listView;
-    int prmistion = 1, postion, prograss;
-    ImageButton start, stop;
+    int prmistion = 1, postion, prograss,nextint,lastint,gesamt;
+    ImageButton last, next;
     Runnable runnable, runn;
     Handler handler, handel;
     boolean sorstop;
@@ -65,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements Playble {
     List<Tarck> tarcks;
     boolean isplaing;
     Notification notification;
+
 
 
     @Override
@@ -81,8 +75,8 @@ public class MainActivity extends AppCompatActivity implements Playble {
         sekk(seekBar);
         bause = findViewById(R.id.pause);
         relativeLayout = findViewById(R.id.relative);
-        start = findViewById(R.id.start);
-        stop = findViewById(R.id.stop);
+        last = findViewById(R.id.start);
+        next = findViewById(R.id.stop);
         buttonClick();
         current();
         registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
@@ -141,6 +135,8 @@ public class MainActivity extends AppCompatActivity implements Playble {
 
                 try {
                     prograss = position;
+                    nextint=position;
+                    lastint=position;
                     mediaPlayer.stop();
                     mediaPlayer = new MediaPlayer();
                     mediaPlayer.setDataSource(songinfos.get(position).getPath());
@@ -226,9 +222,10 @@ public class MainActivity extends AppCompatActivity implements Playble {
         bause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                onTaskpause();
+                /*
                 mediaPlayer.pause();
                 if (sorstop) {
-
                     current();
                     mediaPlayer.start();
                     bause.setImageResource(R.drawable.start);
@@ -239,28 +236,66 @@ public class MainActivity extends AppCompatActivity implements Playble {
 
                 }
 
+                 */
+
             }
         });
-        stop.setOnClickListener(new View.OnClickListener() {
+        next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onTaskpause();
+                onTaskNext();
+/*
+                nextint++;
+                lastint++;
+                if(nextint>=songinfos.size()){
+                    nextint=0;
+                }
+
                 mediaPlayer.stop();
-                mediaPlayer = new MediaPlayer();
+                try {
+                    mediaPlayer=new MediaPlayer();
+                    mediaPlayer.setDataSource(songinfos.get(nextint).getPath());
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
+                    Log.i("prog", "onClick: "+prograss);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 bause.setImageResource(R.drawable.stop);
-                seekBar.setProgress(0);
+                bause.setImageResource(R.drawable.start);
+                seekBar.setProgress(0); */
             }
+
+
         });
-        start.setOnClickListener(new View.OnClickListener() {
+        last.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                onTaskprovis();
+            }
+                /*
+                lastint--;
+                nextint--;
+                if(lastint<0){
+                    lastint=(songinfos.size()-1);
+                }
 
-                mediaPlayer.start();
+                mediaPlayer.stop();
+                try {
+                    mediaPlayer=new MediaPlayer();
+                    mediaPlayer.setDataSource(songinfos.get(lastint).getPath());
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
+                    Log.i("prog", "onClick: "+prograss);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                bause.setImageResource(R.drawable.stop);
                 bause.setImageResource(R.drawable.start);
-                onTaskplay();
-
 
             }
+
+                */
         });
 
     }
@@ -318,8 +353,8 @@ public class MainActivity extends AppCompatActivity implements Playble {
 
         sekk(seekBar);
         bause = findViewById(R.id.pause);
-        start = findViewById(R.id.start);
-        stop = findViewById(R.id.stop);
+        last = findViewById(R.id.start);
+        next = findViewById(R.id.stop);
         buttonClick();
         Toast.makeText(this, "onRestart", Toast.LENGTH_LONG).show();
         current();
@@ -345,8 +380,8 @@ public class MainActivity extends AppCompatActivity implements Playble {
 
         sekk(seekBar);
         bause = findViewById(R.id.pause);
-        start = findViewById(R.id.start);
-        stop = findViewById(R.id.stop);
+        last = findViewById(R.id.start);
+        next = findViewById(R.id.stop);
         buttonClick();
         Toast.makeText(this, "onRestart", Toast.LENGTH_LONG).show();
         current();
@@ -397,11 +432,11 @@ public class MainActivity extends AppCompatActivity implements Playble {
                     onTaskprovis();
                     break;
                 case Notification.actionplay:
-                    if (isplaing) {
-                        onPause();
-                    } else {
-                        onTaskplay();
-                    }
+
+                        onTaskpause();
+
+                     //  onTaskplay();
+
                     break;
                 case Notification.actionnext:
                     onTaskNext();
@@ -424,36 +459,77 @@ public class MainActivity extends AppCompatActivity implements Playble {
 
     @Override
     public void onTaskprovis() {
-        postion--;
-        notification.creatchanel();
-        notification.greatNafi(0, songinfos.get(postion), R.drawable.ic_stopmusic, postion, songinfos.size() - 1);
+        lastint--;
+        nextint--;
+        if(lastint<0){
+            lastint=(songinfos.size()-1);
+        }
+
+        mediaPlayer.stop();
+        try {
+            mediaPlayer=new MediaPlayer();
+            mediaPlayer.setDataSource(songinfos.get(lastint).getPath());
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+            Log.i("prog", "onClick: "+prograss);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        bause.setImageResource(R.drawable.stop);
+        bause.setImageResource(R.drawable.start);
+
+
+        notification.greatNafi(0, songinfos.get(postion), R.drawable.ic_stopmusic, prograss, songinfos.size() - 1);
 
     }
 
     @Override
     public void onTaskNext() {
-        postion++;
-        notification.creatchanel();
-        notification.greatNafi(0, songinfos.get(postion), R.drawable.ic_stopmusic, postion, songinfos.size() - 1);
+        nextint++;
+        lastint++;
+        if(nextint>=songinfos.size()){
+            nextint=0;
+        }
+
+        mediaPlayer.stop();
+        try {
+            mediaPlayer=new MediaPlayer();
+            mediaPlayer.setDataSource(songinfos.get(nextint).getPath());
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+            Log.i("prog", "onClick: "+prograss);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        bause.setImageResource(R.drawable.stop);
+        bause.setImageResource(R.drawable.start);
+        seekBar.setProgress(0);
+
+        notification.greatNafi(0, songinfos.get(postion), R.drawable.ic_stopmusic, prograss, songinfos.size() - 1);
 
     }
 
     @Override
     public void onTaskpause() {
         mediaPlayer.pause();
+        notification.creatchanel();
         if (sorstop) {
 
             current();
             mediaPlayer.start();
             bause.setImageResource(R.drawable.start);
             sorstop = false;
+            Log.i("hier", "onTaskpause: "+"hier1");
+            notification.greatNafi(0,songinfos.get(postion),R.drawable.start,postion,songinfos.size()-1);
         } else {
             bause.setImageResource(R.drawable.stop);
+            notification.greatNafi(0,songinfos.get(postion),R.drawable.ic_baseline_play_circle_outline_24,postion,songinfos.size()-1);
+            Log.i("hier", "onTaskpause: "+"hier2");
             sorstop = true;
 
         }
-        notification.creatchanel();
-        notification.greatNafi(0,songinfos.get(postion),R.drawable.start,postion,songinfos.size()-1);
+
+
         isplaing=false;
 
     }
