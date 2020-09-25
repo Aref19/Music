@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements Playble {
     private void getallsong() {
         songinfos = new ArrayList<>();
         Uri allsong = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+
         String selection = MediaStore.Audio.Media.IS_MUSIC + "!=0";
         crusor = managedQuery(allsong, null, selection, null, null);
         if (crusor != null) {
