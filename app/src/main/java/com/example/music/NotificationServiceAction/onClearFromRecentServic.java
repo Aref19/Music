@@ -6,6 +6,8 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
+import com.example.music.Adabter;
+
 public class onClearFromRecentServic extends Service {
     @Nullable
     @Override
@@ -20,7 +22,9 @@ public class onClearFromRecentServic extends Service {
 
     @Override
     public void onDestroy() {
+
         super.onDestroy();
+
     }
 
     @Override

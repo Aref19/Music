@@ -15,6 +15,6 @@ public class Video extends AppCompatActivity {
     }
     private void catchVideo(){
         Uri path= MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-        String selection=MediaStore.Video.Media.
+
     }
 }

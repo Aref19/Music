@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -16,7 +15,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.example.music.NotificationServiceAction.NotificationService;
 import com.example.music.R;
-import com.example.music.Songinfo;
+import com.example.music.HauptMain.Songinfo;
 
 public class Notification {
     private NotificationManager notificationManager;
