@@ -36,6 +36,7 @@ import com.example.music.Notifaction.Notification;
 import com.example.music.Notifaction.Tarck;
 import com.example.music.NotificationServiceAction.onClearFromRecentServic;
 import com.example.music.R;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,13 +44,13 @@ import java.util.List;
 
 
 
-    public  class MainActivity extends AppCompatActivity implements Playble {
+     public  class Music extends AppCompatActivity implements Playble {
         SeekBar seekBar;
         MediaPlayer mediaPlayer = new MediaPlayer();
         Cursor crusor;
         ArrayList<Songinfo> songinfos;
         ListView listView;
-        int prmistion = 1, postion, prograss,nextint,lastint,gesamt;
+        int prmistion = 1, postion, prograss,nextint=0,lastint=0, sitution=0;
         ImageButton last, next;
         Runnable runnable, runn;
         Handler handler, handel;
@@ -57,7 +58,7 @@ import java.util.List;
         ImageView bause;
         RelativeLayout relativeLayout;
         List<Tarck> tarcks;
-        boolean isplaing;
+        boolean isplaing,isselect;
         Notification notification;
 
 
@@ -82,7 +83,9 @@ import java.util.List;
             current();
             registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
             startService(new Intent(getBaseContext(), onClearFromRecentServic.class));
-
+            notification = new Notification(getApplication());
+            notification.creatchanel();
+            seekBar.setMax(0);
 
         }
 
@@ -120,7 +123,7 @@ import java.util.List;
 
                     } while (crusor.moveToNext());
                     //       Toast.makeText(this,"sdaaaaaaa"+songinfos.get(0).getSong_name(),Toast.LENGTH_LONG).show();
-                    Adabter adabter = new Adabter(songinfos, this);
+                    Adapter adabter = new Adapter(songinfos, this);
 
                     listView.setAdapter(adabter);
                     list(listView, songinfos);
@@ -136,6 +139,7 @@ import java.util.List;
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                     try {
+                        sitution=position;
                         prograss = position;
                         nextint=position;
                         lastint=position;
@@ -145,11 +149,10 @@ import java.util.List;
                         mediaPlayer.prepare();
                         mediaPlayer.start();
                         bause.setImageResource(R.drawable.start);
-
+                         isselect=true;
                         seekBar.setMax(mediaPlayer.getDuration());
-                        notification = new Notification(getApplication());
-                        notification.creatchanel();
-                        notification.greatNafi(0, songinfos.get(postion), R.drawable.stop, postion, songinfos.size());
+
+                        notification.greatNafi(0, songinfos.get(postion), R.drawable.ic_baseline_pause_circle_filled_24, position, songinfos.size());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -158,7 +161,7 @@ import java.util.List;
         }
 
         private void premtion() {
-            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(Music.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
             } else {
                 requstpremstion();
@@ -174,7 +177,7 @@ import java.util.List;
                         .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, prmistion);
+                                ActivityCompat.requestPermissions(Music.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, prmistion);
 
                             }
                         }).setNegativeButton("no", new DialogInterface.OnClickListener() {
@@ -453,7 +456,7 @@ import java.util.List;
             bause.setImageResource(R.drawable.start);
             onTaskplay();
             notification.creatchanel();
-            notification.greatNafi(0, songinfos.get(postion), R.drawable.start, postion, tarcks.size() - 1);
+            notification.greatNafi(0, songinfos.get(sitution), R.drawable.start, postion, tarcks.size() - 1);
             isplaing = true;
 
 
@@ -463,6 +466,13 @@ import java.util.List;
         public void onTaskprovis() {
             lastint--;
             nextint--;
+            isselect=true;
+            if(sitution==0){
+                sitution=songinfos.size()-1;
+            }else {
+                sitution--;
+            }
+
             if(lastint<0){
                 lastint=(songinfos.size()-1);
             }
@@ -472,6 +482,7 @@ import java.util.List;
                 mediaPlayer=new MediaPlayer();
                 mediaPlayer.setDataSource(songinfos.get(lastint).getPath());
                 mediaPlayer.prepare();
+                mediaPlayer.seekTo(0);
                 mediaPlayer.start();
                 Log.i("prog", "onClick: "+prograss);
             } catch (IOException e) {
@@ -481,7 +492,7 @@ import java.util.List;
             bause.setImageResource(R.drawable.start);
 
 
-            notification.greatNafi(0, songinfos.get(postion), R.drawable.ic_stopmusic, prograss, songinfos.size() - 1);
+            notification.greatNafi(0, songinfos.get(sitution), R.drawable.ic_baseline_pause_circle_filled_24, sitution, songinfos.size() - 1);
 
         }
 
@@ -489,6 +500,13 @@ import java.util.List;
         public void onTaskNext() {
             nextint++;
             lastint++;
+            isselect=true;
+
+            if(sitution==songinfos.size()-1){
+                sitution=0;
+            }else {
+                sitution++;
+            }
             if(nextint>=songinfos.size()){
                 nextint=0;
             }
@@ -498,6 +516,7 @@ import java.util.List;
                 mediaPlayer=new MediaPlayer();
                 mediaPlayer.setDataSource(songinfos.get(nextint).getPath());
                 mediaPlayer.prepare();
+                mediaPlayer.seekTo(0);
                 mediaPlayer.start();
                 Log.i("prog", "onClick: "+prograss);
             } catch (IOException e) {
@@ -507,7 +526,7 @@ import java.util.List;
             bause.setImageResource(R.drawable.start);
             seekBar.setProgress(0);
 
-            notification.greatNafi(0, songinfos.get(postion), R.drawable.ic_stopmusic, prograss, songinfos.size() - 1);
+            notification.greatNafi(0, songinfos.get(sitution), R.drawable.ic_baseline_pause_circle_filled_24, sitution, songinfos.size() - 1);
 
         }
 
@@ -522,12 +541,15 @@ import java.util.List;
                 bause.setImageResource(R.drawable.start);
                 sorstop = false;
                 Log.i("hier", "onTaskpause: "+"hier1");
-                notification.greatNafi(0,songinfos.get(postion),R.drawable.start,postion,songinfos.size()-1);
-            } else {
+                notification.greatNafi(0,songinfos.get(sitution),R.drawable.ic_baseline_pause_circle_filled_24,sitution,songinfos.size()-1);
+            } else if(isselect){
                 bause.setImageResource(R.drawable.stop);
-                notification.greatNafi(0,songinfos.get(postion),R.drawable.ic_baseline_play_circle_outline_24,postion,songinfos.size()-1);
+                notification.greatNafi(0,songinfos.get(sitution),R.drawable.ic_baseline_play_circle_outline_24,sitution,songinfos.size()-1);
                 Log.i("hier", "onTaskpause: "+"hier2");
                 sorstop = true;
+
+            }else {
+                Snackbar.make(this.listView,"dies hat kein mehr foto foto",Snackbar.LENGTH_LONG).show();
 
             }
 
@@ -541,10 +563,10 @@ import java.util.List;
         @Override
         protected void onDestroy() {
             super.onDestroy();
-            NotificationManager notificationManager= null;
+            NotificationManager notificationManager= getApplication().getSystemService(NotificationManager.class);
             notificationManager.cancelAll();
             unregisterReceiver(broadcastReceiver);
 
         }
     }
-}
+

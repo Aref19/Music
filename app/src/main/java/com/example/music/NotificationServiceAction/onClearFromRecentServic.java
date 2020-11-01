@@ -6,7 +6,7 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
-import com.example.music.Adabter;
+import com.example.music.HauptMain.Adapter;
 
 public class onClearFromRecentServic extends Service {
     @Nullable
