@@ -402,7 +402,9 @@ import java.util.List;
         @Override
         public boolean onOptionsItemSelected(@NonNull MenuItem item) {
             if (item.getItemId() == R.id.back) {
-                imageholen();
+                Intent intent=new Intent(this,selectView.class);
+                startActivity(intent);
+             //   imageholen();
 
             }
             return super.onOptionsItemSelected(item);
@@ -501,6 +503,7 @@ import java.util.List;
             nextint++;
             lastint++;
             isselect=true;
+
 
             if(sitution==songinfos.size()-1){
                 sitution=0;
