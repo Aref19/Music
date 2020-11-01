@@ -562,10 +562,16 @@ import java.util.List;
 
         @Override
         protected void onDestroy() {
+
             super.onDestroy();
+/*
             NotificationManager notificationManager= getApplication().getSystemService(NotificationManager.class);
             notificationManager.cancelAll();
             unregisterReceiver(broadcastReceiver);
+
+ */
+
+
 
         }
     }
