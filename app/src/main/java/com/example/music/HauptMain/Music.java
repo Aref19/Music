@@ -564,12 +564,11 @@ import java.util.List;
         protected void onDestroy() {
 
             super.onDestroy();
-/*
+
             NotificationManager notificationManager= getApplication().getSystemService(NotificationManager.class);
             notificationManager.cancelAll();
             unregisterReceiver(broadcastReceiver);
 
- */
 
 
 
