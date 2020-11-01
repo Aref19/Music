@@ -50,7 +50,7 @@ import java.util.List;
         Cursor crusor;
         ArrayList<Songinfo> songinfos;
         ListView listView;
-        int prmistion = 1, postion, prograss,nextint=0,lastint=0, sitution=0;
+        int prmistion = 1, postion, prograss,nextint,lastint, sitution=0;
         ImageButton last, next;
         Runnable runnable, runn;
         Handler handler, handel;
@@ -67,12 +67,13 @@ import java.util.List;
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
-            premtion();
+
             seekBar = findViewById(R.id.laufm);
             listView = findViewById(R.id.liedlist);
             handler = new Handler();
             handel = new Handler();
-            tarcks();
+            premtion();
+
             getallsong();
             sekk(seekBar);
             bause = findViewById(R.id.pause);
@@ -86,6 +87,7 @@ import java.util.List;
             notification = new Notification(getApplication());
             notification.creatchanel();
             seekBar.setMax(0);
+
 
         }
 
@@ -151,6 +153,7 @@ import java.util.List;
                         bause.setImageResource(R.drawable.start);
                          isselect=true;
                         seekBar.setMax(mediaPlayer.getDuration());
+                        Log.i("warum", "onTaskpause: "+"von hierlist");
 
                         notification.greatNafi(0, songinfos.get(postion), R.drawable.ic_baseline_pause_circle_filled_24, position, songinfos.size());
                     } catch (IOException e) {
@@ -200,7 +203,7 @@ import java.util.List;
                         postion = progress;
                         mediaPlayer.seekTo(progress);
 
-                    } else if (progress == mediaPlayer.getDuration()) {
+                    } else if (progress == mediaPlayer.getDuration()&&isselect) {
                         media();
 
                     }
@@ -328,6 +331,7 @@ import java.util.List;
                 mediaPlayer.setDataSource(songinfos.get(prograss).getPath());
                 mediaPlayer.prepare();
                 mediaPlayer.start();
+                Log.i("warum", "onTaskpause: "+"von hier media");
                 seekBar.setMax(mediaPlayer.getDuration());
 
             } catch (IOException e) {
@@ -365,16 +369,8 @@ import java.util.List;
             current();
         }
 
-        @Override
-        protected void onStart() {
-            super.onStart();
-            getallsong();
-            sekk(seekBar);
-            buttonClick();
-            Toast.makeText(this, "onStart", Toast.LENGTH_LONG).show();
-            current();
-        }
 
+/*
         @Override
         protected void onResume() {
             super.onResume();
@@ -391,6 +387,8 @@ import java.util.List;
             Toast.makeText(this, "onRestart", Toast.LENGTH_LONG).show();
             current();
         }
+
+ */
 
         @Override
         public boolean onCreateOptionsMenu(Menu menu) {
@@ -454,6 +452,7 @@ import java.util.List;
 
         @Override
         public void onTaskplay() {
+            Log.i("warum", "onTaskpause: "+"von hier");
             mediaPlayer.start();
             bause.setImageResource(R.drawable.start);
             onTaskplay();
@@ -469,6 +468,7 @@ import java.util.List;
             lastint--;
             nextint--;
             isselect=true;
+            Log.i("warum", "onTaskpause: "+"von hier0");
             if(sitution==0){
                 sitution=songinfos.size()-1;
             }else {
@@ -503,7 +503,7 @@ import java.util.List;
             nextint++;
             lastint++;
             isselect=true;
-
+            Log.i("warum", "onTaskpause: "+"von hier1");
 
             if(sitution==songinfos.size()-1){
                 sitution=0;
@@ -537,6 +537,7 @@ import java.util.List;
         public void onTaskpause() {
             mediaPlayer.pause();
             notification.creatchanel();
+            Log.i("warum", "onTaskpause: "+"von hier2");
             if (sorstop) {
 
                 current();
