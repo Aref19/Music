@@ -70,6 +70,7 @@ import java.util.List;
 
             seekBar = findViewById(R.id.laufm);
             listView = findViewById(R.id.liedlist);
+
             handler = new Handler();
             handel = new Handler();
             premtion();
@@ -155,7 +156,7 @@ import java.util.List;
                         seekBar.setMax(mediaPlayer.getDuration());
                         Log.i("warum", "onTaskpause: "+"von hierlist");
 
-                        notification.greatNafi(0, songinfos.get(postion), R.drawable.ic_baseline_pause_circle_filled_24, position, songinfos.size());
+                        notification.greatNafi(0, songinfos.get(position), R.drawable.ic_baseline_pause_circle_filled_24, position, songinfos.size());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
