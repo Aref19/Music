@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -25,7 +23,7 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
     ListView listView;
     RadioButton iamg1, imag2;
     TextView textColor, buttonCollor;
-    Spinner selectbuttonColor, selecttextColor;
+    Spinner selecttext, selectbutton;
     ArrayAdapter<CharSequence> adapter;
     ArrayList<String> songs = new ArrayList<>();
     ArrayAdapter<String> stringArrayAdapter;
@@ -36,14 +34,14 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.selectview);
-        selectbuttonColor = findViewById(R.id.spinner);
-        selecttextColor = findViewById(R.id.spinner2);
+        selecttext = findViewById(R.id.spinner);
+        selectbutton = findViewById(R.id.spinner2);
         listView = findViewById(R.id.userlist);
-        spinners(selectbuttonColor);
-        spinners(selecttextColor);
+        spinners(selecttext);
+        spinners(selectbutton);
         textColor = findViewById(R.id.textcolor);
-        selecttextColor.setOnItemSelectedListener(this);
-        selectbuttonColor.setOnItemSelectedListener(this);
+        selectbutton.setOnItemSelectedListener(this);
+        selecttext.setOnItemSelectedListener(this);
         button1=findViewById(R.id.stop);
         button2=findViewById(R.id.pause);
         button3=findViewById(R.id.start);
@@ -59,12 +57,12 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
             adapter = ArrayAdapter.createFromResource(this,
                     R.array.colorsarra, android.R.layout.simple_spinner_item);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            selecttextColor.setAdapter(adapter);
-        } else {
+            selecttext.setAdapter(adapter);
+        } else if(spinner.getId() == R.id.spinner2){
             adapter = ArrayAdapter.createFromResource(this,
                     R.array.colorsarrabutton, android.R.layout.simple_spinner_item);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            selectbuttonColor.setAdapter(adapter);
+            selectbutton.setAdapter(adapter);
         }
 
 
@@ -75,38 +73,64 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String[] colorsname = getResources().getStringArray(R.array.colorsarra);
-        String[] colorsColor = {"#FFFFFFFF", "#00FF00", "#FF0000", "#0000FF", "#000000"};
+        String[] colorsnameofButton = getResources().getStringArray(R.array.colorsarrabutton);
+
+        String[] colorsButton = {"#2FD29F", "#2F519F", "#BE519F", "#E4D29F", "#5C8AFF"};
+        String[] colorsitems = {"#FFFFFFFF", "#00FF00", "#FF0000", "#0000FF", "#000000"};
 
         String colorname = "";
         if (parent.getId() == R.id.spinner) {
             Log.i("spinn1", "onItemSelected: " + parent.getItemAtPosition(position) + colorsname[position] + position);
 
             if (parent.getItemAtPosition(position).equals(colorsname[0])) {
-                textColor.setTextColor(Color.parseColor(colorsColor[0]));
+                textColor.setTextColor(Color.parseColor(colorsitems[0]));
                 Log.i("spinn1", "onItemSelected: " + parent.getItemAtPosition(position) + colorsname[0]);
                 stringArrayAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, songs);
-                button1.setBackgroundColor(Color.parseColor(colorsname[1]));
+
             } else if (parent.getItemAtPosition(position).equals(colorsname[1])) {
-                textColor.setTextColor(Color.parseColor(colorsColor[1]));
+                textColor.setTextColor(Color.parseColor(colorsitems[1]));
                 stringArrayAdapter = new ArrayAdapter<>(this, R.layout.grren, songs);
 
                 Log.i("spinn1", "onItemSelected: " + parent.getItemAtPosition(position) + colorsname[1]);
             } else if (parent.getItemAtPosition(position).equals(colorsname[2])) {
-                textColor.setTextColor(Color.parseColor(colorsColor[2]));
+                textColor.setTextColor(Color.parseColor(colorsitems[2]));
                 stringArrayAdapter = new ArrayAdapter<>(this, R.layout.text, songs);
                 Log.i("spinn1", "onItemSelected: " + parent.getItemAtPosition(position) + colorsname[2]);
             } else if (parent.getItemAtPosition(position).equals(colorsname[4])) {
-                textColor.setTextColor(Color.parseColor(colorsColor[4]));
+                textColor.setTextColor(Color.parseColor(colorsitems[4]));
                 Log.i("spinn1", "onItemSelected: " + parent.getItemAtPosition(position) + colorsname[3]);
             } else if (parent.getItemAtPosition(position).equals(colorsname[3])) {
-                textColor.setTextColor(Color.parseColor(colorsColor[3]));
+                textColor.setTextColor(Color.parseColor(colorsitems[3]));
                 stringArrayAdapter = new ArrayAdapter<>(this, R.layout.blau, songs);
                 Log.i("spinn1", "onItemSelected: " + parent.getItemAtPosition(position) + colorsname[3]);
             }
 
 
         } else {
-            Log.i("spinn", "onItemSelected: " + parent.getItemAtPosition(position) + "2");
+            if (parent.getItemAtPosition(position).equals(colorsnameofButton[0])) {
+                button1.setBackgroundColor(Color.parseColor(colorsButton[0]));
+                button2.setBackgroundColor(Color.parseColor(colorsButton[0]));
+                button3.setBackgroundColor(Color.parseColor(colorsButton[0]));
+            } else if (parent.getItemAtPosition(position).equals(colorsnameofButton[1])) {
+                button3.setBackgroundColor(Color.parseColor(colorsButton[1]));
+                button2.setBackgroundColor(Color.parseColor(colorsButton[1]));
+                button1.setBackgroundColor(Color.parseColor(colorsButton[1]));
+
+                Log.i("spinn1", "onItemSelected: " + parent.getItemAtPosition(position) + colorsname[1]);
+            } else if (parent.getItemAtPosition(position).equals(colorsnameofButton[2])) {
+                button3.setBackgroundColor(Color.parseColor(colorsButton[2]));
+                button2.setBackgroundColor(Color.parseColor(colorsButton[2]));
+                button1.setBackgroundColor(Color.parseColor(colorsButton[2]));
+            } else if (parent.getItemAtPosition(position).equals(colorsnameofButton[4])) {
+                button3.setBackgroundColor(Color.parseColor(colorsButton[4]));
+                button2.setBackgroundColor(Color.parseColor(colorsButton[4]));
+                button1.setBackgroundColor(Color.parseColor(colorsButton[4]));
+            } else if (parent.getItemAtPosition(position).equals(colorsnameofButton[3])) {
+                button3.setBackgroundColor(Color.parseColor(colorsButton[3]));
+                button2.setBackgroundColor(Color.parseColor(colorsButton[3]));
+                button1.setBackgroundColor(Color.parseColor(colorsButton[3]));
+
+            }
         }
         listView.setAdapter(stringArrayAdapter);
 
