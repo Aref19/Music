@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -70,7 +71,8 @@ import java.util.List;
 
             seekBar = findViewById(R.id.laufm);
             listView = findViewById(R.id.liedlist);
-
+             Drawable drawable= getResources().getDrawable(R.drawable.buton);
+            drawable.get
             handler = new Handler();
             handel = new Handler();
             premtion();
