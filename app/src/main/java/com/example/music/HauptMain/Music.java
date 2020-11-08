@@ -9,16 +9,21 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Canvas;
+import android.view.View;
+
+import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import com.example.music.ButtonView.ViewButton;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -28,6 +33,7 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -64,6 +70,7 @@ import java.util.List;
 
 
 
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -71,8 +78,12 @@ import java.util.List;
 
             seekBar = findViewById(R.id.laufm);
             listView = findViewById(R.id.liedlist);
-             Drawable drawable= getResources().getDrawable(R.drawable.buton);
-            drawable.get
+             int d=R.drawable.buton;
+
+
+
+
+
             handler = new Handler();
             handel = new Handler();
             premtion();
