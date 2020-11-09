@@ -23,12 +23,14 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.music.DatenBank.SaveInfoUserselect;
 import com.example.music.R;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.jar.Manifest;
 
 public class selectView extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     ListView listView;
@@ -41,7 +43,9 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
     ImageView button1,button2,button3;
     LinearLayout linearLayout;
 
+
     GradientDrawable []drawables;
+    SaveInfoUserselect saveInfoUserselect;
 
     @SuppressLint({"ResourceAsColor", "WrongViewCast"})
     @Override
@@ -67,6 +71,7 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
         drawables[0]=(GradientDrawable) button1.getBackground().mutate();
         drawables[1]=(GradientDrawable) button2.getBackground().mutate();
         drawables[2]=(GradientDrawable) button3.getBackground().mutate();
+      saveInfoUserselect=  SaveInfoUserselect.getContext(this);
 
 
 
@@ -107,23 +112,27 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
                 textColor.setTextColor(Color.parseColor(colorsitems[0]));
                 Log.i("spinn1", "onItemSelected: " + parent.getItemAtPosition(position) + colorsname[0]);
                 stringArrayAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, songs);
-
+                 saveInfoUserselect.saveColorText(SaveInfoUserselect.USER_ColorT_KEY,colorsitems[0]);
             } else if (parent.getItemAtPosition(position).equals(colorsname[1])) {
                 textColor.setTextColor(Color.parseColor(colorsitems[1]));
                 stringArrayAdapter = new ArrayAdapter<>(this, R.layout.grren, songs);
+                saveInfoUserselect.saveColorText(SaveInfoUserselect.USER_ColorT_KEY,colorsitems[1]);
 
                 Log.i("spinn1", "onItemSelected: " + parent.getItemAtPosition(position) + colorsname[1]);
             } else if (parent.getItemAtPosition(position).equals(colorsname[2])) {
                 textColor.setTextColor(Color.parseColor(colorsitems[2]));
                 stringArrayAdapter = new ArrayAdapter<>(this, R.layout.text, songs);
                 Log.i("spinn1", "onItemSelected: " + parent.getItemAtPosition(position) + colorsname[2]);
+                saveInfoUserselect.saveColorText(SaveInfoUserselect.USER_ColorT_KEY,colorsitems[2]);
             } else if (parent.getItemAtPosition(position).equals(colorsname[4])) {
                 textColor.setTextColor(Color.parseColor(colorsitems[4]));
                 Log.i("spinn1", "onItemSelected: " + parent.getItemAtPosition(position) + colorsname[3]);
+                saveInfoUserselect.saveColorText(SaveInfoUserselect.USER_ColorT_KEY,colorsitems[4]);
             } else if (parent.getItemAtPosition(position).equals(colorsname[3])) {
                 textColor.setTextColor(Color.parseColor(colorsitems[3]));
                 stringArrayAdapter = new ArrayAdapter<>(this, R.layout.blau, songs);
                 Log.i("spinn1", "onItemSelected: " + parent.getItemAtPosition(position) + colorsname[3]);
+                saveInfoUserselect.saveColorText(SaveInfoUserselect.USER_ColorT_KEY,colorsitems[3]);
             }
 
 
@@ -132,6 +141,7 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
                 drawables[0].setColor(Color.parseColor(colorsButton[0]));
                 drawables[1].setColor(Color.parseColor(colorsButton[0]));
                 drawables[2].setColor(Color.parseColor(colorsButton[0]));
+                saveInfoUserselect.saveColorButton(SaveInfoUserselect.USER_ColorB_KEY,colorsButton[0]);
                 /*
                 button1.setBackgroundColor(Color.parseColor(colorsButton[0]));
                 button2.setBackgroundColor(Color.parseColor(colorsButton[0]));
@@ -142,6 +152,7 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
                 drawables[0].setColor(Color.parseColor(colorsButton[1]));
                 drawables[1].setColor(Color.parseColor(colorsButton[1]));
                 drawables[2].setColor(Color.parseColor(colorsButton[1]));
+                saveInfoUserselect.saveColorButton(SaveInfoUserselect.USER_ColorB_KEY,colorsButton[1]);
                 /*
                 button3.setBackgroundColor(Color.parseColor(colorsButton[1]));
                 button2.setBackgroundColor(Color.parseColor(colorsButton[1]));
@@ -154,6 +165,7 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
                drawables[0].setColor(Color.parseColor(colorsButton[2]));
                 drawables[1].setColor(Color.parseColor(colorsButton[2]));
                 drawables[2].setColor(Color.parseColor(colorsButton[2]));
+                saveInfoUserselect.saveColorButton(SaveInfoUserselect.USER_ColorB_KEY,colorsButton[2]);
                 /*
                 button3.setBackgroundColor(Color.parseColor(colorsButton[2]));
                 button2.setBackgroundColor(Color.parseColor(colorsButton[2]));
@@ -164,6 +176,7 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
                 drawables[0].setColor(Color.parseColor(colorsButton[4]));
                 drawables[1].setColor(Color.parseColor(colorsButton[4]));
                 drawables[2].setColor(Color.parseColor(colorsButton[4]));
+                saveInfoUserselect.saveColorButton(SaveInfoUserselect.USER_ColorB_KEY,colorsButton[4]);
                 /*
                 button3.setBackgroundColor(Color.parseColor(colorsButton[4]));
                 button2.setBackgroundColor(Color.parseColor(colorsButton[4]));
@@ -174,6 +187,7 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
                 drawables[0].setColor(Color.parseColor(colorsButton[3]));
                 drawables[2].setColor(Color.parseColor(colorsButton[3]));
                 drawables[1].setColor(Color.parseColor(colorsButton[3]));
+                saveInfoUserselect.saveColorButton(SaveInfoUserselect.USER_ColorB_KEY,colorsButton[3]);
                 /*
                 button3.setBackgroundColor(Color.parseColor(colorsButton[3]));
                 button2.setBackgroundColor(Color.parseColor(colorsButton[3]));
@@ -196,16 +210,19 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
 
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         startActivityForResult(intent, 1);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if(resultCode==RESULT_OK) {
             Uri uri = data.getData();
+            saveInfoUserselect.saveURIImage(SaveInfoUserselect.USER_Image_KEY, Uri.decode(uri.toString()));
             Log.i("Path", "onActivityResult: " + uri);
             Drawable bg = null;
             InputStream inputStream = null;
@@ -214,10 +231,12 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
                 Log.i("inputS", "onActivityResult: " + inputStream);
                 bg = Drawable.createFromStream(inputStream, uri.toString());
 
+
             } catch (FileNotFoundException e) {
                 linearLayout.setBackgroundResource(R.drawable.n);
             }
             linearLayout.setBackground(bg);
+
         }
        
 
