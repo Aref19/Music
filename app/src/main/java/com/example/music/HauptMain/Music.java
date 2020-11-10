@@ -418,7 +418,6 @@ int s;
         buttonClick();
         Toast.makeText(this, "onRestart", Toast.LENGTH_LONG).show();
         current();
-        int j;
     }
 
 
