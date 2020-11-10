@@ -402,7 +402,7 @@ public class Music extends AppCompatActivity implements Playble {
 
         listView.setAdapter(adabter);
         list(listView, songinfos);
-
+int s;
         seekBar = findViewById(R.id.laufm);
         listView = findViewById(R.id.liedlist);
         handler = new Handler();
@@ -418,6 +418,7 @@ public class Music extends AppCompatActivity implements Playble {
         buttonClick();
         Toast.makeText(this, "onRestart", Toast.LENGTH_LONG).show();
         current();
+        int j;
     }
 
 
