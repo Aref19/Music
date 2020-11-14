@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.example.music.DatenBank.SaveInfoUserselect;
 import com.example.music.NotificationServiceAction.NotificationService;
 import com.example.music.R;
 import com.example.music.HauptMain.Songinfo;
@@ -25,11 +28,11 @@ public class Notification {
     public static final String actionnext = "actionnext";
     public static final String Action = "Actionprevious";
 
-
+   SaveInfoUserselect saveInfoUserselect;
     public Notification(Context context) {
         this.context = context;
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
+          saveInfoUserselect=SaveInfoUserselect.getContext(context);
     }
 
     public void greatNafi(int id, Songinfo tarck, int playbutton, int pos, int size) {
@@ -66,7 +69,7 @@ public class Notification {
         android.app.Notification builder = new NotificationCompat.Builder(context, c)
                 .setContentTitle(tarck.getSong_name())
                 .setContentText(tarck.getAltist())
-                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.drawable.music))
+                .setLargeIcon(BitmapFactory.decodeFile(saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY)))
                 .setSmallIcon(R.drawable.app)
                 .setOnlyAlertOnce(true)
                 .setShowWhen(false)

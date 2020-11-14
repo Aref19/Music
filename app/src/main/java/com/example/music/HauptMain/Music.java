@@ -13,7 +13,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
+import android.media.AudioManager;
 import android.os.Messenger;
 import android.view.View;
 
@@ -35,6 +37,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -50,11 +53,20 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.music.DatenBank.SaveInfoUserselect;
+import com.example.music.Firbase.Fierbase;
+import com.example.music.Firbase.WorkwithFirbase;
 import com.example.music.Notifaction.Notification;
 import com.example.music.Notifaction.Tarck;
 import com.example.music.NotificationServiceAction.onClearFromRecentServic;
 import com.example.music.R;
+import com.example.music.Video.Video;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -63,7 +75,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Music extends AppCompatActivity implements Playble {
+public class Music extends AppCompatActivity implements Playble, WorkwithFirbase, AudioManager.OnAudioFocusChangeListener {
     SeekBar seekBar;
     MediaPlayer mediaPlayer = new MediaPlayer();
     Cursor crusor;
@@ -80,8 +92,9 @@ public class Music extends AppCompatActivity implements Playble {
     boolean isplaing, isselect;
     Notification notification;
     SaveInfoUserselect saveInfoUserselect;
-    GradientDrawable[]drawables;
+    GradientDrawable[] drawables;
     TextView name;
+    AudioManager mAudioManager;
 
 
 
@@ -94,7 +107,6 @@ public class Music extends AppCompatActivity implements Playble {
         seekBar = findViewById(R.id.laufm);
         listView = findViewById(R.id.liedlist);
         int d = R.drawable.buton;
-
 
 
         handler = new Handler();
@@ -115,11 +127,20 @@ public class Music extends AppCompatActivity implements Playble {
         notification.creatchanel();
         seekBar.setMax(0);
         saveInfoUserselect = SaveInfoUserselect.getContext(this);
-        drawables=new GradientDrawable[3];
-        drawables[0]=(GradientDrawable) bause.getBackground().mutate();
-        drawables[1]=(GradientDrawable) next.getBackground().mutate();
-        drawables[2]=(GradientDrawable) last.getBackground().mutate();
+
+         mAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+
+        drawables = new GradientDrawable[3];
+        drawables[0] = (GradientDrawable) bause.getBackground().mutate();
+        drawables[1] = (GradientDrawable) next.getBackground().mutate();
+        drawables[2] = (GradientDrawable) last.getBackground().mutate();
         buttonColor();
+
+        if (!saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("")) {
+            pullFoto(relativeLayout, this);
+        }
+
+        //loadImage(relativeLayout);
 
 /*
         try {background();
@@ -128,10 +149,6 @@ public class Music extends AppCompatActivity implements Playble {
         }
 
  */
-
-
-
-
 
 
     }
@@ -143,6 +160,7 @@ public class Music extends AppCompatActivity implements Playble {
         sekk(seekBar);
         buttonClick();
         current();
+       // uperpruf();
 
     }
 
@@ -263,6 +281,7 @@ public class Music extends AppCompatActivity implements Playble {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 mediaPlayer.seekTo(postion);
+
 
                 ;
 
@@ -392,17 +411,20 @@ public class Music extends AppCompatActivity implements Playble {
         sekk(seekBar);
         current();
         Toast.makeText(this, "onStop", Toast.LENGTH_LONG).show();
+      //  uperpruf();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         buttonColor();
+        pullFoto(relativeLayout, this);
+        // loadImage(relativeLayout);
         Adapter adabter = new Adapter(songinfos, this);
 
         listView.setAdapter(adabter);
         list(listView, songinfos);
-int s;
+
         seekBar = findViewById(R.id.laufm);
         listView = findViewById(R.id.liedlist);
         handler = new Handler();
@@ -418,7 +440,6 @@ int s;
         buttonClick();
         Toast.makeText(this, "onRestart", Toast.LENGTH_LONG).show();
         current();
-        int j;
     }
 
 
@@ -642,43 +663,91 @@ int s;
              */
 
 
-
             //relativeLayout.setImageBitmap(myBitmap);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 
-            Log.i("Path", "onActivityResult: " + uri);
-            Drawable bg = null;
-            InputStream inputStream = null;
-            try {
-                getApplicationContext().getContentResolver().takePersistableUriPermission(Uri.parse( Uri.decode(uri.toString())), Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                inputStream = getContentResolver().openInputStream(uri);
-                Log.i("inputS", "onActivityResult: " + inputStream);
-                bg = Drawable.createFromStream(inputStream, uri.toString());
+                Log.i("Path", "onActivityResult: " + uri);
+                Drawable bg = null;
+                InputStream inputStream = null;
+                try {
+                    getApplicationContext().getContentResolver().takePersistableUriPermission(Uri.parse(Uri.decode(uri.toString())), Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    inputStream = getContentResolver().openInputStream(uri);
+                    Log.i("inputS", "onActivityResult: " + inputStream);
+                    bg = Drawable.createFromStream(inputStream, uri.toString());
 
-            } catch (FileNotFoundException e) {
-               relativeLayout.setBackgroundResource(R.drawable.n);
+                } catch (FileNotFoundException e) {
+                    relativeLayout.setBackgroundResource(R.drawable.n);
+                }
+                relativeLayout.setBackground(bg);
+
             }
-            relativeLayout.setBackground(bg);
-
-        }
-           //relativeLayout.setBackground(bg);
+            //relativeLayout.setBackground(bg);
         }
 
 
-            //   }
+        //   }
 
 
-            //  this.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        //  this.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+    }
+
+    private void buttonColor() {
+        if (!saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY).equals("")) {
+            drawables[0].setColor(Color.parseColor(saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY)));
+            drawables[1].setColor(Color.parseColor(saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY)));
+            drawables[2].setColor(Color.parseColor(saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY)));;
         }
-        private void buttonColor() {
-            if (!saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY).equals("")) {
-                drawables[0].setColor(Color.parseColor(saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY)));
-                drawables[1].setColor(Color.parseColor(saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY)));
-                drawables[2].setColor(Color.parseColor(saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY)));
-            }
-        }
+    }
+
+    @Override
+    public void pushFoto(Drawable drawable) {
 
     }
+
+
+    @Override
+    public void pullFoto(RelativeLayout linearLayout, Context context) {
+        /*
+        Fierbase fierbase=new Fierbase();
+        fierbase.loadImage(linearLayout,context);
+        linearLayout.setImageBitmap(BitmapFactory.decodeFile( saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY)));
+
+         */
+
+        if (saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.n") || saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.app")) {
+            Log.i("draw1", "pullFoto: ");
+            if (saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.n")) {
+                Log.i("draw2", "pullFoto: ");
+                linearLayout.setBackground(getDrawable(R.drawable.n));
+            } else if (saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.app")) {
+                Log.i("draw3", "pullFoto: ");
+                linearLayout.setBackground(getDrawable(R.drawable.app));
+            }
+        } else if (!saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.n") || saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.app")) {
+            Drawable drawable = BitmapDrawable.createFromPath(saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY));
+            if (drawable == null) {
+                relativeLayout.setBackground(getDrawable(R.drawable.n));
+
+            } else {
+                linearLayout.setBackground(drawable);
+            }
+        }
+
+
+    }
+
+    public void video(View view) {
+        Intent intent = new Intent(this, Video.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onAudioFocusChange(int focusChange) {
+        Log.i("focue", "onAudioFocusChange: "+focusChange);
+    }
+
+    }
+
 
 
 

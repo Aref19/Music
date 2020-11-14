@@ -3,5 +3,13 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
-    <color name="button">#FFE6FF</color>
+    <color name="button">#FFFFFF</color>
+    <color name="stop">#DF261B</color>
+   <color name="weiss">#FFFFFFFF</color>
+    <color name="green">#00FF00</color>
+    <color name="red">#FF0000</color>
+    <color name="balu">#0000FF</color>
+    <color name="schwarz">#000</color>
+
+
 </resources>
