@@ -20,9 +20,12 @@
         <activity android:name=".Start.Login"></activity>
         <activity android:name=".Start.Regstieren" />
         <activity android:name=".Start.Start" />
-        <activity android:name=".Video.ViewshowerActivity" />
-        <activity android:name=".HauptMain.selectView" />
-        <activity android:name=".Video.Video" />
+        <activity android:name=".Video.ViewshowerActivity"
+            android:parentActivityName=".Video.Video"/>
+        <activity android:name=".HauptMain.selectView"
+            android:parentActivityName=".HauptMain.Music"/>
+        <activity android:name=".Video.Video"
+            android:parentActivityName=".HauptMain.Music"/>
         <activity android:name=".HauptMain.Music">
             <intent-filter>
                 <action android:name="android.intent.action.OPEN_DOCUMENT" />

@@ -16,12 +16,18 @@ public class ViewshowerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle("vedios");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.viewshower);
         videoView = findViewById(R.id.videoshower);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         Log.i("passs", "onCreate: " + bundle.get("path"));
         videoView.setVideoURI(Uri.parse(bundle.get("path").toString()));
+        int width=videoView.getWidth();
+        int height=videoView.getHeight();
+        videoView.setMinimumHeight(width*height);
+        videoView.setMinimumWidth(width*height);
         videoView.start();
         MediaController mediaController = new MediaController(this);
         videoView.setMediaController(mediaController);

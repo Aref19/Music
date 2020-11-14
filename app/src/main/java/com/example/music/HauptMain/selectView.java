@@ -73,6 +73,8 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       // getSupportActionBar().setTitle("Main");
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.selectview);
         imageView = findViewById(R.id.imageView);
         selecttext = findViewById(R.id.spinner);
@@ -130,7 +132,8 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String[] colorsname = getResources().getStringArray(R.array.colorsarra);
         String[] colorsnameofButton = getResources().getStringArray(R.array.colorsarrabutton);
-
+        selecttext.setSelection(saveInfoUserselect.loadspinnerSelection(SaveInfoUserselect.USER_Int_Spinnerindex));
+        selectbutton.setSelection(saveInfoUserselect.loadspinnerSelection(SaveInfoUserselect.USER_Intbutton_Spinnerindex));
         String[] colorsButton = {"#2FD29F", "#2F519F", "#BE519F", "#E4D29F", "#5C8AFF"};
         String[] colorsitems = {"#FFFFFFFF", "#00FF00", "#FF0000", "#0000FF", "#000000"};
 
@@ -145,21 +148,25 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
                 saveInfoUserselect.saveColorText(SaveInfoUserselect.USER_ColorT_KEY, colorsitems[0]);
             } else if (parent.getItemAtPosition(position).equals(colorsname[1])) {
                 textColor.setTextColor(Color.parseColor(colorsitems[1]));
+                saveInfoUserselect.savespinnerSelection(SaveInfoUserselect.USER_Int_Spinnerindex,1);
                 stringArrayAdapter = new ArrayAdapter<>(this, R.layout.grren, songs);
                 saveInfoUserselect.saveColorText(SaveInfoUserselect.USER_ColorT_KEY, colorsitems[1]);
 
                 Log.i("spinn1", "onItemSelected: " + parent.getItemAtPosition(position) + colorsname[1]);
             } else if (parent.getItemAtPosition(position).equals(colorsname[2])) {
                 textColor.setTextColor(Color.parseColor(colorsitems[2]));
+                saveInfoUserselect.savespinnerSelection(SaveInfoUserselect.USER_Int_Spinnerindex,2);
                 stringArrayAdapter = new ArrayAdapter<>(this, R.layout.text, songs);
                 Log.i("spinn1", "onItemSelected: " + parent.getItemAtPosition(position) + colorsname[2]);
                 saveInfoUserselect.saveColorText(SaveInfoUserselect.USER_ColorT_KEY, colorsitems[2]);
             } else if (parent.getItemAtPosition(position).equals(colorsname[4])) {
                 textColor.setTextColor(Color.parseColor(colorsitems[4]));
+                saveInfoUserselect.savespinnerSelection(SaveInfoUserselect.USER_Int_Spinnerindex,4);
                 Log.i("spinn1", "onItemSelected: " + parent.getItemAtPosition(position) + colorsname[3]);
                 saveInfoUserselect.saveColorText(SaveInfoUserselect.USER_ColorT_KEY, colorsitems[4]);
             } else if (parent.getItemAtPosition(position).equals(colorsname[3])) {
                 textColor.setTextColor(Color.parseColor(colorsitems[3]));
+                saveInfoUserselect.savespinnerSelection(SaveInfoUserselect.USER_Int_Spinnerindex,4);
                 stringArrayAdapter = new ArrayAdapter<>(this, R.layout.blau, songs);
                 Log.i("spinn1", "onItemSelected: " + parent.getItemAtPosition(position) + colorsname[3]);
                 saveInfoUserselect.saveColorText(SaveInfoUserselect.USER_ColorT_KEY, colorsitems[3]);
@@ -179,6 +186,7 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
 
                  */
             } else if (parent.getItemAtPosition(position).equals(colorsnameofButton[1])) {
+                saveInfoUserselect.savesbuttonSelection(SaveInfoUserselect.USER_Intbutton_Spinnerindex,1);
                 drawables[0].setColor(Color.parseColor(colorsButton[1]));
                 drawables[1].setColor(Color.parseColor(colorsButton[1]));
                 drawables[2].setColor(Color.parseColor(colorsButton[1]));
@@ -192,6 +200,7 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
 
                 Log.i("spinn1", "onItemSelected: " + parent.getItemAtPosition(position) + colorsname[1]);
             } else if (parent.getItemAtPosition(position).equals(colorsnameofButton[2])) {
+                saveInfoUserselect.savesbuttonSelection(SaveInfoUserselect.USER_Intbutton_Spinnerindex,2);
                 drawables[0].setColor(Color.parseColor(colorsButton[2]));
                 drawables[1].setColor(Color.parseColor(colorsButton[2]));
                 drawables[2].setColor(Color.parseColor(colorsButton[2]));
@@ -203,6 +212,7 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
 
                  */
             } else if (parent.getItemAtPosition(position).equals(colorsnameofButton[4])) {
+                saveInfoUserselect.savesbuttonSelection(SaveInfoUserselect.USER_Intbutton_Spinnerindex,4);
                 drawables[0].setColor(Color.parseColor(colorsButton[4]));
                 drawables[1].setColor(Color.parseColor(colorsButton[4]));
                 drawables[2].setColor(Color.parseColor(colorsButton[4]));
@@ -214,6 +224,7 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
 
                  */
             } else if (parent.getItemAtPosition(position).equals(colorsnameofButton[3])) {
+                saveInfoUserselect.savesbuttonSelection(SaveInfoUserselect.USER_Intbutton_Spinnerindex,3);
                 drawables[0].setColor(Color.parseColor(colorsButton[3]));
                 drawables[2].setColor(Color.parseColor(colorsButton[3]));
                 drawables[1].setColor(Color.parseColor(colorsButton[3]));

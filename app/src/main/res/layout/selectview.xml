@@ -142,18 +142,18 @@
 
 
                 />
-            <Button
-                android:id="@+id/selectimage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="image"
-                android:onClick="imageselect"/>
+
 
         </LinearLayout>
-
+        <Button
+            android:id="@+id/selectimage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="image"
+            android:onClick="imageselect"/>
 
     </LinearLayout>
 

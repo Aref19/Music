@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -42,6 +43,7 @@ SaveInfoUserselect saveInfoUserselect;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        setContentView(R.layout.videorecley);
+
         videoView=findViewById(R.id.videoView2);
         videoModels=new ArrayList<>();
         movieAdpter=new MovieAdpter();
@@ -52,7 +54,7 @@ SaveInfoUserselect saveInfoUserselect;
         Music  music=new Music();
 
       // relativeLayout.setBackground(BitmapDrawable.createFromPath(saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY)));
- pullFoto(relativeLayout,this);
+        pullFoto(relativeLayout,this);
         catchVideo();
     }
     @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -77,10 +79,13 @@ SaveInfoUserselect saveInfoUserselect;
             }while (cursor.moveToNext());
          //    videoView.setVideoURI(Uri.parse(videoModels.get(3).getPathVideo()));
           //  Log.i("video4", "catchVideo: "+videoModels.get(1).getPathVideo());
-            movieAdpter.setArraylist(videoModels,this);
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(movieAdpter);
+          //  movieAdpter.setArraylist(videoModels,this);
+           // recyclerView.setHasFixedSize(true);
+            //recyclerView.setLayoutManager(layoutManager);
+            //recyclerView.setAdapter(movieAdpter);
+
+            Task task=new Task(videoModels,this,layoutManager);
+            task.execute();
             movieAdpter.setonitem(new MovieAdpter.Onitemclic() {
                 @Override
                 public void onitemclic(int postion) {
@@ -132,5 +137,32 @@ SaveInfoUserselect saveInfoUserselect;
         }
 
 
+    }
+    private class Task extends AsyncTask<String, String, String>{
+        ArrayList<VideoModel>videoModels;
+        MovieAdpter movieAdpter;
+        Context context;
+        RecyclerView.LayoutManager layoutManager;
+        public Task(ArrayList <VideoModel>videoModels, Context context, RecyclerView.LayoutManager layoutManager){
+            this.videoModels=videoModels;
+            this.movieAdpter=new MovieAdpter();
+            this.context=context;
+            this.layoutManager=layoutManager;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            movieAdpter.setArraylist(videoModels,context);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(movieAdpter);
+            movieAdpter.setonitem(new MovieAdpter.Onitemclic() {
+                @Override
+                public void onitemclic(int postion) {
+                    vidershower(postion);
+                }
+            });
+            return null;
+        }
     }
 }
