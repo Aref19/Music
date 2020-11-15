@@ -44,13 +44,9 @@ public class MovieAdpter extends RecyclerView.Adapter<MovieAdpter.MiovieViewHold
     public void onBindViewHolder(@NonNull MiovieViewHolder holder, int position) {
        holder.videoView3.setVideoURI(Uri.parse(videoModels.get(position).getPathVideo()));
        holder. textView.setText(videoModels.get(position).getName());
-       holder.videoView3.start();
-       holder.videoView3.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-           @Override
-           public void onPrepared(MediaPlayer mp) {
-               mp.setVolume(0,0);
-           }
-       });
+       holder.videoView3.seekTo(10);
+       //holder.videoView3.start();
+
 
 
 

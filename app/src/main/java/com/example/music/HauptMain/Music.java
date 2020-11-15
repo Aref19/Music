@@ -1,6 +1,7 @@
 package com.example.music.HauptMain;
 
 import android.Manifest;
+
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -51,6 +52,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.music.DatenBank.SaveInfoUserselect;
 import com.example.music.Firbase.Fierbase;
@@ -98,7 +101,6 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
     boolean isMusicActive;
 
 
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,14 +131,12 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         seekBar.setMax(0);
         saveInfoUserselect = SaveInfoUserselect.getContext(this);
 
-         mAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-         mAudioManager.requestAudioFocus(this,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
-      //   if(mAudioManager.requestAudioFocus(this,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
+       // audioManger();
+        //   if(mAudioManager.requestAudioFocus(this,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
         //     list(listView, songinfos);
 
 
-
-         //}
+        //}
 
         drawables = new GradientDrawable[3];
         drawables[0] = (GradientDrawable) bause.getBackground().mutate();
@@ -168,9 +168,8 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         sekk(seekBar);
         buttonClick();
         current();
-        mAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-        mAudioManager.requestAudioFocus(this,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
-       // uperpruf();
+        //  audioManger();
+        // uperpruf();
 
     }
 
@@ -225,7 +224,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
                     mediaPlayer.start();
                     bause.setImageResource(R.drawable.start);
                     isselect = true;
-                    isMusicActive=true;
+                    isMusicActive = true;
                     seekBar.setMax(mediaPlayer.getDuration());
                     Log.i("warum", "onTaskpause: " + "von hierlist");
 
@@ -422,10 +421,14 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         sekk(seekBar);
         current();
         Toast.makeText(this, "onStop", Toast.LENGTH_LONG).show();
-        mAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-        mAudioManager.requestAudioFocus(this,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
-      //  uperpruf();
+
+     // audioManger();
+
+        //  uperpruf();
     }
+
+
+
 
     @Override
     protected void onRestart() {
@@ -437,8 +440,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
 
         listView.setAdapter(adabter);
         list(listView, songinfos);
-        mAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-        mAudioManager.requestAudioFocus(this,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+
         seekBar = findViewById(R.id.laufm);
         listView = findViewById(R.id.liedlist);
         handler = new Handler();
@@ -456,24 +458,23 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         current();
     }
 
+/*
+    @Override
+    protected void onResume() {
+        super.onResume();
+        seekBar = findViewById(R.id.laufm);
+        listView = findViewById(R.id.liedlist);
+        handler = new Handler();
+        handel = new Handler();
 
+        sekk(seekBar);
+        // audioManger();
+        buttonClick();
+        Toast.makeText(this, "onRestart", Toast.LENGTH_LONG).show();
+        current();
+    }
 
-        @Override
-        protected void onResume() {
-            super.onResume();
-            seekBar = findViewById(R.id.laufm);
-            listView = findViewById(R.id.liedlist);
-            handler = new Handler();
-            handel = new Handler();
-
-            sekk(seekBar);
-            mAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-            mAudioManager.requestAudioFocus(this,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
-            buttonClick();
-            Toast.makeText(this, "onRestart", Toast.LENGTH_LONG).show();
-            current();
-        }
-
+ */
 
 
     @Override
@@ -543,9 +544,8 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         notification.creatchanel();
         notification.greatNafi(0, songinfos.get(sitution), R.drawable.start, postion, tarcks.size() - 1);
         isplaing = true;
-        isMusicActive=true;
-        mAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-        mAudioManager.requestAudioFocus(this,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+        isMusicActive = true;
+        //audioManger();
 
 
     }
@@ -554,10 +554,9 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
     public void onTaskprovis() {
         lastint--;
         nextint--;
-        isMusicActive=true;
+        isMusicActive = true;
         isselect = true;
-        mAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-        mAudioManager.requestAudioFocus(this,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+      //  audioManger();
         Log.i("warum", "onTaskpause: " + "von hier0");
         if (sitution == 0) {
             sitution = songinfos.size() - 1;
@@ -593,10 +592,9 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         nextint++;
         lastint++;
         isselect = true;
-        isMusicActive=true;
+        isMusicActive = true;
         Log.i("warum", "onTaskpause: " + "von hier1");
-        mAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-        mAudioManager.requestAudioFocus(this,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+        //audioManger();
         if (sitution == songinfos.size() - 1) {
             sitution = 0;
         } else {
@@ -631,10 +629,9 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         notification.creatchanel();
         Log.i("warum", "onTaskpause: " + "von hier2");
 
-        mAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-        mAudioManager.requestAudioFocus(this,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+     //   audioManger();
         if (sorstop) {
-            isMusicActive=true;
+            isMusicActive = true;
             current();
             mediaPlayer.start();
             bause.setImageResource(R.drawable.start);
@@ -642,7 +639,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
             Log.i("hier", "onTaskpause: " + "hier1");
             notification.greatNafi(0, songinfos.get(sitution), R.drawable.ic_baseline_pause_circle_filled_24, sitution, songinfos.size() - 1);
         } else if (isselect) {
-            isMusicActive=false ;
+            isMusicActive = false;
             bause.setImageResource(R.drawable.stop);
             notification.greatNafi(0, songinfos.get(sitution), R.drawable.ic_baseline_play_circle_outline_24, sitution, songinfos.size() - 1);
             Log.i("hier", "onTaskpause: " + "hier2");
@@ -663,7 +660,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
     protected void onDestroy() {
 
         super.onDestroy();
-        isMusicActive=false;
+        isMusicActive = false;
 
         NotificationManager notificationManager = getApplication().getSystemService(NotificationManager.class);
         notificationManager.cancelAll();
@@ -719,7 +716,8 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         if (!saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY).equals("")) {
             drawables[0].setColor(Color.parseColor(saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY)));
             drawables[1].setColor(Color.parseColor(saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY)));
-            drawables[2].setColor(Color.parseColor(saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY)));;
+            drawables[2].setColor(Color.parseColor(saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY)));
+            ;
         }
     }
 
@@ -762,12 +760,16 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
 
     public void video(View view) {
         Intent intent = new Intent(this, Video.class);
+
         startActivity(intent);
+
+
+
     }
 
     @Override
     public void onAudioFocusChange(int focusChange) {
-        if(isMusicActive) {
+        if (isMusicActive) {
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
                 mediaPlayer.pause();
                 Log.i("onfuc", "onAudioFocusChange: " + "1");
@@ -783,7 +785,18 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         }
     }
 
+    private void audioManger() {
+        try {
+            mAudioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
+            mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+
+        }catch (IllegalStateException e){
+            Log.i("exs", "audioManger: "+e.toString());
+        }
+
     }
+
+}
 
 
 

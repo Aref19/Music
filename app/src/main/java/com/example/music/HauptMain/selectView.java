@@ -73,8 +73,8 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // getSupportActionBar().setTitle("Main");
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       getSupportActionBar().setTitle("Main");
+       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.selectview);
         imageView = findViewById(R.id.imageView);
         selecttext = findViewById(R.id.spinner);

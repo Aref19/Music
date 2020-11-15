@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -51,7 +52,7 @@ SaveInfoUserselect saveInfoUserselect;
        layoutManager=new LinearLayoutManager(this);
        relativeLayout=findViewById(R.id.videolayout);
        saveInfoUserselect=SaveInfoUserselect.getContext(this);
-        Music  music=new Music();
+
 
       // relativeLayout.setBackground(BitmapDrawable.createFromPath(saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY)));
         pullFoto(relativeLayout,this);
