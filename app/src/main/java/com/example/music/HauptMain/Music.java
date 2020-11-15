@@ -104,13 +104,13 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         seekBar = findViewById(R.id.laufm);
         listView = findViewById(R.id.liedlist);
         int d = R.drawable.buton;
-
 
         handler = new Handler();
         handel = new Handler();
@@ -131,7 +131,6 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         seekBar.setMax(0);
         saveInfoUserselect = SaveInfoUserselect.getContext(this);
 
-       // audioManger();
         //   if(mAudioManager.requestAudioFocus(this,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
         //     list(listView, songinfos);
 
@@ -163,11 +162,13 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
 
     @Override
     protected void onPause() {
+
         super.onPause();
         Toast.makeText(this, "onPause", Toast.LENGTH_LONG).show();
         sekk(seekBar);
         buttonClick();
         current();
+
         //  audioManger();
         // uperpruf();
 
@@ -417,17 +418,21 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
 
     @Override
     protected void onStop() {
+
         super.onStop();
         sekk(seekBar);
         current();
         Toast.makeText(this, "onStop", Toast.LENGTH_LONG).show();
 
-     // audioManger();
 
         //  uperpruf();
     }
 
+    @Override
+    protected void onStart() {
 
+        super.onStart();
+    }
 
 
     @Override
@@ -500,6 +505,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, 1);
+        finish();
     }
 
     @Override
@@ -556,7 +562,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         nextint--;
         isMusicActive = true;
         isselect = true;
-      //  audioManger();
+        //  audioManger();
         Log.i("warum", "onTaskpause: " + "von hier0");
         if (sitution == 0) {
             sitution = songinfos.size() - 1;
@@ -629,7 +635,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         notification.creatchanel();
         Log.i("warum", "onTaskpause: " + "von hier2");
 
-     //   audioManger();
+        //   audioManger();
         if (sorstop) {
             isMusicActive = true;
             current();
@@ -764,7 +770,6 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         startActivity(intent);
 
 
-
     }
 
     @Override
@@ -785,13 +790,13 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         }
     }
 
-    private void audioManger() {
+    public void audioManger() {
         try {
             mAudioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
             mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
 
-        }catch (IllegalStateException e){
-            Log.i("exs", "audioManger: "+e.toString());
+        } catch (IllegalStateException e) {
+            Log.i("exs", "audioManger: " + e.toString());
         }
 
     }
