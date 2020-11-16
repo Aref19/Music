@@ -10,11 +10,17 @@ import android.net.Uri;
 import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.music.DatenBank.SaveInfoUserselect;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -27,6 +33,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class Fierbase {
+    FirebaseAuth firebaseAuth;
+    SaveInfoUserselect saveInfoUserselect;
     public void imageStroge(Drawable drawable) {
         FirebaseStorage storage =FirebaseStorage.getInstance();
         // Create a storage reference from our app
@@ -114,6 +122,26 @@ public class Fierbase {
                 Log.i("image2", "onSuccess: " + e.toString());
             }
         });
+    }
+    public void signin(String email, String pass, final Context context){
+        firebaseAuth=FirebaseAuth.getInstance();
+        firebaseAuth.createUserWithEmailAndPassword(email.trim(),pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+               try {
+                   Toast.makeText(context, "successfully registered", Toast.LENGTH_LONG).show();
+                    saveInfoUserselect=SaveInfoUserselect.getContext(context);
+                    saveInfoUserselect.saveUseremail(SaveInfoUserselect.User_email);
+                       }catch (Exception e){
+                   Toast.makeText(context, "check your info "+e, Toast.LENGTH_LONG).show();
+               }
+                }
+
+            }
+        });
+
+
     }
 
 }

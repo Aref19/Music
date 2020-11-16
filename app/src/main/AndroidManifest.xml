@@ -17,20 +17,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HauptMain.Music"></activity>
+        <activity android:name=".Start.Start2"></activity>
+        <activity android:name=".HauptMain.Music" />
         <activity android:name=".Start.Regstieren" />
-        <activity android:name=".Start.Start" />
-        <activity android:name=".Video.ViewshowerActivity"
-            android:parentActivityName=".Video.Video"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/app_name"></activity>
-        <activity android:name=".HauptMain.selectView"></activity>
-        <activity android:name=".Video.Video"
+        <activity android:name=".Start.Login" />
+        <activity
+            android:name=".Video.ViewshowerActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-         />
-
-        <activity android:name=".Start.Login" android:configChanges="orientation|screenSize"
+            android:parentActivityName=".Video.Video" />
+        <activity android:name=".HauptMain.selectView" />
+        <activity
+            android:name=".Video.Video"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".Start.Start"
+            android:configChanges="orientation|screenSize"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.OPEN_DOCUMENT" />
