@@ -23,7 +23,7 @@ public class Start2 extends AppCompatActivity {
         super.onStart();
         saveInfoUserselect=SaveInfoUserselect.getContext(this);
         Intent intent;
-        if(!saveInfoUserselect.saveUseremail(SaveInfoUserselect.User_email).isEmpty()){
+        if(!saveInfoUserselect.getUseremail(SaveInfoUserselect.User_email).isEmpty()){
             intent=new Intent(this,Music.class);
             startActivity(intent);
         }else {

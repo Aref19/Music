@@ -73,7 +73,7 @@ public class SaveInfoUserselect {
         editor.putString(user,user_email);
         editor.apply();
     }
-    public String  saveUseremail(String user){
+    public String  getUseremail(String user){
         SharedPreferences editor=context.getSharedPreferences(SHARED_PREFS_KEY,Context.MODE_PRIVATE);
         return editor.getString(user,"");
 

@@ -43,6 +43,13 @@ android:inputType="textEmailAddress"
             android:padding="18dp" />
 
         <Button
+            android:id="@+id/button4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="anmelden"
+            android:text="anmelden" />
+
+        <Button
             android:id="@+id/button2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

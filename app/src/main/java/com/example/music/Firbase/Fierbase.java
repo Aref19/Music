@@ -1,6 +1,7 @@
 package com.example.music.Firbase;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.music.DatenBank.SaveInfoUserselect;
+import com.example.music.HauptMain.Music;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,6 +37,7 @@ import java.io.InputStream;
 public class Fierbase {
     FirebaseAuth firebaseAuth;
     SaveInfoUserselect saveInfoUserselect;
+    Intent intent;
     public void imageStroge(Drawable drawable) {
         FirebaseStorage storage =FirebaseStorage.getInstance();
         // Create a storage reference from our app
@@ -123,7 +126,7 @@ public class Fierbase {
             }
         });
     }
-    public void signin(String email, String pass, final Context context){
+    public void signin(final String email, String pass, final Context context){
         firebaseAuth=FirebaseAuth.getInstance();
         firebaseAuth.createUserWithEmailAndPassword(email.trim(),pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -132,7 +135,7 @@ public class Fierbase {
                try {
                    Toast.makeText(context, "successfully registered", Toast.LENGTH_LONG).show();
                     saveInfoUserselect=SaveInfoUserselect.getContext(context);
-                    saveInfoUserselect.saveUseremail(SaveInfoUserselect.User_email);
+                    saveInfoUserselect.saveUseremail(SaveInfoUserselect.User_email,email);
                        }catch (Exception e){
                    Toast.makeText(context, "check your info "+e, Toast.LENGTH_LONG).show();
                }
@@ -142,6 +145,18 @@ public class Fierbase {
         });
 
 
+    }
+    public void login(String email, String pass, final Context context){
+        firebaseAuth=FirebaseAuth.getInstance();
+        firebaseAuth.signInWithEmailAndPassword(email.trim(),pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    intent=new Intent(context, Music.class);
+                    context.startActivity(intent);
+                }
+            }
+        });
     }
 
 }
