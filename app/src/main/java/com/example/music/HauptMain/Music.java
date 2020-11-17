@@ -116,6 +116,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         handel = new Handler();
         premtion();
 
+
         getallsong();
         sekk(seekBar);
         bause = findViewById(R.id.pause);
@@ -142,7 +143,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         drawables[1] = (GradientDrawable) next.getBackground().mutate();
         drawables[2] = (GradientDrawable) last.getBackground().mutate();
         buttonColor();
-
+        longdruck(listView);
         if (!saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("")) {
             pullFoto(relativeLayout, this);
         }
@@ -799,6 +800,17 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
             Log.i("exs", "audioManger: " + e.toString());
         }
 
+    }
+    private void longdruck(ListView listView){
+        Log.i("long", "longdruck: "+"rstrzt");
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Fierbase fierbase=new Fierbase();
+                fierbase.imageStroge(Uri.parse(songinfos.get(position).getPath()),Music.this);
+                return false;
+            }
+        });
     }
 
 }

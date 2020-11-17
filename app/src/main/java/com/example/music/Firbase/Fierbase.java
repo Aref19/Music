@@ -1,6 +1,8 @@
 package com.example.music.Firbase;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.text.Html;
 import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -24,12 +27,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,28 +43,34 @@ public class Fierbase {
     FirebaseAuth firebaseAuth;
     SaveInfoUserselect saveInfoUserselect;
     Intent intent;
-    public void imageStroge(Drawable drawable) {
+    public void imageStroge(Uri uri , final Context context) {
+        firebaseAuth=FirebaseAuth.getInstance();
         FirebaseStorage storage =FirebaseStorage.getInstance();
         // Create a storage reference from our app
-        StorageReference storageRef = storage.getReference().child("imagesbackground").child("user");
+        StorageReference storageRef = storage.getReference().child("userAudio").child(firebaseAuth.getUid());
         // Get the data from an ImageView as bytes
-        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
 
-        UploadTask uploadTask = storageRef.putBytes(data);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
+        UploadTask uploadTask = storageRef.putFile(Uri.fromFile(new File(uri.toString())));
+        uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
-            public void onFailure(@NonNull Exception exception) {
-                Log.i("sucss", "onFailure: " + "sucss"+exception);
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                // ...
-
+            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                int progress = 100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+                AlertDialog.Builder builder =new AlertDialog.Builder(context);
+                builder.setCancelable(false);
+                builder.setTitle(""+progress);
+                builder.setMessage("uplod");
+                builder.show();
+                Log.i("progr", "onProgress: "+progress);
+                if(progress==100.0){
+                    AlertDialog.Builder dim =new AlertDialog.Builder(context);
+                    dim.setTitle("Sucsuss");
+                    dim.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                }
             }
         });
 
