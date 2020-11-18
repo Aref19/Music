@@ -28,6 +28,7 @@ import com.example.music.DatenBank.SaveInfoUserselect;
 import com.example.music.Firbase.WorkwithFirbase;
 import com.example.music.HauptMain.Music;
 import com.example.music.R;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 
@@ -114,8 +115,10 @@ public class Video extends AppCompatActivity implements WorkwithFirbase {
     }
 
 
+
+
     @Override
-    public void pushFoto(Drawable drawable) {
+    public void pushAudio(UploadTask.TaskSnapshot snapshot) {
 
     }
 

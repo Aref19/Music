@@ -1,6 +1,7 @@
 package com.example.music.Firbase;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.net.Uri;
 import android.text.Html;
 import android.util.Log;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -49,28 +51,22 @@ public class Fierbase {
         // Create a storage reference from our app
         StorageReference storageRef = storage.getReference().child("userAudio").child(firebaseAuth.getUid());
         // Get the data from an ImageView as bytes
-
+       final ProgressDialog builder;
         UploadTask uploadTask = storageRef.putFile(Uri.fromFile(new File(uri.toString())));
         uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                int progress = 100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
-                AlertDialog.Builder builder =new AlertDialog.Builder(context);
-                builder.setCancelable(false);
-                builder.setTitle(""+progress);
-                builder.setMessage("uplod");
-                builder.show();
-                Log.i("progr", "onProgress: "+progress);
-                if(progress==100.0){
-                    AlertDialog.Builder dim =new AlertDialog.Builder(context);
-                    dim.setTitle("Sucsuss");
-                    dim.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
+            public void onProgress(@NonNull final UploadTask.TaskSnapshot snapshot) {
+                 double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+                ProgressDialog  builder =ProgressDialog.show(context,"plase Wait ",progress+"%",true,false);
+                if(snapshot.){
+                   builder.dismiss();
                 }
+
+
+
+                Log.i("progr", "onProgress: "+progress);
+
+
             }
         });
 

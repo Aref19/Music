@@ -6,7 +6,9 @@ import android.graphics.drawable.Drawable;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.google.firebase.storage.UploadTask;
+
 public interface WorkwithFirbase {
-    void pushFoto(Drawable drawable);
+    void  pushAudio(UploadTask.TaskSnapshot snapshot);
     void pullFoto(RelativeLayout linearLayout, Context context);
 }

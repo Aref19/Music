@@ -68,6 +68,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -98,7 +99,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
     GradientDrawable[] drawables;
     TextView name;
     AudioManager mAudioManager;
-    boolean isMusicActive;
+    boolean isMusicActive,checklong;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -131,6 +132,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         notification.creatchanel();
         seekBar.setMax(0);
         saveInfoUserselect = SaveInfoUserselect.getContext(this);
+        checklong=false;
 
         //   if(mAudioManager.requestAudioFocus(this,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
         //     list(listView, songinfos);
@@ -214,26 +216,27 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                try {
-                    sitution = position;
-                    prograss = position;
-                    nextint = position;
-                    lastint = position;
-                    mediaPlayer.stop();
-                    mediaPlayer = new MediaPlayer();
-                    mediaPlayer.setDataSource(songinfos.get(position).getPath());
-                    mediaPlayer.prepare();
-                    mediaPlayer.start();
-                    bause.setImageResource(R.drawable.start);
-                    isselect = true;
-                    isMusicActive = true;
-                    seekBar.setMax(mediaPlayer.getDuration());
-                    Log.i("warum", "onTaskpause: " + "von hierlist");
+                      try {
+                          sitution = position;
+                          prograss = position;
+                          nextint = position;
+                          lastint = position;
+                          mediaPlayer.stop();
+                          mediaPlayer = new MediaPlayer();
+                          mediaPlayer.setDataSource(songinfos.get(position).getPath());
+                          mediaPlayer.prepare();
+                          mediaPlayer.start();
+                          bause.setImageResource(R.drawable.start);
+                          isselect = true;
+                          isMusicActive = true;
+                          seekBar.setMax(mediaPlayer.getDuration());
+                          Log.i("warum", "onTaskpause: " + "von hierlist");
 
-                    notification.greatNafi(0, songinfos.get(position), R.drawable.ic_baseline_pause_circle_filled_24, position, songinfos.size());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                          notification.greatNafi(0, songinfos.get(position), R.drawable.ic_baseline_pause_circle_filled_24, position, songinfos.size());
+                      } catch (IOException e) {
+                          e.printStackTrace();
+                      }
+
             }
         });
     }
@@ -728,11 +731,11 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         }
     }
 
+
     @Override
-    public void pushFoto(Drawable drawable) {
+    public void pushAudio(UploadTask.TaskSnapshot snapshot) {
 
     }
-
 
     @Override
     public void pullFoto(RelativeLayout linearLayout, Context context) {
@@ -803,14 +806,22 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
     }
     private void longdruck(ListView listView){
         Log.i("long", "longdruck: "+"rstrzt");
+
+
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Fierbase fierbase=new Fierbase();
-                fierbase.imageStroge(Uri.parse(songinfos.get(position).getPath()),Music.this);
-                return false;
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id){
+
+                    Fierbase fierbase=new Fierbase();
+                    fierbase.imageStroge(Uri.parse(songinfos.get(position).getPath()),Music.this);
+                    checklong=false;
+
+
+                return true;
             }
         });
+
+
     }
 
 }
