@@ -9,6 +9,6 @@ import android.widget.RelativeLayout;
 import com.google.firebase.storage.UploadTask;
 
 public interface WorkwithFirbase {
-    void  pushAudio(UploadTask.TaskSnapshot snapshot);
+    void  pushAudio(UploadTask.TaskSnapshot snapshot,Context context);
     void pullFoto(RelativeLayout linearLayout, Context context);
 }

@@ -3,6 +3,7 @@ package com.example.music.HauptMain;
 import android.Manifest;
 
 import android.app.NotificationManager;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -40,6 +41,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -65,6 +67,7 @@ import com.example.music.R;
 import com.example.music.Video.Video;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -733,7 +736,8 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
 
 
     @Override
-    public void pushAudio(UploadTask.TaskSnapshot snapshot) {
+    public void pushAudio(UploadTask.TaskSnapshot snapshot,Context context) {
+
 
     }
 
@@ -812,9 +816,15 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id){
 
-                    Fierbase fierbase=new Fierbase();
-                    fierbase.imageStroge(Uri.parse(songinfos.get(position).getPath()),Music.this);
-                    checklong=false;
+                   // Fierbase fierbase=new Fierbase();
+                    //fierbase.imageStroge(Uri.parse(songinfos.get(position).getPath()),Music.this);
+                    //checklong=false;
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, songinfos.get(position).getAltist());
+                sendIntent.setType("text/plain");
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
 
 
                 return true;

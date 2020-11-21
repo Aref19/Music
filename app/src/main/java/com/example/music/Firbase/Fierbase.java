@@ -7,14 +7,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.text.Html;
 import android.util.Log;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -35,19 +33,18 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class Fierbase {
+
     FirebaseAuth firebaseAuth;
     SaveInfoUserselect saveInfoUserselect;
     Intent intent;
     public void imageStroge(Uri uri , final Context context) {
         firebaseAuth=FirebaseAuth.getInstance();
         FirebaseStorage storage =FirebaseStorage.getInstance();
+        final ProgressDialog progressDialog=new ProgressDialog(context);
+        progressDialog.show();
         // Create a storage reference from our app
         StorageReference storageRef = storage.getReference().child("userAudio").child(firebaseAuth.getUid());
         // Get the data from an ImageView as bytes
@@ -56,17 +53,32 @@ public class Fierbase {
         uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(@NonNull final UploadTask.TaskSnapshot snapshot) {
-                 double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
-                ProgressDialog  builder =ProgressDialog.show(context,"plase Wait ",progress+"%",true,false);
-                if(snapshot.){
-                   builder.dismiss();
+                double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+           progressDialog.setMessage(progress+"%");
+                if(progress==100){
+                  progressDialog.dismiss();
+
                 }
 
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
 
+                if(progress==100){
+                    AlertDialog.Builder builder =new AlertDialog.Builder(context);
+                    builder.setCancelable(false);
+                    builder.setTitle(Html.fromHtml("<font color='#509324'>Sucsess</font>"));
+                    builder.setMessage("sucsess");
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).show();
 
-                Log.i("progr", "onProgress: "+progress);
-
-
+                }
             }
         });
 
@@ -166,4 +178,58 @@ public class Fierbase {
         });
     }
 
+
 }
+class MyTask extends AsyncTask<UploadTask.TaskSnapshot,String,String> {
+    ProgressDialog progressDialog;
+    Context context;
+    UploadTask.TaskSnapshot taskSnapshot;
+
+    public MyTask(Context context){
+        this.context=context;
+    }
+
+    @Override
+    protected String doInBackground(UploadTask.TaskSnapshot... taskSnapshots) {
+        double progress = (100.0 * taskSnapshots[0].getBytesTransferred()) / taskSnapshots[0].getTotalByteCount();
+            if(progress==100){
+                return "suc";
+            }
+
+            return "er";
+
+
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        progressDialog =ProgressDialog.show(context,"plase Wait ","Sending",true,false);
+    }
+
+
+
+    @Override
+    protected void onPostExecute(String o) {
+        super.onPostExecute(o);
+        progressDialog.dismiss();
+        if(o.equals("suc")){
+            AlertDialog.Builder builder =new AlertDialog.Builder(context);
+            builder.setCancelable(false);
+            builder.setTitle(Html.fromHtml("<font color='#509324'>Sucsess</font>"));
+            builder.setMessage("sucsess");
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            }).show();
+
+        }else {
+            Toast.makeText(context,"Somthin "+o,Toast.LENGTH_LONG).show();
+            Log.i("Gmail", "onPostExecute: "+o);
+        }
+
+    }
+}
+

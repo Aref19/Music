@@ -118,9 +118,11 @@ public class Video extends AppCompatActivity implements WorkwithFirbase {
 
 
     @Override
-    public void pushAudio(UploadTask.TaskSnapshot snapshot) {
+    public void pushAudio(UploadTask.TaskSnapshot snapshot,Context context) {
 
     }
+
+
 
     @Override
     public void pullFoto(RelativeLayout linearLayout, Context context) {
