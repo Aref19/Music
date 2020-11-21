@@ -819,10 +819,11 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
                    // Fierbase fierbase=new Fierbase();
                     //fierbase.imageStroge(Uri.parse(songinfos.get(position).getPath()),Music.this);
                     //checklong=false;
-                Intent sendIntent = new Intent();
+                Intent sendIntent = new Intent(Intent.ACTION_SEND);
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, songinfos.get(position).getAltist());
-                sendIntent.setType("text/plain");
+
+                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(songinfos.get(position).getPath()));
+                sendIntent.setType("audio/*");
                 Intent shareIntent = Intent.createChooser(sendIntent, null);
                 startActivity(shareIntent);
 
