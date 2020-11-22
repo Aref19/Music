@@ -31,6 +31,7 @@ import com.example.music.R;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Video extends AppCompatActivity implements WorkwithFirbase {
     VideoView videoView;
@@ -145,6 +146,11 @@ public class Video extends AppCompatActivity implements WorkwithFirbase {
             }
         }
 
+
+    }
+
+    @Override
+    public void cutchAduio(String songs,Context context) {
 
     }
 

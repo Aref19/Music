@@ -11,6 +11,7 @@ public class SaveThings {
     private int id;
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
     private byte [] image;
+    private String namesong;
 
     public void setId(int id) {
         this.id = id;
@@ -26,5 +27,13 @@ public class SaveThings {
 
     public byte[] getImage() {
         return image;
+    }
+
+    public String getNamesong() {
+        return namesong;
+    }
+
+    public void setNamesong(String namesong) {
+        this.namesong = namesong;
     }
 }

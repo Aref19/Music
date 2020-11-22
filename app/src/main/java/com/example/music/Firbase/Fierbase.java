@@ -18,6 +18,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.music.AccountUser.Account;
+import com.example.music.AccountUser.AcountUser;
+import com.example.music.DatenBank.LocalDatenBank.SaveThings;
 import com.example.music.DatenBank.SaveInfoUserselect;
 import com.example.music.HauptMain.Music;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,29 +37,40 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class Fierbase {
 
     FirebaseAuth firebaseAuth;
     SaveInfoUserselect saveInfoUserselect;
     Intent intent;
-    public void imageStroge(Uri uri , final Context context) {
-        firebaseAuth=FirebaseAuth.getInstance();
-        FirebaseStorage storage =FirebaseStorage.getInstance();
-        final ProgressDialog progressDialog=new ProgressDialog(context);
+    Date date;
+
+
+    public void imageStroge(Uri uri, final Context context, String name) {
+        date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd 'at' hh:mm:ss ");
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        final ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.show();
         // Create a storage reference from our app
-        StorageReference storageRef = storage.getReference().child("userAudio").child(firebaseAuth.getUid());
+        StorageReference storageRef = storage.getReference().child(firebaseAuth.getUid()).child(name);
         // Get the data from an ImageView as bytes
-       final ProgressDialog builder;
+        final ProgressDialog builder;
         UploadTask uploadTask = storageRef.putFile(Uri.fromFile(new File(uri.toString())));
         uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(@NonNull final UploadTask.TaskSnapshot snapshot) {
                 double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
-           progressDialog.setMessage(progress+"%");
-                if(progress==100){
-                  progressDialog.dismiss();
+                progressDialog.setMessage(progress + "%");
+                if (progress == 100) {
+                    progressDialog.dismiss();
 
                 }
 
@@ -66,8 +80,8 @@ public class Fierbase {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
 
-                if(progress==100){
-                    AlertDialog.Builder builder =new AlertDialog.Builder(context);
+                if (progress == 100) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setCancelable(false);
                     builder.setTitle(Html.fromHtml("<font color='#509324'>Sucsess</font>"));
                     builder.setMessage("sucsess");
@@ -83,17 +97,18 @@ public class Fierbase {
         });
 
     }
+
     public void loadImage(final RelativeLayout linearLayout) {
-        FirebaseStorage storage=FirebaseStorage.getInstance();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference().child("imagesbackground").child("user");
         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 String image = uri.toString();
-                Bitmap bitmap= BitmapFactory.decodeFile(image);
+                Bitmap bitmap = BitmapFactory.decodeFile(image);
                 //Canvas canvas=new Canvas(bitmap);
-                Drawable drawable=new BitmapDrawable(bitmap);
-                    linearLayout.setBackground(drawable);
+                Drawable drawable = new BitmapDrawable(bitmap);
+                linearLayout.setBackground(drawable);
                 Log.i("image1", "onSuccess: " + image);
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -104,8 +119,9 @@ public class Fierbase {
             }
         });
     }
+
     public void loadImage(final RelativeLayout linearLayout, final Context context) {
-        FirebaseStorage storage=FirebaseStorage.getInstance();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference().child("imagesbackground").child("user");
         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -113,7 +129,7 @@ public class Fierbase {
                 Picasso.with(context).load(uri).into(new Target() {
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        Drawable  drawable=new BitmapDrawable(bitmap);
+                        Drawable drawable = new BitmapDrawable(bitmap);
                         linearLayout.setBackground(drawable);
                     }
 
@@ -145,19 +161,20 @@ public class Fierbase {
             }
         });
     }
-    public void signin(final String email, String pass, final Context context){
-        firebaseAuth=FirebaseAuth.getInstance();
-        firebaseAuth.createUserWithEmailAndPassword(email.trim(),pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
+    public void signin(final String email, String pass, final Context context) {
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth.createUserWithEmailAndPassword(email.trim(), pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-               try {
-                   Toast.makeText(context, "successfully registered", Toast.LENGTH_LONG).show();
-                    saveInfoUserselect=SaveInfoUserselect.getContext(context);
-                    saveInfoUserselect.saveUseremail(SaveInfoUserselect.User_email,email);
-                       }catch (Exception e){
-                   Toast.makeText(context, "check your info "+e, Toast.LENGTH_LONG).show();
-               }
+                if (task.isSuccessful()) {
+                    try {
+                        Toast.makeText(context, "successfully registered", Toast.LENGTH_LONG).show();
+                        saveInfoUserselect = SaveInfoUserselect.getContext(context);
+                        saveInfoUserselect.saveUseremail(SaveInfoUserselect.User_email, email);
+                    } catch (Exception e) {
+                        Toast.makeText(context, "check your info " + e, Toast.LENGTH_LONG).show();
+                    }
                 }
 
             }
@@ -165,38 +182,76 @@ public class Fierbase {
 
 
     }
-    public void login(String email, String pass, final Context context){
-        firebaseAuth=FirebaseAuth.getInstance();
-        firebaseAuth.signInWithEmailAndPassword(email.trim(),pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
+    public void login(String email, String pass, final Context context) {
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth.signInWithEmailAndPassword(email.trim(), pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    intent=new Intent(context, Music.class);
+                if (task.isSuccessful()) {
+                    intent = new Intent(context, Music.class);
                     context.startActivity(intent);
                 }
             }
         });
     }
 
+    public void getSongsStorge(List<SaveThings> name, final Context context) {
+        int i=0;
+
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        final ArrayList<String> strings=new ArrayList<>();
+            do {
+            i++;
+            Log.i("songsf", "onSuccess: "+name.get(i).getNamesong().trim());
+                Log.i("songsf", "onSuccess: 0"+name.get(0).getNamesong().trim());
+                Log.i("songsf", "onSuccess: 1"+name.get(1).getNamesong().trim());
+                Log.i("songsf", "onSuccess: "+name.size());
+                Log.i("songsf", "onSuccess: "+i);
+            StorageReference storageR = storage.getReference().child(firebaseAuth.getUid()).child(name.get(i).getNamesong().trim());
+            storageR.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    strings.add(uri.toString());
+                    Log.i("songsur", "onSuccess: "+uri.toString());
+                    AcountUser acountUser = new AcountUser();
+                    if(uri!=null){
+                        Log.i("songsur", "onSuccess: "+uri.toString());
+                        acountUser.cutchAduio(uri.toString(),context);
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.i("songf", "onFailure: "+e.toString());
+                }
+            });
+        }while (i!=name.size()-1);
+
+    }
+
 
 }
-class MyTask extends AsyncTask<UploadTask.TaskSnapshot,String,String> {
+
+class MyTask extends AsyncTask<UploadTask.TaskSnapshot, String, String> {
     ProgressDialog progressDialog;
     Context context;
     UploadTask.TaskSnapshot taskSnapshot;
 
-    public MyTask(Context context){
-        this.context=context;
+    public MyTask(Context context) {
+        this.context = context;
     }
 
     @Override
     protected String doInBackground(UploadTask.TaskSnapshot... taskSnapshots) {
         double progress = (100.0 * taskSnapshots[0].getBytesTransferred()) / taskSnapshots[0].getTotalByteCount();
-            if(progress==100){
-                return "suc";
-            }
+        if (progress == 100) {
+            return "suc";
+        }
 
-            return "er";
+        return "er";
 
 
     }
@@ -204,17 +259,16 @@ class MyTask extends AsyncTask<UploadTask.TaskSnapshot,String,String> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressDialog =ProgressDialog.show(context,"plase Wait ","Sending",true,false);
+        progressDialog = ProgressDialog.show(context, "plase Wait ", "Sending", true, false);
     }
-
 
 
     @Override
     protected void onPostExecute(String o) {
         super.onPostExecute(o);
         progressDialog.dismiss();
-        if(o.equals("suc")){
-            AlertDialog.Builder builder =new AlertDialog.Builder(context);
+        if (o.equals("suc")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setCancelable(false);
             builder.setTitle(Html.fromHtml("<font color='#509324'>Sucsess</font>"));
             builder.setMessage("sucsess");
@@ -225,11 +279,12 @@ class MyTask extends AsyncTask<UploadTask.TaskSnapshot,String,String> {
                 }
             }).show();
 
-        }else {
-            Toast.makeText(context,"Somthin "+o,Toast.LENGTH_LONG).show();
-            Log.i("Gmail", "onPostExecute: "+o);
+        } else {
+            Toast.makeText(context, "Somthin " + o, Toast.LENGTH_LONG).show();
+            Log.i("Gmail", "onPostExecute: " + o);
         }
 
     }
+
 }
 

@@ -33,6 +33,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.music.AccountUser.AcountUser;
 import com.example.music.ButtonView.ViewButton;
 
 import android.widget.AdapterView;
@@ -57,6 +58,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.music.DatenBank.LocalDatenBank.DataBase;
 import com.example.music.DatenBank.SaveInfoUserselect;
 import com.example.music.Firbase.Fierbase;
 import com.example.music.Firbase.WorkwithFirbase;
@@ -64,6 +66,7 @@ import com.example.music.Notifaction.Notification;
 import com.example.music.Notifaction.Tarck;
 import com.example.music.NotificationServiceAction.onClearFromRecentServic;
 import com.example.music.R;
+import com.example.music.Share.Uppop;
 import com.example.music.Video.Video;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -503,6 +506,11 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
             startActivity(intent);
             //   imageholen();
 
+        }else if(item.getItemId()==R.id.account){
+            Intent intent=new Intent(this, AcountUser.class);
+          //DataBase dataBase= DataBase.getInstance(this);
+          // dataBase.daoData().deltetable();
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -772,6 +780,13 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
 
     }
 
+    @Override
+    public void cutchAduio(String songs,Context Context) {
+
+    }
+
+
+
     public void video(View view) {
         Intent intent = new Intent(this, Video.class);
 
@@ -819,6 +834,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
                    // Fierbase fierbase=new Fierbase();
                     //fierbase.imageStroge(Uri.parse(songinfos.get(position).getPath()),Music.this);
                     //checklong=false;
+                /*
                 Intent sendIntent = new Intent(Intent.ACTION_SEND);
                 sendIntent.setAction(Intent.ACTION_SEND);
 
@@ -826,6 +842,12 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
                 sendIntent.setType("audio/*");
                 Intent shareIntent = Intent.createChooser(sendIntent, null);
                 startActivity(shareIntent);
+
+                 */
+                FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
+                Uppop uppop=new Uppop(Music.this,songinfos,position);
+                uppop.show(fragmentManager,null);
+
 
 
                 return true;

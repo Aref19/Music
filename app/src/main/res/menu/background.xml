@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <group>
         <item
             android:title="select yor background"
             android:id="@+id/back">
-
         </item>
+        <item
+            android:title="show account"
+            android:id="@+id/account">
+        </item>
+        <item
+            android:id="@+id/rqier"
+            android:title="TODO"
+            app:showAsAction="ifRoom"
+            android:icon="@drawable/ic_baseline_person_add_24"></item>
     </group>
 
 </menu>

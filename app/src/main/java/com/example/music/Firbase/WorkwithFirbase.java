@@ -8,7 +8,10 @@ import android.widget.RelativeLayout;
 
 import com.google.firebase.storage.UploadTask;
 
+import java.util.List;
+
 public interface WorkwithFirbase {
     void  pushAudio(UploadTask.TaskSnapshot snapshot,Context context);
     void pullFoto(RelativeLayout linearLayout, Context context);
+    void cutchAduio(String songs,Context context);
 }
