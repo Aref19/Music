@@ -21,8 +21,11 @@ import com.example.music.Firbase.Fierbase;
 import com.example.music.HauptMain.Music;
 import com.example.music.HauptMain.Songinfo;
 import com.example.music.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.Inflater;
 
 public class Uppop extends DialogFragment implements View.OnClickListener {
@@ -76,12 +79,17 @@ public class Uppop extends DialogFragment implements View.OnClickListener {
             Fierbase fierbase = new Fierbase();
             this.dismiss();
             fierbase.imageStroge(Uri.parse(songinfos.get(pos).getPath()), context, songinfos.get(pos).getSong_name().trim());
-            saveThings = new SaveThings();
-            saveThings.setNamesong(songinfos.get(pos).getSong_name().trim());
-
-            dataBase.daoData().insert(saveThings);
+            fierbase.chickDataToFDatabase(songinfos.get(pos).getSong_name());
+            Map<String,String> stringStringMap=new HashMap<>();
+            stringStringMap.put("namesong",songinfos.get(pos).getSong_name());
+            stringStringMap.put("Altist",songinfos.get(pos).getAltist());
+           // namesHolder(songinfos.get(pos).getSong_name(),stringStringMap);
+           // saveThings = new SaveThings();
+            //saveThings.setNamesong(songinfos.get(pos).getSong_name().trim());
+          //  dataBase.daoData().insert(saveThings);
         } else if (imageButton.getId() == R.id.frind) {
 
         }
     }
+
 }

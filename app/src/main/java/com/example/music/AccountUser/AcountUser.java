@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.widget.SeekBar;
 
 import com.example.music.DatenBank.LocalDatenBank.DataBase;
 import com.example.music.DatenBank.LocalDatenBank.SaveThings;
+import com.example.music.DatenBank.SaveInfoUserselect;
 import com.example.music.Firbase.Fierbase;
 import com.example.music.Firbase.WorkwithFirbase;
 import com.example.music.R;
@@ -38,16 +41,20 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase {
      ArrayList<String > songslocal,uris;
      ArrayAdapter<String> stringArrayAdapter;
      MediaPlayer mediaPlayer;
+     RelativeLayout relativeLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_acount_user);
+        relativeLayout=findViewById(R.id.relative);
         listView=findViewById(R.id.liedlistonline);
         seekBar=findViewById(R.id.laufmonline);
         DataBase dataBase=DataBase.getInstance(this);
         mediaPlayer=new MediaPlayer();
         songslocal=new ArrayList<>();
         uris=new ArrayList<>();
+        SaveInfoUserselect saveInfoUserselect=SaveInfoUserselect.getContext(this);
+        relativeLayout.setBackground(BitmapDrawable.createFromPath(saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY)));
         for (int i=0;i<dataBase.daoData().getlist().size();i++){
             songslocal.add(dataBase.daoData().getlist().get(i).getNamesong());
         }
@@ -62,7 +69,7 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("uros", "onItemClick: "+uris.get(0));
+
 
                 try {
                     mediaPlayer = new MediaPlayer();
@@ -109,8 +116,6 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase {
     }
     public void getSongsStorge(List<SaveThings> name, final Context context) {
         int i=0;
-
-
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
         final ArrayList<String> strings=new ArrayList<>();

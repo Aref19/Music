@@ -20,15 +20,27 @@ import androidx.annotation.NonNull;
 
 import com.example.music.AccountUser.Account;
 import com.example.music.AccountUser.AcountUser;
+import com.example.music.DatenBank.LocalDatenBank.DataBase;
 import com.example.music.DatenBank.LocalDatenBank.SaveThings;
 import com.example.music.DatenBank.SaveInfoUserselect;
 import com.example.music.HauptMain.Music;
+import com.example.music.HauptMain.Songinfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -41,7 +53,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Fierbase {
 
@@ -164,7 +178,7 @@ public class Fierbase {
 
     public void signin(final String email, String pass, final Context context) {
         firebaseAuth = FirebaseAuth.getInstance();
-        firebaseAuth.createUserWithEmailAndPassword(email.trim(), pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        firebaseAuth.signInWithEmailAndPassword(email.trim(), pass.trim()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
@@ -172,11 +186,18 @@ public class Fierbase {
                         Toast.makeText(context, "successfully registered", Toast.LENGTH_LONG).show();
                         saveInfoUserselect = SaveInfoUserselect.getContext(context);
                         saveInfoUserselect.saveUseremail(SaveInfoUserselect.User_email, email);
+                        Intent intent=new Intent(context,Music.class);
+                        context.startActivity(intent);
                     } catch (Exception e) {
                         Toast.makeText(context, "check your info " + e, Toast.LENGTH_LONG).show();
                     }
                 }
 
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(context, "check your info " + e, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -231,9 +252,45 @@ public class Fierbase {
         }while (i!=name.size()-1);
 
     }
+    public void chickDataToFDatabase(String nameSong){
+        FirebaseDatabase.getInstance().getReference().child(firebaseAuth.getUid()).child(firebaseAuth.getUid()).setValue(nameSong);
+        FirebaseFirestore fR = FirebaseFirestore.getInstance();
+        final DocumentReference documentReference = fR.collection(firebaseAuth.getUid()).document(nameSong);
+        Map<String,String> stringStringMap=new HashMap<>();
+        documentReference.set(stringStringMap);
 
+    }
+    public void namesHolder( final Context context) {
+        //online
+        /*
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore fR = FirebaseFirestore.getInstance();
+        final DocumentReference documentReference = fR.collection("user").document(namesong);
+        documentReference.set(ditals);
 
-}
+         */
+        FirebaseFirestore fR = FirebaseFirestore.getInstance();
+        //dowland
+        firebaseAuth=FirebaseAuth.getInstance();
+
+        fR.collection(firebaseAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    DataBase dataBase=DataBase.getInstance(context);
+                    dataBase.daoData().deltetable();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        //save in database
+                        SaveThings saveThings=new SaveThings();
+                        saveThings.setNamesong(document.getId());
+                        dataBase.daoData().insert(saveThings);
+                        Log.d("songss", document.getId() + " => " + document.getData());
+                    }
+                }
+            }
+        });
+    }}
+
 
 class MyTask extends AsyncTask<UploadTask.TaskSnapshot, String, String> {
     ProgressDialog progressDialog;
@@ -285,6 +342,7 @@ class MyTask extends AsyncTask<UploadTask.TaskSnapshot, String, String> {
         }
 
     }
+
 
 }
 

@@ -105,6 +105,8 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
         dataBase = DataBase.getInstance(this);
         im = findViewById(R.id.imageView2);
         //dataBase.daoData().deltetable();
+        selecttext.setSelection(saveInfoUserselect.loadspinnerSelection(SaveInfoUserselect.USER_Int_Spinnerindex));
+        selectbutton.setSelection(saveInfoUserselect.loadspinnerSelection(SaveInfoUserselect.USER_Intbutton_Spinnerindex));
         //image();
 
 
@@ -132,8 +134,7 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String[] colorsname = getResources().getStringArray(R.array.colorsarra);
         String[] colorsnameofButton = getResources().getStringArray(R.array.colorsarrabutton);
-        selecttext.setSelection(saveInfoUserselect.loadspinnerSelection(SaveInfoUserselect.USER_Int_Spinnerindex));
-        selectbutton.setSelection(saveInfoUserselect.loadspinnerSelection(SaveInfoUserselect.USER_Intbutton_Spinnerindex));
+
         String[] colorsButton = {"#2FD29F", "#2F519F", "#BE519F", "#E4D29F", "#5C8AFF"};
         String[] colorsitems = {"#FFFFFFFF", "#00FF00", "#FF0000", "#0000FF", "#000000"};
 

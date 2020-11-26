@@ -19,6 +19,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.media.AudioManager;
 import android.os.Messenger;
+import android.security.keystore.StrongBoxUnavailableException;
 import android.view.View;
 
 import android.graphics.ColorFilter;
@@ -72,6 +73,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -83,6 +85,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class Music extends AppCompatActivity implements Playble, WorkwithFirbase, AudioManager.OnAudioFocusChangeListener {
@@ -124,7 +127,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         premtion();
 
 
-        getallsong();
+
         sekk(seekBar);
         bause = findViewById(R.id.pause);
         relativeLayout = findViewById(R.id.relative);
@@ -146,6 +149,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
 
         //}
 
+
         drawables = new GradientDrawable[3];
         drawables[0] = (GradientDrawable) bause.getBackground().mutate();
         drawables[1] = (GradientDrawable) next.getBackground().mutate();
@@ -165,6 +169,8 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         }
 
  */
+     //   listfullen("main");
+       namesHolder();
 
 
     }
@@ -184,7 +190,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
     }
 
 
-    private void getallsong() {
+    private void getallsong(Context context) {
         songinfos = new ArrayList<>();
         Uri allsong = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 
@@ -208,6 +214,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
                 } while (crusor.moveToNext());
                 //       Toast.makeText(this,"sdaaaaaaa"+songinfos.get(0).getSong_name(),Toast.LENGTH_LONG).show();
                 Adapter adabter = new Adapter(songinfos, this);
+
 
                 listView.setAdapter(adabter);
                 list(listView, songinfos);
@@ -248,8 +255,10 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
     }
 
     private void premtion() {
+        boolean sta;
         if (ContextCompat.checkSelfPermission(Music.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(Music.this, Manifest.permission.MANAGE_DOCUMENTS) == PackageManager.PERMISSION_GRANTED) {
-
+           listfullen("pre");
+          Toast.makeText(this,"pre",Toast.LENGTH_LONG).show();
         } else {
             requstpremstion();
         }
@@ -257,6 +266,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
     }
 
     private void requstpremstion() {
+
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.MANAGE_DOCUMENTS)) {
             new AlertDialog.Builder(this)
                     .setTitle("premision")
@@ -264,8 +274,9 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
                     .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                           listfullen("ok");
                             ActivityCompat.requestPermissions(Music.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MANAGE_DOCUMENTS}, prmistion);
-
+                            Toast.makeText(getApplication(),"pre",Toast.LENGTH_LONG).show();
                         }
                     }).setNegativeButton("no", new DialogInterface.OnClickListener() {
                 @Override
@@ -275,9 +286,38 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
             }).create().show();
 
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MANAGE_DOCUMENTS}, prmistion);
+          ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MANAGE_DOCUMENTS}, prmistion);
+
+
+
         }
     }
+    private void listfullen(String s){
+        Log.i("warum", "listfullen: "+s);
+        getallsong(Music.this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    listfullen("ok");
+                }  else {
+                    // Explain to the user that the feature is unavailable because
+                    // the features requires a permission that the user has denied.
+                    // At the same time, respect the user's decision. Don't link to
+                    // system settings in an effort to convince the user to change
+                    // their decision.
+                }
+                return;
+        }
+        // Other 'case' lines to check for other
+        // permissions this app might request.
+    }
+
 
     private void sekk(SeekBar seekBar) {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -853,6 +893,12 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
                 return true;
             }
         });
+
+    }
+    private void namesHolder(){
+        FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
+        Fierbase fierbase=new Fierbase();
+        fierbase.namesHolder(this);
 
 
     }
