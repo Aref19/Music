@@ -17,8 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".Start.Start2"></activity>
+        <activity android:name=".AccountUser.AcountUser"></activity>
+        <activity android:name=".Start.Start2" />
         <activity android:name=".HauptMain.Music" />
         <activity android:name=".Start.Regstieren" />
         <activity android:name=".Start.Login" />
@@ -36,7 +36,6 @@
             android:name=".Start.Start"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name">
->>>>>>> dfe7ddc8432e1e1b8e9469bedaa7f897f9c819b4
             <intent-filter>
                 <action android:name="android.intent.action.OPEN_DOCUMENT" />
                 <action android:name="android.intent.action.MAIN" />

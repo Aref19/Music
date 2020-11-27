@@ -15,10 +15,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-        <VideoView
+        <com.example.music.Video.MyVideoView
             android:id="@+id/videoView3"
-            android:layout_width="189dp"
-            android:layout_height="148dp"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:padding="10dp" />

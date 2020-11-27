@@ -3,6 +3,7 @@ package com.example.music.HauptMain;
 import android.Manifest;
 
 import android.app.NotificationManager;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,6 +19,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.media.AudioManager;
 import android.os.Messenger;
+import android.security.keystore.StrongBoxUnavailableException;
 import android.view.View;
 
 import android.graphics.ColorFilter;
@@ -32,6 +34,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.music.AccountUser.AcountUser;
 import com.example.music.ButtonView.ViewButton;
 
 import android.widget.AdapterView;
@@ -40,6 +43,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -55,6 +59,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.music.DatenBank.LocalDatenBank.DataBase;
 import com.example.music.DatenBank.SaveInfoUserselect;
 import com.example.music.Firbase.Fierbase;
 import com.example.music.Firbase.WorkwithFirbase;
@@ -62,10 +67,13 @@ import com.example.music.Notifaction.Notification;
 import com.example.music.Notifaction.Tarck;
 import com.example.music.NotificationServiceAction.onClearFromRecentServic;
 import com.example.music.R;
+import com.example.music.Share.Uppop;
 import com.example.music.Video.Video;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -77,6 +85,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class Music extends AppCompatActivity implements Playble, WorkwithFirbase, AudioManager.OnAudioFocusChangeListener {
@@ -99,7 +108,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
     GradientDrawable[] drawables;
     TextView name;
     AudioManager mAudioManager;
-    boolean isMusicActive,checklong;
+    boolean isMusicActive, checklong;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -118,7 +127,6 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         premtion();
 
 
-        getallsong();
         sekk(seekBar);
         bause = findViewById(R.id.pause);
         relativeLayout = findViewById(R.id.relative);
@@ -132,13 +140,14 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         notification.creatchanel();
         seekBar.setMax(0);
         saveInfoUserselect = SaveInfoUserselect.getContext(this);
-        checklong=false;
+        checklong = false;
 
         //   if(mAudioManager.requestAudioFocus(this,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
         //     list(listView, songinfos);
 
 
         //}
+
 
         drawables = new GradientDrawable[3];
         drawables[0] = (GradientDrawable) bause.getBackground().mutate();
@@ -159,6 +168,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         }
 
  */
+        //   listfullen("main");
 
 
     }
@@ -178,7 +188,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
     }
 
 
-    private void getallsong() {
+    private void getallsong(Context context) {
         songinfos = new ArrayList<>();
         Uri allsong = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 
@@ -203,6 +213,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
                 //       Toast.makeText(this,"sdaaaaaaa"+songinfos.get(0).getSong_name(),Toast.LENGTH_LONG).show();
                 Adapter adabter = new Adapter(songinfos, this);
 
+
                 listView.setAdapter(adabter);
                 list(listView, songinfos);
             }
@@ -216,34 +227,35 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                      try {
-                          sitution = position;
-                          prograss = position;
-                          nextint = position;
-                          lastint = position;
-                          mediaPlayer.stop();
-                          mediaPlayer = new MediaPlayer();
-                          mediaPlayer.setDataSource(songinfos.get(position).getPath());
-                          mediaPlayer.prepare();
-                          mediaPlayer.start();
-                          bause.setImageResource(R.drawable.start);
-                          isselect = true;
-                          isMusicActive = true;
-                          seekBar.setMax(mediaPlayer.getDuration());
-                          Log.i("warum", "onTaskpause: " + "von hierlist");
-
-                          notification.greatNafi(0, songinfos.get(position), R.drawable.ic_baseline_pause_circle_filled_24, position, songinfos.size());
-                      } catch (IOException e) {
-                          e.printStackTrace();
-                      }
+                try {
+                    sitution = position;
+                    prograss = position;
+                    nextint = position;
+                    lastint = position;
+                    mediaPlayer.stop();
+                    mediaPlayer = new MediaPlayer();
+                    mediaPlayer.setDataSource(songinfos.get(position).getPath());
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
+                    bause.setImageResource(R.drawable.start);
+                    isselect = true;
+                    isMusicActive = true;
+                    seekBar.setMax(mediaPlayer.getDuration());
+                    Log.i("warum", "onTaskpause: " + "von hierlist");
+                    notification.greatNafi(0, songinfos.get(position), R.drawable.ic_baseline_pause_circle_filled_24, position, songinfos.size());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
     }
 
     private void premtion() {
+        boolean sta;
         if (ContextCompat.checkSelfPermission(Music.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(Music.this, Manifest.permission.MANAGE_DOCUMENTS) == PackageManager.PERMISSION_GRANTED) {
-
+            listfullen("pre");
+            Toast.makeText(this, "pre", Toast.LENGTH_LONG).show();
         } else {
             requstpremstion();
         }
@@ -251,6 +263,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
     }
 
     private void requstpremstion() {
+
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.MANAGE_DOCUMENTS)) {
             new AlertDialog.Builder(this)
                     .setTitle("premision")
@@ -258,8 +271,9 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
                     .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            listfullen("ok");
                             ActivityCompat.requestPermissions(Music.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MANAGE_DOCUMENTS}, prmistion);
-
+                            Toast.makeText(getApplication(), "pre", Toast.LENGTH_LONG).show();
                         }
                     }).setNegativeButton("no", new DialogInterface.OnClickListener() {
                 @Override
@@ -270,8 +284,37 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
 
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MANAGE_DOCUMENTS}, prmistion);
+
+
         }
     }
+
+    private void listfullen(String s) {
+        Log.i("warum", "listfullen: " + s);
+        getallsong(Music.this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    listfullen("ok");
+                } else {
+                    // Explain to the user that the feature is unavailable because
+                    // the features requires a permission that the user has denied.
+                    // At the same time, respect the user's decision. Don't link to
+                    // system settings in an effort to convince the user to change
+                    // their decision.
+                }
+                return;
+        }
+        // Other 'case' lines to check for other
+        // permissions this app might request.
+    }
+
 
     private void sekk(SeekBar seekBar) {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -500,6 +543,11 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
             startActivity(intent);
             //   imageholen();
 
+        } else if (item.getItemId() == R.id.account) {
+            Intent intent = new Intent(this, AcountUser.class);
+            //DataBase dataBase= DataBase.getInstance(this);
+            // dataBase.daoData().deltetable();
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -733,7 +781,8 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
 
 
     @Override
-    public void pushAudio(UploadTask.TaskSnapshot snapshot) {
+    public void pushAudio(UploadTask.TaskSnapshot snapshot, Context context) {
+
 
     }
 
@@ -767,6 +816,12 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
 
 
     }
+
+    @Override
+    public void cutchAduio(String songs, Context Context) {
+
+    }
+
 
     public void video(View view) {
         Intent intent = new Intent(this, Video.class);
@@ -804,23 +859,36 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         }
 
     }
-    private void longdruck(ListView listView){
-        Log.i("long", "longdruck: "+"rstrzt");
+
+    private void longdruck(ListView listView) {
+        Log.i("long", "longdruck: " + "rstrzt");
 
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id){
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-                    Fierbase fierbase=new Fierbase();
-                    fierbase.imageStroge(Uri.parse(songinfos.get(position).getPath()),Music.this);
-                    checklong=false;
+                // Fierbase fierbase=new Fierbase();
+                //fierbase.imageStroge(Uri.parse(songinfos.get(position).getPath()),Music.this);
+                //checklong=false;
+                /*
+                Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                sendIntent.setAction(Intent.ACTION_SEND);
+
+                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(songinfos.get(position).getPath()));
+                sendIntent.setType("audio/*");
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
+
+                 */
+                FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
+                Uppop uppop = new Uppop(Music.this, songinfos, position);
+                uppop.show(fragmentManager, null);
 
 
                 return true;
             }
         });
-
 
     }
 
