@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    tools:context=".Start.Regstieren"
+    android:gravity="center"
+    android:background="@drawable/vogle"
+   >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content"
+        android:background="@color/weiss"
+        android:gravity="center"
+        android:orientation="vertical"
+
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_gmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:inputType="textEmailAddress"
+            android:drawableStart="@drawable/ic_baseline_mail_outline_24"
+            android:gravity="center"
+            android:hint="gmail"
+
+
+            android:padding="18dp" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_password_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableStart="@drawable/ic_baseline_format_textdirection_l_to_r_24"
+            android:gravity="center"
+            android:hint="Passowrd"
+            android:inputType="textPassword"
+            android:padding="18dp" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_passwordwider_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableStart="@drawable/ic_baseline_format_textdirection_l_to_r_24"
+            android:gravity="center"
+            android:hint="Passowrd Wieder"
+            android:inputType="textPassword"
+            android:padding="18dp" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="rgistieren"
+            android:text="Rgistieren" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

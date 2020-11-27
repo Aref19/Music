@@ -4,11 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Video.Video">
+    tools:context=".Start.Start"
+    android:background="@drawable/app">
 
-
-    <VideoView
-        android:id="@+id/videoView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 </RelativeLayout>

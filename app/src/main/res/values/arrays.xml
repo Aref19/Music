@@ -1,2 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+
+    <array name="colorsarra">
+        <item  > weiss </item>
+        <item > green </item>
+        <item > red </item>
+        <item > balu </item>
+        <item > schwarz </item>
+    </array>
+    <array name="colorsarrabutton">
+        <item  > q </item>
+        <item >w </item>
+        <item > e </item>
+        <item > balu </item>
+        <item > schwarz </item>
+    </array>
+
+</resources>

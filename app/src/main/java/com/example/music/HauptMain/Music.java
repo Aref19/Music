@@ -1,6 +1,7 @@
 package com.example.music.HauptMain;
 
 import android.Manifest;
+
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,7 +14,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
+import android.media.AudioManager;
 import android.os.Messenger;
 import android.view.View;
 
@@ -35,6 +38,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -48,13 +52,25 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.music.DatenBank.SaveInfoUserselect;
+import com.example.music.Firbase.Fierbase;
+import com.example.music.Firbase.WorkwithFirbase;
 import com.example.music.Notifaction.Notification;
 import com.example.music.Notifaction.Tarck;
 import com.example.music.NotificationServiceAction.onClearFromRecentServic;
 import com.example.music.R;
+import com.example.music.Video.Video;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -63,7 +79,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Music extends AppCompatActivity implements Playble {
+public class Music extends AppCompatActivity implements Playble, WorkwithFirbase, AudioManager.OnAudioFocusChangeListener {
     SeekBar seekBar;
     MediaPlayer mediaPlayer = new MediaPlayer();
     Cursor crusor;
@@ -80,14 +96,16 @@ public class Music extends AppCompatActivity implements Playble {
     boolean isplaing, isselect;
     Notification notification;
     SaveInfoUserselect saveInfoUserselect;
-    GradientDrawable[]drawables;
+    GradientDrawable[] drawables;
     TextView name;
-
+    AudioManager mAudioManager;
+    boolean isMusicActive,checklong;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -95,11 +113,10 @@ public class Music extends AppCompatActivity implements Playble {
         listView = findViewById(R.id.liedlist);
         int d = R.drawable.buton;
 
-
-
         handler = new Handler();
         handel = new Handler();
         premtion();
+
 
         getallsong();
         sekk(seekBar);
@@ -115,11 +132,25 @@ public class Music extends AppCompatActivity implements Playble {
         notification.creatchanel();
         seekBar.setMax(0);
         saveInfoUserselect = SaveInfoUserselect.getContext(this);
-        drawables=new GradientDrawable[3];
-        drawables[0]=(GradientDrawable) bause.getBackground().mutate();
-        drawables[1]=(GradientDrawable) next.getBackground().mutate();
-        drawables[2]=(GradientDrawable) last.getBackground().mutate();
+        checklong=false;
+
+        //   if(mAudioManager.requestAudioFocus(this,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
+        //     list(listView, songinfos);
+
+
+        //}
+
+        drawables = new GradientDrawable[3];
+        drawables[0] = (GradientDrawable) bause.getBackground().mutate();
+        drawables[1] = (GradientDrawable) next.getBackground().mutate();
+        drawables[2] = (GradientDrawable) last.getBackground().mutate();
         buttonColor();
+        longdruck(listView);
+        if (!saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("")) {
+            pullFoto(relativeLayout, this);
+        }
+
+        //loadImage(relativeLayout);
 
 /*
         try {background();
@@ -130,19 +161,19 @@ public class Music extends AppCompatActivity implements Playble {
  */
 
 
-
-
-
-
     }
 
     @Override
     protected void onPause() {
+
         super.onPause();
         Toast.makeText(this, "onPause", Toast.LENGTH_LONG).show();
         sekk(seekBar);
         buttonClick();
         current();
+
+        //  audioManger();
+        // uperpruf();
 
     }
 
@@ -185,25 +216,27 @@ public class Music extends AppCompatActivity implements Playble {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                try {
-                    sitution = position;
-                    prograss = position;
-                    nextint = position;
-                    lastint = position;
-                    mediaPlayer.stop();
-                    mediaPlayer = new MediaPlayer();
-                    mediaPlayer.setDataSource(songinfos.get(position).getPath());
-                    mediaPlayer.prepare();
-                    mediaPlayer.start();
-                    bause.setImageResource(R.drawable.start);
-                    isselect = true;
-                    seekBar.setMax(mediaPlayer.getDuration());
-                    Log.i("warum", "onTaskpause: " + "von hierlist");
+                      try {
+                          sitution = position;
+                          prograss = position;
+                          nextint = position;
+                          lastint = position;
+                          mediaPlayer.stop();
+                          mediaPlayer = new MediaPlayer();
+                          mediaPlayer.setDataSource(songinfos.get(position).getPath());
+                          mediaPlayer.prepare();
+                          mediaPlayer.start();
+                          bause.setImageResource(R.drawable.start);
+                          isselect = true;
+                          isMusicActive = true;
+                          seekBar.setMax(mediaPlayer.getDuration());
+                          Log.i("warum", "onTaskpause: " + "von hierlist");
 
-                    notification.greatNafi(0, songinfos.get(position), R.drawable.ic_baseline_pause_circle_filled_24, position, songinfos.size());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                          notification.greatNafi(0, songinfos.get(position), R.drawable.ic_baseline_pause_circle_filled_24, position, songinfos.size());
+                      } catch (IOException e) {
+                          e.printStackTrace();
+                      }
+
             }
         });
     }
@@ -263,6 +296,7 @@ public class Music extends AppCompatActivity implements Playble {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 mediaPlayer.seekTo(postion);
+
 
                 ;
 
@@ -388,21 +422,34 @@ public class Music extends AppCompatActivity implements Playble {
 
     @Override
     protected void onStop() {
+
         super.onStop();
         sekk(seekBar);
         current();
         Toast.makeText(this, "onStop", Toast.LENGTH_LONG).show();
+
+
+        //  uperpruf();
     }
+
+    @Override
+    protected void onStart() {
+
+        super.onStart();
+    }
+
 
     @Override
     protected void onRestart() {
         super.onRestart();
         buttonColor();
+        pullFoto(relativeLayout, this);
+        // loadImage(relativeLayout);
         Adapter adabter = new Adapter(songinfos, this);
 
         listView.setAdapter(adabter);
         list(listView, songinfos);
-int s;
+
         seekBar = findViewById(R.id.laufm);
         listView = findViewById(R.id.liedlist);
         handler = new Handler();
@@ -418,29 +465,26 @@ int s;
         buttonClick();
         Toast.makeText(this, "onRestart", Toast.LENGTH_LONG).show();
         current();
-        int j;
     }
 
-
 /*
-        @Override
-        protected void onResume() {
-            super.onResume();
-            seekBar = findViewById(R.id.laufm);
-            listView = findViewById(R.id.liedlist);
-            handler = new Handler();
-            handel = new Handler();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        seekBar = findViewById(R.id.laufm);
+        listView = findViewById(R.id.liedlist);
+        handler = new Handler();
+        handel = new Handler();
 
-            sekk(seekBar);
-            bause = findViewById(R.id.pause);
-            last = findViewById(R.id.start);
-            next = findViewById(R.id.stop);
-            buttonClick();
-            Toast.makeText(this, "onRestart", Toast.LENGTH_LONG).show();
-            current();
-        }
+        sekk(seekBar);
+        // audioManger();
+        buttonClick();
+        Toast.makeText(this, "onRestart", Toast.LENGTH_LONG).show();
+        current();
+    }
 
  */
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -465,6 +509,7 @@ int s;
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, 1);
+        finish();
     }
 
     @Override
@@ -489,9 +534,7 @@ int s;
                     onTaskprovis();
                     break;
                 case Notification.actionplay:
-
                     onTaskpause();
-
                     //  onTaskplay();
 
                     break;
@@ -511,6 +554,8 @@ int s;
         notification.creatchanel();
         notification.greatNafi(0, songinfos.get(sitution), R.drawable.start, postion, tarcks.size() - 1);
         isplaing = true;
+        isMusicActive = true;
+        //audioManger();
 
 
     }
@@ -519,7 +564,9 @@ int s;
     public void onTaskprovis() {
         lastint--;
         nextint--;
+        isMusicActive = true;
         isselect = true;
+        //  audioManger();
         Log.i("warum", "onTaskpause: " + "von hier0");
         if (sitution == 0) {
             sitution = songinfos.size() - 1;
@@ -555,8 +602,9 @@ int s;
         nextint++;
         lastint++;
         isselect = true;
+        isMusicActive = true;
         Log.i("warum", "onTaskpause: " + "von hier1");
-
+        //audioManger();
         if (sitution == songinfos.size() - 1) {
             sitution = 0;
         } else {
@@ -590,8 +638,10 @@ int s;
         mediaPlayer.pause();
         notification.creatchanel();
         Log.i("warum", "onTaskpause: " + "von hier2");
-        if (sorstop) {
 
+        //   audioManger();
+        if (sorstop) {
+            isMusicActive = true;
             current();
             mediaPlayer.start();
             bause.setImageResource(R.drawable.start);
@@ -599,6 +649,7 @@ int s;
             Log.i("hier", "onTaskpause: " + "hier1");
             notification.greatNafi(0, songinfos.get(sitution), R.drawable.ic_baseline_pause_circle_filled_24, sitution, songinfos.size() - 1);
         } else if (isselect) {
+            isMusicActive = false;
             bause.setImageResource(R.drawable.stop);
             notification.greatNafi(0, songinfos.get(sitution), R.drawable.ic_baseline_play_circle_outline_24, sitution, songinfos.size() - 1);
             Log.i("hier", "onTaskpause: " + "hier2");
@@ -619,6 +670,7 @@ int s;
     protected void onDestroy() {
 
         super.onDestroy();
+        isMusicActive = false;
 
         NotificationManager notificationManager = getApplication().getSystemService(NotificationManager.class);
         notificationManager.cancelAll();
@@ -642,43 +694,138 @@ int s;
              */
 
 
-
             //relativeLayout.setImageBitmap(myBitmap);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 
-            Log.i("Path", "onActivityResult: " + uri);
-            Drawable bg = null;
-            InputStream inputStream = null;
-            try {
-                getApplicationContext().getContentResolver().takePersistableUriPermission(Uri.parse( Uri.decode(uri.toString())), Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                inputStream = getContentResolver().openInputStream(uri);
-                Log.i("inputS", "onActivityResult: " + inputStream);
-                bg = Drawable.createFromStream(inputStream, uri.toString());
+                Log.i("Path", "onActivityResult: " + uri);
+                Drawable bg = null;
+                InputStream inputStream = null;
+                try {
+                    getApplicationContext().getContentResolver().takePersistableUriPermission(Uri.parse(Uri.decode(uri.toString())), Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    inputStream = getContentResolver().openInputStream(uri);
+                    Log.i("inputS", "onActivityResult: " + inputStream);
+                    bg = Drawable.createFromStream(inputStream, uri.toString());
 
-            } catch (FileNotFoundException e) {
-               relativeLayout.setBackgroundResource(R.drawable.n);
+                } catch (FileNotFoundException e) {
+                    relativeLayout.setBackgroundResource(R.drawable.n);
+                }
+                relativeLayout.setBackground(bg);
+
             }
-            relativeLayout.setBackground(bg);
-
-        }
-           //relativeLayout.setBackground(bg);
+            //relativeLayout.setBackground(bg);
         }
 
 
-            //   }
+        //   }
 
 
-            //  this.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        //  this.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+    }
+
+    private void buttonColor() {
+        if (!saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY).equals("")) {
+            drawables[0].setColor(Color.parseColor(saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY)));
+            drawables[1].setColor(Color.parseColor(saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY)));
+            drawables[2].setColor(Color.parseColor(saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY)));
+            ;
         }
-        private void buttonColor() {
-            if (!saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY).equals("")) {
-                drawables[0].setColor(Color.parseColor(saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY)));
-                drawables[1].setColor(Color.parseColor(saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY)));
-                drawables[2].setColor(Color.parseColor(saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY)));
+    }
+
+
+    @Override
+    public void pushAudio(UploadTask.TaskSnapshot snapshot) {
+
+    }
+
+    @Override
+    public void pullFoto(RelativeLayout linearLayout, Context context) {
+        /*
+        Fierbase fierbase=new Fierbase();
+        fierbase.loadImage(linearLayout,context);
+        linearLayout.setImageBitmap(BitmapFactory.decodeFile( saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY)));
+
+         */
+
+        if (saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.n") || saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.app")) {
+            Log.i("draw1", "pullFoto: ");
+            if (saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.n")) {
+                Log.i("draw2", "pullFoto: ");
+                linearLayout.setBackground(getDrawable(R.drawable.n));
+            } else if (saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.app")) {
+                Log.i("draw3", "pullFoto: ");
+                linearLayout.setBackground(getDrawable(R.drawable.app));
             }
+        } else if (!saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.n") || saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.app")) {
+            Drawable drawable = BitmapDrawable.createFromPath(saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY));
+            if (drawable == null) {
+                relativeLayout.setBackground(getDrawable(R.drawable.n));
+
+            } else {
+                linearLayout.setBackground(drawable);
+            }
+        }
+
+
+    }
+
+    public void video(View view) {
+        Intent intent = new Intent(this, Video.class);
+
+        startActivity(intent);
+
+
+    }
+
+    @Override
+    public void onAudioFocusChange(int focusChange) {
+        if (isMusicActive) {
+            if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                mediaPlayer.pause();
+                Log.i("onfuc", "onAudioFocusChange: " + "1");
+            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                mediaPlayer.start();
+                sekk(seekBar);
+                current();
+                Log.i("onfuc", "onAudioFocusChange: " + "2");
+            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                onDestroy();
+                Log.i("onfuc", "onAudioFocusChange: " + "3");
+            }
+        }
+    }
+
+    public void audioManger() {
+        try {
+            mAudioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
+            mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+
+        } catch (IllegalStateException e) {
+            Log.i("exs", "audioManger: " + e.toString());
         }
 
     }
+    private void longdruck(ListView listView){
+        Log.i("long", "longdruck: "+"rstrzt");
+
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id){
+
+                    Fierbase fierbase=new Fierbase();
+                    fierbase.imageStroge(Uri.parse(songinfos.get(position).getPath()),Music.this);
+                    checklong=false;
+
+
+                return true;
+            }
+        });
+
+
+    }
+
+}
+
 
 
 
