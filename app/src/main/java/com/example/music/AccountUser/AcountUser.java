@@ -67,6 +67,7 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
         namesHolder();
         DataBase dataBase = DataBase.getInstance(this);
         mediaPlayer = new MediaPlayer();
+
         songslocal = new ArrayList<>();
         uris = new ArrayList<>();
         SaveInfoUserselect saveInfoUserselect = SaveInfoUserselect.getContext(this);
@@ -92,8 +93,8 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
             @SuppressLint("ResourceType")
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                  play=true;
-             //     stop.setImageResource(R.id.stop);
+
+                 stop.setImageResource(R.drawable.start);
                 getSongsStorge(songslocal.get(position));
 
 
@@ -234,12 +235,15 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
 
     }
     private void stop(){
+        Log.i("jetzt" , "onTaskplay: "+play);
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(play){
                 onTaskpause();
+                    play=false;
                 }else {
+                    play=true;
                     onTaskplay();
                 }
             }
@@ -250,7 +254,9 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
     @Override
     public void onTaskplay() {
       mediaPlayer.start();
-      stop.setImageResource(R.drawable.stop);
+        Log.i("jetzt" , "onTaskplay: "+"von play");
+      stop.setImageResource(R.drawable.start);
+
     }
 
     @Override
@@ -265,7 +271,8 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
 
     @Override
     public void onTaskpause() {
+
         mediaPlayer.pause();
-        stop.setImageResource(R.drawable.start);
+        stop.setImageResource(R.drawable.stop);
     }
 }

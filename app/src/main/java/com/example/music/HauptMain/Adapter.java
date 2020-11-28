@@ -52,6 +52,7 @@ public class Adapter extends BaseAdapter {
         TextView namedersinger=view.findViewById(R.id.lauf);
          namedersong.setText(areArrayList.get(position).getSong_name().toString());
          namedersinger.setText(areArrayList.get(position).getAlbum_name());
+         namedersinger.setText(areArrayList.get(position).getAlbum_name());
          textColor();
         return view;
     }
