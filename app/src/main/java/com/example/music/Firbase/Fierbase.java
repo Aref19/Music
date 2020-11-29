@@ -81,10 +81,12 @@ public class Fierbase {
         uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(@NonNull final UploadTask.TaskSnapshot snapshot) {
+
                 double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
                 progressDialog.setMessage(progress + "%");
                 if (progress == 100) {
                     progressDialog.dismiss();
+
 
                 }
 

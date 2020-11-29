@@ -108,7 +108,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
     GradientDrawable[] drawables;
     TextView name;
     AudioManager mAudioManager;
-    boolean isMusicActive,checklong;
+    boolean isMusicActive, checklong;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -127,7 +127,6 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         premtion();
 
 
-
         sekk(seekBar);
         bause = findViewById(R.id.pause);
         relativeLayout = findViewById(R.id.relative);
@@ -141,7 +140,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         notification.creatchanel();
         seekBar.setMax(0);
         saveInfoUserselect = SaveInfoUserselect.getContext(this);
-        checklong=false;
+        checklong = false;
 
         //   if(mAudioManager.requestAudioFocus(this,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
         //     list(listView, songinfos);
@@ -169,8 +168,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         }
 
  */
-     //   listfullen("main");
-       namesHolder();
+        //   listfullen("main");
 
 
     }
@@ -229,26 +227,25 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                      try {
-                          sitution = position;
-                          prograss = position;
-                          nextint = position;
-                          lastint = position;
-                          mediaPlayer.stop();
-                          mediaPlayer = new MediaPlayer();
-                          mediaPlayer.setDataSource(songinfos.get(position).getPath());
-                          mediaPlayer.prepare();
-                          mediaPlayer.start();
-                          bause.setImageResource(R.drawable.start);
-                          isselect = true;
-                          isMusicActive = true;
-                          seekBar.setMax(mediaPlayer.getDuration());
-                          Log.i("warum", "onTaskpause: " + "von hierlist");
-
-                          notification.greatNafi(0, songinfos.get(position), R.drawable.ic_baseline_pause_circle_filled_24, position, songinfos.size());
-                      } catch (IOException e) {
-                          e.printStackTrace();
-                      }
+                try {
+                    sitution = position;
+                    prograss = position;
+                    nextint = position;
+                    lastint = position;
+                    mediaPlayer.stop();
+                    mediaPlayer = new MediaPlayer();
+                    mediaPlayer.setDataSource(songinfos.get(position).getPath());
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
+                    bause.setImageResource(R.drawable.start);
+                    isselect = true;
+                    isMusicActive = true;
+                    seekBar.setMax(mediaPlayer.getDuration());
+                    Log.i("warum", "onTaskpause: " + "von hierlist");
+                    notification.greatNafi(0, songinfos.get(position), R.drawable.ic_baseline_pause_circle_filled_24, position, songinfos.size());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -257,8 +254,8 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
     private void premtion() {
         boolean sta;
         if (ContextCompat.checkSelfPermission(Music.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(Music.this, Manifest.permission.MANAGE_DOCUMENTS) == PackageManager.PERMISSION_GRANTED) {
-           listfullen("pre");
-          Toast.makeText(this,"pre",Toast.LENGTH_LONG).show();
+            listfullen("pre");
+            Toast.makeText(this, "pre", Toast.LENGTH_LONG).show();
         } else {
             requstpremstion();
         }
@@ -274,9 +271,9 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
                     .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                           listfullen("ok");
+                            listfullen("ok");
                             ActivityCompat.requestPermissions(Music.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MANAGE_DOCUMENTS}, prmistion);
-                            Toast.makeText(getApplication(),"pre",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplication(), "pre", Toast.LENGTH_LONG).show();
                         }
                     }).setNegativeButton("no", new DialogInterface.OnClickListener() {
                 @Override
@@ -286,14 +283,14 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
             }).create().show();
 
         } else {
-          ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MANAGE_DOCUMENTS}, prmistion);
-
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MANAGE_DOCUMENTS}, prmistion);
 
 
         }
     }
-    private void listfullen(String s){
-        Log.i("warum", "listfullen: "+s);
+
+    private void listfullen(String s) {
+        Log.i("warum", "listfullen: " + s);
         getallsong(Music.this);
     }
 
@@ -305,7 +302,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
                 if (grantResults.length > 0 &&
                         grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     listfullen("ok");
-                }  else {
+                } else {
                     // Explain to the user that the feature is unavailable because
                     // the features requires a permission that the user has denied.
                     // At the same time, respect the user's decision. Don't link to
@@ -546,10 +543,10 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
             startActivity(intent);
             //   imageholen();
 
-        }else if(item.getItemId()==R.id.account){
-            Intent intent=new Intent(this, AcountUser.class);
-          //DataBase dataBase= DataBase.getInstance(this);
-          // dataBase.daoData().deltetable();
+        } else if (item.getItemId() == R.id.account) {
+            Intent intent = new Intent(this, AcountUser.class);
+            //DataBase dataBase= DataBase.getInstance(this);
+            // dataBase.daoData().deltetable();
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
@@ -784,7 +781,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
 
 
     @Override
-    public void pushAudio(UploadTask.TaskSnapshot snapshot,Context context) {
+    public void pushAudio(UploadTask.TaskSnapshot snapshot, Context context) {
 
 
     }
@@ -821,10 +818,9 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
     }
 
     @Override
-    public void cutchAduio(String songs,Context Context) {
+    public void cutchAduio(String songs, Context Context) {
 
     }
-
 
 
     public void video(View view) {
@@ -863,17 +859,18 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         }
 
     }
-    private void longdruck(ListView listView){
-        Log.i("long", "longdruck: "+"rstrzt");
+
+    private void longdruck(ListView listView) {
+        Log.i("long", "longdruck: " + "rstrzt");
 
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id){
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-                   // Fierbase fierbase=new Fierbase();
-                    //fierbase.imageStroge(Uri.parse(songinfos.get(position).getPath()),Music.this);
-                    //checklong=false;
+                // Fierbase fierbase=new Fierbase();
+                //fierbase.imageStroge(Uri.parse(songinfos.get(position).getPath()),Music.this);
+                //checklong=false;
                 /*
                 Intent sendIntent = new Intent(Intent.ACTION_SEND);
                 sendIntent.setAction(Intent.ACTION_SEND);
@@ -885,21 +882,13 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
 
                  */
                 FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
-                Uppop uppop=new Uppop(Music.this,songinfos,position);
-                uppop.show(fragmentManager,null);
-
+                Uppop uppop = new Uppop(Music.this, songinfos, position);
+                uppop.show(fragmentManager, null);
 
 
                 return true;
             }
         });
-
-    }
-    private void namesHolder(){
-        FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
-        Fierbase fierbase=new Fierbase();
-        fierbase.namesHolder(this);
-
 
     }
 

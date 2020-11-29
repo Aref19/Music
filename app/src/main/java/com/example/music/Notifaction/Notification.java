@@ -28,43 +28,43 @@ public class Notification {
     public static final String actionnext = "actionnext";
     public static final String Action = "Actionprevious";
 
-   SaveInfoUserselect saveInfoUserselect;
+    SaveInfoUserselect saveInfoUserselect;
     public Notification(Context context) {
         this.context = context;
         this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-          saveInfoUserselect=SaveInfoUserselect.getContext(context);
+        saveInfoUserselect=SaveInfoUserselect.getContext(context);
     }
 
     public void greatNafi(int id, Songinfo tarck, int playbutton, int pos, int size) {
         NotificationManagerCompat notificationManagerCompat=NotificationManagerCompat.from(context);
         MediaSessionCompat mediaSessionCompat=new MediaSessionCompat(context,"tag");
-       // Bitmap icon= BitmapFactory.decodeResource(context.getResources(),tarck.getImage());
+        // Bitmap icon= BitmapFactory.decodeResource(context.getResources(),tarck.getImage());
         PendingIntent pendingIntent;
         int drw_privous;
         int drw_next ;
-      if(pos==0){
+        if(pos==0){
             pendingIntent=null;
             drw_privous=0;
-       }else {
+        }else {
             Intent intent=new Intent(context, NotificationService.class).setAction(Action);
             pendingIntent=PendingIntent.getBroadcast(context,0,intent,PendingIntent.FLAG_CANCEL_CURRENT);
             drw_privous=R.drawable.ic_baseline_skip_previous_24;
 
-       }
+        }
         Intent intent1=new Intent(context, NotificationService.class).setAction(actionplay);
         PendingIntent pendingIntentplay=PendingIntent.getBroadcast(context,0,intent1,PendingIntent.FLAG_CANCEL_CURRENT);
 
 
         PendingIntent pendingIntentnext ;
-       if(pos==size){
-           pendingIntentnext=null;
-           drw_next=0;
+        if(pos==size){
+            pendingIntentnext=null;
+            drw_next=0;
 
         }else{
             Intent intentnext=new Intent(context, NotificationService.class).setAction(actionnext);
-             pendingIntentnext=PendingIntent.getBroadcast(context,0,intentnext,PendingIntent.FLAG_CANCEL_CURRENT);
+            pendingIntentnext=PendingIntent.getBroadcast(context,0,intentnext,PendingIntent.FLAG_CANCEL_CURRENT);
             drw_next=R.drawable.ic_baseline_skip_next_24;
-       }
+        }
 
         android.app.Notification builder = new NotificationCompat.Builder(context, c)
                 .setContentTitle(tarck.getSong_name())
@@ -80,12 +80,12 @@ public class Notification {
                 .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                         .setShowActionsInCompactView(0,1,2)
 
-                .setMediaSession(mediaSessionCompat.getSessionToken()))
+                        .setMediaSession(mediaSessionCompat.getSessionToken()))
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .build();
         Log.i("pla", "greatNafi: "+playbutton);
         //notificationManager.notify(id, builder);
-       notificationManagerCompat.notify(1,builder);
+        notificationManagerCompat.notify(1,builder);
 
         Log.i("na", "greatNafi: ja +" + id);
 
