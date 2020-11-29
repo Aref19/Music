@@ -26,8 +26,10 @@ import com.example.music.Firbase.WorkwithFirbase;
 import com.example.music.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -53,6 +55,7 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase {
         mediaPlayer=new MediaPlayer();
         songslocal=new ArrayList<>();
         uris=new ArrayList<>();
+
         SaveInfoUserselect saveInfoUserselect=SaveInfoUserselect.getContext(this);
         relativeLayout.setBackground(BitmapDrawable.createFromPath(saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY)));
         for (int i=0;i<dataBase.daoData().getlist().size();i++){
@@ -115,30 +118,32 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase {
     }
     }
     public void getSongsStorge(List<SaveThings> name, final Context context) {
+        uris.clear();
         int i=0;
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
+
         final ArrayList<String> strings=new ArrayList<>();
         do {
+            Log.i("songsf", "onSuccess: "+i+"name :"+  storage.getReference().child(firebaseAuth.getUid()).child(name.get(i).getNamesong()).getName());
 
-
-            Log.i("songsf", "onSuccess: "+i);
-            StorageReference storageR = storage.getReference().child(firebaseAuth.getUid()).child(name.get(i).getNamesong().trim());
+            StorageReference storageR = storage.getReference().child(firebaseAuth.getUid()).child(name.get(i).getNamesong());
             storageR.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-               uris.add(uri.toString());
-                    Log.i("songsur", "onSuccess: "+uri.toString());
+                  //  Log.i("songsur", "onSuccess: "+uri.toString());
+
+                  //  Log.i("songsur", "onSuccess: "+uri.toString());
                     AcountUser acountUser = new AcountUser();
                     if(uri!=null){
-                        Log.i("songsur", "onSuccess: "+uri.toString());
-
+                       Log.i("songsur", "onSuccess: "+uri.toString());
+                        uris.add(uri.toString());
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.i("songf", "onFailure: "+e.toString());
+                 Log.i("songf", "onFailure: "+e.toString());
                 }
             });
             i++;
