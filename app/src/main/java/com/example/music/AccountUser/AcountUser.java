@@ -79,11 +79,16 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
         handler = new Handler();
         current();
         stop();
+        if(dataBase.daoData().getlist().size()!=0){
+            for (int i = 0; i < dataBase.daoData().getlist().size(); i++) {
+                songslocal.add(dataBase.daoData().getlist().get(i).getNamesong());
 
-        for (int i = 0; i < dataBase.daoData().getlist().size(); i++) {
-            songslocal.add(dataBase.daoData().getlist().get(i).getNamesong());
-
+            }
+        }else {
+            relativeLayout.setBackground(getDrawable(R.drawable.flug));
         }
+
+
         seek();
 
         stringArrayAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, songslocal);
