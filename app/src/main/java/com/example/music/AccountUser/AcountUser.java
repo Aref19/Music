@@ -5,8 +5,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
@@ -22,6 +24,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
@@ -29,8 +32,11 @@ import com.example.music.DatenBank.LocalDatenBank.DataBase;
 import com.example.music.DatenBank.LocalDatenBank.SaveThings;
 import com.example.music.DatenBank.SaveInfoUserselect;
 import com.example.music.Firbase.Fierbase;
+import com.example.music.Firbase.FirebaseUser;
 import com.example.music.Firbase.WorkwithFirbase;
 import com.example.music.HauptMain.Playble;
+import com.example.music.Notifaction.Notification;
+import com.example.music.NotificationServiceAction.onClearFromRecentServic;
 import com.example.music.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -57,6 +63,8 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
     Handler handler;
     ImageView stop;
     boolean play;
+    ImageView imageView;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +75,10 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
         seekBar = findViewById(R.id.laufmonline);
         seekBar = findViewById(R.id.laufmonline);
         stop = findViewById(R.id.pauseonline);
+        imageView=findViewById(R.id.userfoto);
+        progressBar=findViewById(R.id.progressBar);
+        FirebaseUser firebaseUser=new FirebaseUser();
+        firebaseUser.loadUserImage(imageView,this);
         namesHolder();
         DataBase dataBase = DataBase.getInstance(this);
         mediaPlayer = new MediaPlayer();
@@ -76,15 +88,17 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
         SaveInfoUserselect saveInfoUserselect = SaveInfoUserselect.getContext(this);
         relativeLayout.setBackground(BitmapDrawable.createFromPath(saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY)));
         uris.clear();
+        registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        startService(new Intent(getBaseContext(), onClearFromRecentServic.class));
         handler = new Handler();
         current();
         stop();
-        if(dataBase.daoData().getlist().size()!=0){
+        if (dataBase.daoData().getlist().size() != 0) {
             for (int i = 0; i < dataBase.daoData().getlist().size(); i++) {
                 songslocal.add(dataBase.daoData().getlist().get(i).getNamesong());
 
             }
-        }else {
+        } else {
             relativeLayout.setBackground(getDrawable(R.drawable.flug));
         }
 
@@ -299,6 +313,30 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        FirebaseUser firebaseUser=new FirebaseUser();
+
+        imageView.setImageURI(data.getData());
+        firebaseUser.fotoUser(Uri.parse(data.getData().toString()),AcountUser.this,imageView);
 
     }
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getExtras().getString("action");
+            switch (action) {
+                case Notification.Action:
+                    onTaskprovis();
+                    break;
+                case Notification.actionplay:
+                    onTaskpause();
+                    //  onTaskplay();
+
+                    break;
+                case Notification.actionnext:
+                    onTaskNext();
+                    break;
+            }
+        }
+    };
 }

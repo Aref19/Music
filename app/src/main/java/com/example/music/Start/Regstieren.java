@@ -32,7 +32,7 @@ public class Regstieren extends AppCompatActivity {
 
     public void rgistieren(View view) {
         if (textinhalt(pass, passwieder)) {
-            fierbase.signin(email.getText().toString(), String.valueOf(pass.getText().toString()), this);
+            fierbase.creatUSer(email.getText().toString(), String.valueOf(pass.getText().toString()), this);
         } else {
             Toast.makeText(this,"pass mus be same",Toast.LENGTH_LONG).show();
         }

@@ -69,13 +69,14 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
     GradientDrawable[] drawables;
     SaveInfoUserselect saveInfoUserselect;
 
-    @SuppressLint({"ResourceAsColor", "WrongViewCast"})
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        getSupportActionBar().setTitle("Main");
        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.selectview);
+
         imageView = findViewById(R.id.imageView);
         selecttext = findViewById(R.id.spinner);
         selectbutton = findViewById(R.id.spinner2);
@@ -83,6 +84,7 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
         linearLayout = findViewById(R.id.background);
         radio1 = findViewById(R.id.radioButton);
         radio2 = findViewById(R.id.radioButton2);
+
         spinners(selecttext);
         spinners(selectbutton);
         textColor = findViewById(R.id.textcolor);
@@ -110,7 +112,10 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
         //image();
 
 
+
+
     }
+
 
     private void spinners(Spinner spinner) {
         if (spinner.getId() == R.id.spinner) {
@@ -129,7 +134,7 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
     }
 
 
-    @SuppressLint("ResourceAsColor")
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String[] colorsname = getResources().getStringArray(R.array.colorsarra);
@@ -147,7 +152,7 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
                 Log.i("spinn1", "onItemSelected: " + parent.getItemAtPosition(position) + colorsname[0]);
                 stringArrayAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, songs);
                 saveInfoUserselect.saveColorText(SaveInfoUserselect.USER_ColorT_KEY, colorsitems[0]);
-            } else if (parent.getItemAtPosition(position).equals(colorsname[1])) {
+           } else if (parent.getItemAtPosition(position).equals(colorsname[1])) {
                 textColor.setTextColor(Color.parseColor(colorsitems[1]));
                 saveInfoUserselect.savespinnerSelection(SaveInfoUserselect.USER_Int_Spinnerindex,1);
                 stringArrayAdapter = new ArrayAdapter<>(this, R.layout.grren, songs);
@@ -259,7 +264,7 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
         startActivityForResult(intent, 1);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+   // @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -354,19 +359,19 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
+
     public void Radioclick(View view) {
-        String uri;
+
         boolean check = ((RadioButton) view).isChecked();
         switch (view.getId()) {
             case R.id.radioButton:
 
-                uri = "android.resource://" + getPackageName() + "/" + R.drawable.n;
+
                 saveInfoUserselect.saveURIImage(SaveInfoUserselect.USER_Image_KEY, "R.drawable.n");
                 linearLayout.setBackgroundResource(R.drawable.n);
                 break;
             case R.id.radioButton2:
-                uri = "android.resource://" + getOpPackageName() + "/" + R.drawable.app;
+
                 saveInfoUserselect.saveURIImage(SaveInfoUserselect.USER_Image_KEY,"R.drawable.app");
                 linearLayout.setBackgroundResource(R.drawable.app);
 

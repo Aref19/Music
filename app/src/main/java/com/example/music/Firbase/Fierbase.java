@@ -205,6 +205,33 @@ public class Fierbase {
 
 
     }
+    public void creatUSer(final String email, String pass, final Context context) {
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth.createUserWithEmailAndPassword(email.trim(), pass.trim()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    try {
+                        Toast.makeText(context, "successfully registered", Toast.LENGTH_LONG).show();
+                        saveInfoUserselect = SaveInfoUserselect.getContext(context);
+                        saveInfoUserselect.saveUseremail(SaveInfoUserselect.User_email, email);
+                        Intent intent=new Intent(context,Music.class);
+                        context.startActivity(intent);
+                    } catch (Exception e) {
+                        Toast.makeText(context, "check your info " + e, Toast.LENGTH_LONG).show();
+                    }
+                }
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(context, "check your info " + e, Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+    }
 
     public void login(String email, String pass, final Context context) {
         firebaseAuth = FirebaseAuth.getInstance();
