@@ -123,7 +123,7 @@
                     app:srcCompat="@drawable/stop" />
 
                 <ImageButton
-                    android:id="@+id/sto"
+                    android:id="@+id/stop"
 
                     android:padding="10dp"
                     android:layout_margin="10dp"

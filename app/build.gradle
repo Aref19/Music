@@ -44,11 +44,13 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation "androidx.core:core-ktx:+"
     //noinspection GradleCompatible
-    implementation 'com.android.support:design:23.1.1'
+    implementation 'com.android.support:design:26.1.0'
     implementation platform('com.google.firebase:firebase-bom:26.0.0')
 //    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation "com.google.android.material:material:1.2.0"
+    //noinspection GradleCompatible
+
 
 
     implementation 'com.squareup.picasso:picasso:2.5.2'

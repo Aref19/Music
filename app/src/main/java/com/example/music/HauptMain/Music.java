@@ -2,6 +2,8 @@ package com.example.music.HauptMain;
 
 import android.Manifest;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -56,7 +58,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.music.DatenBank.LocalDatenBank.DataBase;
@@ -69,6 +70,7 @@ import com.example.music.NotificationServiceAction.onClearFromRecentServic;
 import com.example.music.R;
 import com.example.music.Share.Uppop;
 import com.example.music.Video.Video;
+import com.example.music.Video.VideoFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -111,22 +113,18 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
     boolean isMusicActive, checklong;
 
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         seekBar = findViewById(R.id.laufm);
         listView = findViewById(R.id.liedlist);
-        int d = R.drawable.buton;
-
+         audioManger();
         handler = new Handler();
         handel = new Handler();
         premtion();
-
-
         sekk(seekBar);
         bause = findViewById(R.id.pause);
         relativeLayout = findViewById(R.id.relative);
@@ -177,10 +175,11 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
     protected void onPause() {
 
         super.onPause();
-        Toast.makeText(this, "onPause", Toast.LENGTH_LONG).show();
-        sekk(seekBar);
-        buttonClick();
+
+       sekk(seekBar);
+       buttonClick();
         current();
+        audioManger();
 
         //  audioManger();
         // uperpruf();
@@ -194,6 +193,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
 
         String selection = MediaStore.Audio.Media.IS_MUSIC + "!=0";
         crusor = managedQuery(allsong, null, selection, null, null);
+
         if (crusor != null) {
             if (crusor.moveToNext()) {
                 do {
@@ -467,9 +467,10 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
     protected void onStop() {
 
         super.onStop();
-        sekk(seekBar);
-        current();
-        Toast.makeText(this, "onStop", Toast.LENGTH_LONG).show();
+       sekk(seekBar);
+        audioManger();
+       current();
+       Toast.makeText(this, "onStop", Toast.LENGTH_LONG).show();
 
 
         //  uperpruf();
@@ -486,27 +487,27 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
     protected void onRestart() {
         super.onRestart();
         buttonColor();
-        pullFoto(relativeLayout, this);
-        // loadImage(relativeLayout);
-        Adapter adabter = new Adapter(songinfos, this);
-
-        listView.setAdapter(adabter);
-        list(listView, songinfos);
-
-        seekBar = findViewById(R.id.laufm);
-        listView = findViewById(R.id.liedlist);
-        handler = new Handler();
-        handel = new Handler();
-        Uri allsong = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        String selection = MediaStore.Audio.Media.IS_MUSIC + "!=0";
-        crusor = managedQuery(allsong, null, selection, null, null);
-
-        sekk(seekBar);
-        bause = findViewById(R.id.pause);
-        last = findViewById(R.id.start);
-        next = findViewById(R.id.stop);
-        buttonClick();
-        Toast.makeText(this, "onRestart", Toast.LENGTH_LONG).show();
+//        pullFoto(relativeLayout, this);
+//        // loadImage(relativeLayout);
+//        Adapter adabter = new Adapter(songinfos, this);
+//
+//        listView.setAdapter(adabter);
+//        list(listView, songinfos);
+//
+//        seekBar = findViewById(R.id.laufm);
+//        listView = findViewById(R.id.liedlist);
+//        handler = new Handler();
+//        handel = new Handler();
+//        Uri allsong = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+//        String selection = MediaStore.Audio.Media.IS_MUSIC + "!=0";
+//        crusor = managedQuery(allsong, null, selection, null, null);
+//
+//        sekk(seekBar);
+//        bause = findViewById(R.id.pause);
+//        last = findViewById(R.id.start);
+//        next = findViewById(R.id.stop);
+//        buttonClick();
+     Toast.makeText(this, "onRestart", Toast.LENGTH_LONG).show();
         current();
     }
 
@@ -824,9 +825,18 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
 
 
     public void video(View view) {
+
+        VideoFragment  Fragment = new VideoFragment();
+
+        FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.relative, Fragment);
+        fragmentTransaction.commit();
+        /*
         Intent intent = new Intent(this, Video.class);
 
         startActivity(intent);
+
+         */
 
 
     }
@@ -853,9 +863,9 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         try {
             mAudioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
             mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
-
+            Log.i("exsfrom", "audioManger: " );
         } catch (IllegalStateException e) {
-            Log.i("exs", "audioManger: " + e.toString());
+            Log.i("exsfrom", "audioManger: " + e.toString());
         }
 
     }

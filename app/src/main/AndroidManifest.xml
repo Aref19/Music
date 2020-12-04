@@ -15,11 +15,15 @@
         android:icon="@drawable/app"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
+        android:supportsRtl="false"
         android:theme="@style/AppTheme">
-        <activity android:name=".AccountUser.AcountUser"></activity>
+
+        <activity
+            android:name=".AccountUser.AcountUser"
+            android:label="@string/app_name"
+            android:parentActivityName=".HauptMain.Music" />
         <activity android:name=".Start.Start2" />
-        <activity android:name=".HauptMain.Music" />
+        <activity android:name=".HauptMain.Main" />
         <activity android:name=".Start.Regstieren" />
         <activity android:name=".Start.Login" />
         <activity
