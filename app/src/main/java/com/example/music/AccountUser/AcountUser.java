@@ -1,16 +1,21 @@
 package com.example.music.AccountUser;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,6 +24,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
@@ -26,8 +32,11 @@ import com.example.music.DatenBank.LocalDatenBank.DataBase;
 import com.example.music.DatenBank.LocalDatenBank.SaveThings;
 import com.example.music.DatenBank.SaveInfoUserselect;
 import com.example.music.Firbase.Fierbase;
+import com.example.music.Firbase.FirebaseUser;
 import com.example.music.Firbase.WorkwithFirbase;
 import com.example.music.HauptMain.Playble;
+import com.example.music.Notifaction.Notification;
+import com.example.music.NotificationServiceAction.onClearFromRecentServic;
 import com.example.music.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -50,10 +59,12 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
     MediaPlayer mediaPlayer;
     RelativeLayout relativeLayout;
     SeekBar getSeekBar;
-    int prograss,postion;
+    int prograss, postion;
     Handler handler;
     ImageView stop;
     boolean play;
+    ImageView imageView;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +74,12 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
         relativeLayout = findViewById(R.id.relative);
         listView = findViewById(R.id.liedlistonline);
         seekBar = findViewById(R.id.laufmonline);
-        seekBar=findViewById(R.id.laufmonline);
-        stop=findViewById(R.id.pauseonline);
+        seekBar = findViewById(R.id.laufmonline);
+        stop = findViewById(R.id.pauseonline);
+        imageView=findViewById(R.id.userfoto);
+        progressBar=findViewById(R.id.progressBar);
+        FirebaseUser firebaseUser=new FirebaseUser();
+        firebaseUser.loadUserImage(imageView,this);
         namesHolder();
         DataBase dataBase = DataBase.getInstance(this);
         mediaPlayer = new MediaPlayer();
@@ -74,14 +89,21 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
         SaveInfoUserselect saveInfoUserselect = SaveInfoUserselect.getContext(this);
         relativeLayout.setBackground(BitmapDrawable.createFromPath(saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY)));
         uris.clear();
+        registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        startService(new Intent(getBaseContext(), onClearFromRecentServic.class));
         handler = new Handler();
         current();
         stop();
+        if (dataBase.daoData().getlist().size() != 0) {
+            for (int i = 0; i < dataBase.daoData().getlist().size(); i++) {
+                songslocal.add(dataBase.daoData().getlist().get(i).getNamesong());
 
-        for (int i=0;i<dataBase.daoData().getlist().size();i++){
-            songslocal.add(dataBase.daoData().getlist().get(i).getNamesong());
-
+            }
+        } else {
+            relativeLayout.setBackground(getDrawable(R.drawable.flug));
         }
+
+
         seek();
 
         stringArrayAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, songslocal);
@@ -95,7 +117,7 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                 stop.setImageResource(R.drawable.start);
+                stop.setImageResource(R.drawable.ic_baseline_pause_circle_filled_24);
                 getSongsStorge(songslocal.get(position));
 
 
@@ -147,12 +169,11 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
                 try {
-                    if (mediaPlayer.isPlaying()) {
 
-                        mediaPlayer.stop();
-                        mediaPlayer = new MediaPlayer();
-                    }
                     mediaPlayer = new MediaPlayer();
+                    //  mediaPlayer.stop();
+                    //   mediaPlayer = new MediaPlayer();
+
 
                     mediaPlayer.setDataSource(task.getResult().toString());
                     Log.i("uri1", "onItemClick: " + task.getResult().toString());
@@ -179,8 +200,6 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
                     Log.i("songsur", "onSuccess: "+uri.toString());
                     AcountUser acountUser = new AcountUser();
                     if(uri!=null){
-
-
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -191,7 +210,6 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
             });
             i++;
       //  }while (i<name.size());
-
             */
 
     }
@@ -202,28 +220,30 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
         fierbase.namesHolder(this);
 
     }
-    public  void seek(){
-      seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-          @Override
-          public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            if(fromUser){
-                postion=progress;
-                mediaPlayer.seekTo(progress);
+
+    public void seek() {
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    postion = progress;
+                    mediaPlayer.seekTo(progress);
+                }
             }
-          }
 
-          @Override
-          public void onStartTrackingTouch(SeekBar seekBar) {
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
 
-          }
+            }
 
-          @Override
-          public void onStopTrackingTouch(SeekBar seekBar) {
-              mediaPlayer.seekTo(postion);
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                mediaPlayer.seekTo(postion);
 
-          }
-      });
+            }
+        });
     }
+
     private void current() {
         seekBar.setProgress(mediaPlayer.getCurrentPosition());
         Runnable runnable = new Runnable() {
@@ -235,16 +255,17 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
         handler.postDelayed(runnable, 1000);
 
     }
-    private void stop(){
-        Log.i("jetzt" , "onTaskplay: "+play);
+
+    private void stop() {
+        Log.i("jetzt", "onTaskplay: " + play);
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(play){
-                onTaskpause();
-                    play=false;
-                }else {
-                    play=true;
+                if (play) {
+                    onTaskpause();
+                    play = false;
+                } else {
+                    play = true;
                     onTaskplay();
                 }
             }
@@ -254,9 +275,9 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
 
     @Override
     public void onTaskplay() {
-      mediaPlayer.start();
-        Log.i("jetzt" , "onTaskplay: "+"von play");
-      stop.setImageResource(R.drawable.start);
+        mediaPlayer.start();
+        Log.i("jetzt", "onTaskplay: " + "von play");
+        stop.setImageResource(R.drawable.ic_baseline_pause_circle_filled_24);
 
     }
 
@@ -274,6 +295,49 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
     public void onTaskpause() {
 
         mediaPlayer.pause();
-        stop.setImageResource(R.drawable.stop);
+        stop.setImageResource(R.drawable.ic_baseline_play_circle_outline_24);
     }
+
+    public void userImage(View view) {
+        userImage();
+
+
+    }
+
+    private void userImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, 1);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        FirebaseUser firebaseUser=new FirebaseUser();
+
+        imageView.setImageURI(data.getData());
+        firebaseUser.fotoUser(Uri.parse(data.getData().toString()),AcountUser.this,imageView);
+
+    }
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getExtras().getString("action");
+            switch (action) {
+                case Notification.Action:
+                    onTaskprovis();
+                    break;
+                case Notification.actionplay:
+                    onTaskpause();
+                    //  onTaskplay();
+
+                    break;
+                case Notification.actionnext:
+                    onTaskNext();
+                    break;
+            }
+        }
+    };
 }

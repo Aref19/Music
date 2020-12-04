@@ -77,39 +77,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:gravity="center">
-        <ImageButton
-            android:src="@drawable/ic_baseline_group_24"
-            android:id="@+id/button"
-            android:padding="10dp"
-            android:layout_margin="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/buton"
-            android:text="Button" />
-        <ImageButton
-            android:padding="10dp"
-            android:layout_margin="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_missed_video_call_24"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/buton"
-            android:onClick="video"
-            android:text="Button" />
-        <!--
-        <ImageButton
-            android:padding="10dp"
-            android:layout_margin="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_music_note_24"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/buton"
-            android:text="Button" />
-            -->
-    </LinearLayout>
+        android:gravity="center"/>
 
 
 </RelativeLayout>

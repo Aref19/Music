@@ -21,6 +21,7 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.main);
         BottomNavigationView bottomNavigationView=findViewById(R.id.navibut);
         bottomNavigationView.setOnNavigationItemReselectedListener(nav);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fram,new MusicNavie()).commit();
     }
     private  BottomNavigationView.OnNavigationItemReselectedListener nav=new BottomNavigationView.OnNavigationItemReselectedListener() {
         @Override
