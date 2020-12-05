@@ -18,9 +18,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.music.DatenBank.SaveInfoUserselect;
+import com.example.music.HauptMain.Music;
 import com.example.music.R;
 
 import java.util.ArrayList;
+
+
 
 public class MovieAdpter extends RecyclerView.Adapter<MovieAdpter.MiovieViewHolder> {
     private ArrayList<VideoModel>videoModels=new ArrayList<>();
@@ -63,7 +66,7 @@ public class MovieAdpter extends RecyclerView.Adapter<MovieAdpter.MiovieViewHold
         public MiovieViewHolder(@NonNull View itemView, final Onitemclic onitemclic) {
             super(itemView);
              textView=itemView.findViewById(R.id.videoname);
-             textView.setTextColor(Color.parseColor(saveInfoUserselect.loadColorTe(SaveInfoUserselect.USER_ColorT_KEY)));
+            textView.setTextColor(Color.parseColor(saveInfoUserselect.loadColorTe(SaveInfoUserselect.USER_ColorT_KEY)));
 
             videoView3=itemView.findViewById(R.id.videoView3);
             videoView3.setOnClickListener(this);
@@ -96,11 +99,15 @@ public class MovieAdpter extends RecyclerView.Adapter<MovieAdpter.MiovieViewHold
         }
     }
     public void setArraylist(ArrayList<VideoModel>videmodels,Context context){
+
         this.videoModels=videmodels;
         this.context=context;
 
         saveInfoUserselect=SaveInfoUserselect.getContext(context);
         notifyDataSetChanged();
+    }
+    public ArrayList<VideoModel> get(){
+        return this.videoModels;
     }
 
 }

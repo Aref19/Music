@@ -27,6 +27,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:parentActivityName=".Video.Video" />
+
         <activity android:name=".HauptMain.selectView" />
         <activity
             android:name=".Video.Video"
