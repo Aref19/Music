@@ -18,26 +18,20 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.music.AccountUser.Account;
 import com.example.music.AccountUser.AcountUser;
 import com.example.music.DatenBank.LocalDatenBank.DataBase;
 import com.example.music.DatenBank.LocalDatenBank.SaveThings;
 import com.example.music.DatenBank.SaveInfoUserselect;
 import com.example.music.HauptMain.Music;
-import com.example.music.HauptMain.Songinfo;
+import com.example.music.HauptMain.Main;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -49,7 +43,6 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.File;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -188,7 +181,7 @@ public class Fierbase {
                         Toast.makeText(context, "successfully registered", Toast.LENGTH_LONG).show();
                         saveInfoUserselect = SaveInfoUserselect.getContext(context);
                         saveInfoUserselect.saveUseremail(SaveInfoUserselect.User_email, email);
-                        Intent intent=new Intent(context,Music.class);
+                        Intent intent=new Intent(context, Main.class);
                         context.startActivity(intent);
                     } catch (Exception e) {
                         Toast.makeText(context, "check your info " + e, Toast.LENGTH_LONG).show();

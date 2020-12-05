@@ -73,13 +73,11 @@ public class Notification {
                 .setSmallIcon(R.drawable.app)
                 .setOnlyAlertOnce(true)
                 .setShowWhen(false)
-
                 .addAction(drw_privous,"privous",pendingIntent)
                 .addAction(playbutton,"play",pendingIntentplay)
                 .addAction(drw_next,"next",pendingIntentnext)
                 .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                         .setShowActionsInCompactView(0,1,2)
-
                         .setMediaSession(mediaSessionCompat.getSessionToken()))
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .build();

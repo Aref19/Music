@@ -66,7 +66,12 @@ public class MovieAdpter extends RecyclerView.Adapter<MovieAdpter.MiovieViewHold
         public MiovieViewHolder(@NonNull View itemView, final Onitemclic onitemclic) {
             super(itemView);
              textView=itemView.findViewById(R.id.videoname);
-            textView.setTextColor(Color.parseColor(saveInfoUserselect.loadColorTe(SaveInfoUserselect.USER_ColorT_KEY)));
+
+             if(!saveInfoUserselect.loadColorTe(SaveInfoUserselect.USER_ColorT_KEY).equals("")){
+                 textView.setTextColor(Color.parseColor(saveInfoUserselect.loadColorTe(SaveInfoUserselect.USER_ColorT_KEY)));
+             }
+
+
 
             videoView3=itemView.findViewById(R.id.videoView3);
             videoView3.setOnClickListener(this);
@@ -102,7 +107,6 @@ public class MovieAdpter extends RecyclerView.Adapter<MovieAdpter.MiovieViewHold
 
         this.videoModels=videmodels;
         this.context=context;
-
         saveInfoUserselect=SaveInfoUserselect.getContext(context);
         notifyDataSetChanged();
     }

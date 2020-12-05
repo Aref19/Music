@@ -70,6 +70,7 @@ public class AcountUser extends AppCompatActivity implements WorkwithFirbase, Pl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_acount_user);
+
         relativeLayout = findViewById(R.id.relative);
         listView = findViewById(R.id.liedlistonline);
         seekBar = findViewById(R.id.laufmonline);

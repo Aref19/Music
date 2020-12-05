@@ -32,7 +32,7 @@
             android:id="@+id/radioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="Radioclick"
+            android:onClick="userRad"
             android:text="RadioButton" />
             <!---->
 
@@ -47,7 +47,7 @@
             android:id="@+id/radioButton2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="Radioclick"
+            android:onClick="RadioclickUser"
             android:text="RadioButton" />
 
 
@@ -130,6 +130,18 @@
 
                 <ImageButton
                     android:id="@+id/stop"
+                android:padding="10dp"
+                android:layout_margin="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/buton"
+                android:src="@drawable/ic_baseline_navigate_next_24"
+
+                    />
+
+>>>>>>> 82f859945a0f3461530cd5ba0ccec6023672ef09
                     android:padding="10dp"
                     android:layout_margin="10dp"
                     android:layout_width="wrap_content"
@@ -152,14 +164,14 @@
 
         </LinearLayout>
         <Button
-            android:id="@+id/selectimage"
+            android:id="@+id/selectimageUser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_gravity="center"
             android:gravity="center"
             android:text="image"
-            android:onClick="imageselect"/>
+            android:onClick="userImage"/>
 
     </LinearLayout>
 

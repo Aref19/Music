@@ -12,6 +12,9 @@ public class Songinfo {
         this.altist=altist;
 
     }
+    public Songinfo(){
+
+    }
 
     public String getAlbum_name() {
         return album_name;
@@ -29,4 +32,11 @@ public class Songinfo {
         return song_name;
     }
 
+    public void setSong_name(String song_name) {
+        this.song_name = song_name;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 }

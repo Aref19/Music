@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.music.DatenBank.SaveInfoUserselect;
+import com.example.music.HauptMain.Main;
 import com.example.music.HauptMain.Music;
 import com.example.music.R;
 
@@ -47,7 +48,7 @@ public class Start extends AppCompatActivity {
             intent = new Intent(getApplication(), Login.class);
 
         } else {
-            intent = new Intent(this, Music.class);
+            intent = new Intent(this, Main.class);
 
         }
         startActivity(intent);
