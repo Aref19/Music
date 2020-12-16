@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -72,12 +73,18 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
     RelativeLayout relativeLayout;
     GradientDrawable[] drawables;
      AudioManager AudioManager;
+     LinearLayout linearLayout;
+
+    public MusicNavie(LinearLayout linearLayout) {
+        this.linearLayout=linearLayout;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //if scheilfe
         view = inflater.inflate(R.layout.musicfragment, container, false);
+        View view2 = inflater.inflate(R.layout.main, container, false);
         songView = view.findViewById(R.id.liedlist);
         last = view.findViewById(R.id.start);
         stop = view.findViewById(R.id.pause);
@@ -165,7 +172,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
                     stop.setImageResource(R.drawable.start);
                     isselect = true;
                     seekBar.setMax(mediaPlayer.getDuration());
-                    Log.i("warum", "onTaskpause: " + "von hierlist");
+                    linearLayout.setVisibility(View.VISIBLE);
                     current();
                     notification.greatNafi(0, songinfos.get(position), R.drawable.ic_baseline_pause_circle_filled_24, position, songinfos.size());
                 } catch (IOException e) {
@@ -541,6 +548,13 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
             Log.i("exsfrom", "audioManger: " + e.toString());
         }
 
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Toast.makeText(view.getContext(), "onstop", Toast.LENGTH_SHORT).show();
+        // hier muss die miderplayer geschpeicher werden
     }
 
     @Override

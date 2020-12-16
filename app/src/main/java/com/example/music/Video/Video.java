@@ -21,6 +21,7 @@ import android.renderscript.ScriptGroup;
 import android.util.Log;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.example.music.DatenBank.LocalDatenBank.DataBase;
@@ -60,6 +61,7 @@ public class Video extends AppCompatActivity implements WorkwithFirbase {
 
 
         // relativeLayout.setBackground(BitmapDrawable.createFromPath(saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY)));
+        Toast.makeText(this,"das",Toast.LENGTH_LONG).show();
         pullFoto(relativeLayout, this);
         catchVideo();
     }
@@ -129,6 +131,7 @@ public class Video extends AppCompatActivity implements WorkwithFirbase {
 
     @Override
     public void pullFoto(RelativeLayout linearLayout, Context context) {
+        Toast.makeText(context,"das",Toast.LENGTH_LONG).show();
         if (saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.n") || saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.app")) {
             Log.i("draw1", "pullFoto: ");
             if (saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.n")) {
@@ -142,9 +145,11 @@ public class Video extends AppCompatActivity implements WorkwithFirbase {
             Drawable drawable = BitmapDrawable.createFromPath(saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY));
             if (drawable == null) {
                 relativeLayout.setBackground(getDrawable(R.drawable.n));
+                Log.i("draw4", "pullFoto: ");
 
             } else {
                 linearLayout.setBackground(drawable);
+                Log.i("lesh", "pullFoto: "+drawable);
             }
         }
 
