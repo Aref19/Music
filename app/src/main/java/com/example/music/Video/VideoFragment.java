@@ -1,6 +1,7 @@
 package com.example.music.Video;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -76,13 +77,25 @@ public class VideoFragment extends Fragment {
             movieAdpter.setonitem(new MovieAdpter.Onitemclic() {
                 @Override
                 public void onitemclic(int postion) {
-                 //   vidershower(postion);
+                    vidershower(postion);
                 }
             });
             MediaController mediaController = new MediaController(view.getContext());
+
     }
+
+
 }
-private class Task extends AsyncTask<String, String, String> {
+
+    private void vidershower(int postion) {
+        Intent intent = new Intent(view.getContext(), ViewshowerActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("path", videoModels.get(postion).getPathVideo());
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    private class Task extends AsyncTask<String, String, String> {
         ArrayList<VideoModel> videoModels;
         MovieAdpter movieAdpter;
         Context context;
@@ -104,9 +117,11 @@ private class Task extends AsyncTask<String, String, String> {
             movieAdpter.setonitem(new MovieAdpter.Onitemclic() {
                 @Override
                 public void onitemclic(int postion) {
-               //     vidershower(postion);
+                    vidershower(postion);
                 }
             });
             return null;
         }
-    }}
+    }
+
+}

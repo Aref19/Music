@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -50,8 +51,10 @@ import com.google.firebase.storage.UploadTask;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MusicNavie extends Fragment implements Playble, WorkwithFirbase {
+
+public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,AudioManager.OnAudioFocusChangeListener {
     ListView songView;
+
     ImageButton next , last;
     ImageView stop;
     View view;
@@ -68,10 +71,12 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase {
     int prmistion = 1;
     RelativeLayout relativeLayout;
     GradientDrawable[] drawables;
+     AudioManager AudioManager;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        //if scheilfe
         view = inflater.inflate(R.layout.musicfragment, container, false);
         songView = view.findViewById(R.id.liedlist);
         last = view.findViewById(R.id.start);
@@ -80,6 +85,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase {
         songinfos = new ArrayList<>();
         longdruck(songView);
         premtion();
+        audioManger();
         seekBar = view.findViewById(R.id.laufm);
         view.getContext().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
         view.getContext().startService(new Intent(getActivity().getBaseContext(), onClearFromRecentServic.class));
@@ -520,5 +526,34 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase {
             }
         }
     };
+    public void audioManger() {
+        try {
+            AudioManager am = (AudioManager) view.getContext().getSystemService(Context.AUDIO_SERVICE);
+            am.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+            Log.i("exsfrom", "audioManger: " );
+        } catch (IllegalStateException e) {
+            Log.i("exsfrom", "audioManger: " + e.toString());
+        }
+
     }
+
+    @Override
+    public void onAudioFocusChange(int focusChange) {
+        if (isselect) {
+            if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK ) {
+                mediaPlayer.pause();
+                Log.i("onfuc", "onAudioFocusChange: " + "1");
+            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                mediaPlayer.start();
+                sekk(seekBar);
+                current();
+                Log.i("onfuc", "onAudioFocusChange: " + "2");
+            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                onDestroy();
+                Log.i("onfuc", "onAudioFocusChange: " + "3");
+            }
+        }
+
+    }
+}
 
