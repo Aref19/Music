@@ -26,6 +26,7 @@ import android.widget.VideoView;
 import com.example.music.DatenBank.LocalDatenBank.DataBase;
 import com.example.music.DatenBank.SaveInfoUserselect;
 import com.example.music.Firbase.WorkwithFirbase;
+import com.example.music.HauptMain.Adapter;
 import com.example.music.HauptMain.Music;
 import com.example.music.R;
 import com.google.firebase.storage.UploadTask;
@@ -92,6 +93,8 @@ public class Video extends AppCompatActivity implements WorkwithFirbase {
 
             Task task = new Task(videoModels, this, layoutManager);
             task.execute();
+
+
             movieAdpter.setonitem(new MovieAdpter.Onitemclic() {
                 @Override
                 public void onitemclic(int postion) {
@@ -119,10 +122,9 @@ public class Video extends AppCompatActivity implements WorkwithFirbase {
 
 
     @Override
-    public void pushAudio(UploadTask.TaskSnapshot snapshot,Context context) {
+    public void pushAudio(UploadTask.TaskSnapshot snapshot, Context context) {
 
     }
-
 
 
     @Override
@@ -150,7 +152,7 @@ public class Video extends AppCompatActivity implements WorkwithFirbase {
     }
 
     @Override
-    public void cutchAduio(String songs,Context context) {
+    public void cutchAduio(String songs, Context context) {
 
     }
 
@@ -164,15 +166,22 @@ public class Video extends AppCompatActivity implements WorkwithFirbase {
             this.videoModels = videoModels;
             this.movieAdpter = new MovieAdpter();
             this.context = context;
+
             this.layoutManager = layoutManager;
         }
 
         @Override
         protected String doInBackground(String... strings) {
+
             movieAdpter.setArraylist(videoModels, context);
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(layoutManager);
+
             recyclerView.setAdapter(movieAdpter);
+            /*
+             */
+
+
             movieAdpter.setonitem(new MovieAdpter.Onitemclic() {
                 @Override
                 public void onitemclic(int postion) {
@@ -182,4 +191,5 @@ public class Video extends AppCompatActivity implements WorkwithFirbase {
             return null;
         }
     }
+
 }

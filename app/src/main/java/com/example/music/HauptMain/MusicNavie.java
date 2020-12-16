@@ -101,7 +101,11 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
         drawables[2] = (GradientDrawable) last.getBackground().mutate();
         sekk(seekBar);
         onClick();
-
+        current();
+        buttonColor();
+        if (!saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("")) {
+            pullFoto(relativeLayout, view.getContext());
+        }
 
         return view;
     }
@@ -162,6 +166,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
                     isselect = true;
                     seekBar.setMax(mediaPlayer.getDuration());
                     Log.i("warum", "onTaskpause: " + "von hierlist");
+                    current();
                     notification.greatNafi(0, songinfos.get(position), R.drawable.ic_baseline_pause_circle_filled_24, position, songinfos.size());
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -180,6 +185,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
         notification.creatchanel();
         notification.greatNafi(0, songinfos.get(sitution), R.drawable.start, sitution, songinfos.size() - 1);
         isselect = true;
+        current();
 
     }
 

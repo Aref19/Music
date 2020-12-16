@@ -360,8 +360,9 @@ public class selectView extends AppCompatActivity implements AdapterView.OnItemS
     }
 
 
-    public void Radioclick(View view) {
 
+
+    public void userRad(View view) {
         boolean check = ((RadioButton) view).isChecked();
         switch (view.getId()) {
             case R.id.radioButton:

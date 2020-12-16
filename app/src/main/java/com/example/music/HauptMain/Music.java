@@ -121,10 +121,11 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         setContentView(R.layout.activity_main);
         seekBar = findViewById(R.id.laufm);
         listView = findViewById(R.id.liedlist);
-         audioManger();
+
         handler = new Handler();
         handel = new Handler();
         premtion();
+
         sekk(seekBar);
         bause = findViewById(R.id.pause);
         relativeLayout = findViewById(R.id.relative);
@@ -179,7 +180,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
        sekk(seekBar);
        buttonClick();
         current();
-        audioManger();
+
 
         //  audioManger();
         // uperpruf();
@@ -465,10 +466,9 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
 
     @Override
     protected void onStop() {
-
         super.onStop();
        sekk(seekBar);
-        audioManger();
+
        current();
        Toast.makeText(this, "onStop", Toast.LENGTH_LONG).show();
 
@@ -833,7 +833,6 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         fragmentTransaction.commit();
         /*
         Intent intent = new Intent(this, Video.class);
-
         startActivity(intent);
 
          */
@@ -859,7 +858,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         }
     }
 
-    public void audioManger() {
+    public void audioManger(Context context) {
         try {
             mAudioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
             mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);

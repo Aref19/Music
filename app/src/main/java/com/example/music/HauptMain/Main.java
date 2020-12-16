@@ -23,7 +23,8 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.main);
         BottomNavigationView bottomNavigationView=findViewById(R.id.navibut);
         bottomNavigationView.setOnNavigationItemSelectedListener(nav);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fram,new MusicNavie()).commit();
+       getSupportFragmentManager().beginTransaction().replace(R.id.fram,new MusicNavie()).commit();
+        //   getSupportFragmentManager().beginTransaction().replace(R.id.fram,new SelectViewFragement()).commit();
     }
     private  BottomNavigationView.OnNavigationItemSelectedListener nav=new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -36,6 +37,9 @@ public class Main extends AppCompatActivity {
                     break;
                 case R.id.video:
                     fragment = new VideoFragment();
+                    break;
+                case R.id.selectview:
+                    fragment=new SelectViewFragement();
                     break;
 
             }
