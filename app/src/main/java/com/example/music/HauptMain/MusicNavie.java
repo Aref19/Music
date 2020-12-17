@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.Icon;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -39,7 +40,10 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.room.Database;
 
+import com.example.music.DatenBank.LocalDatenBank.DataBase;
+import com.example.music.DatenBank.LocalDatenBank.SongLate;
 import com.example.music.DatenBank.SaveInfoUserselect;
 import com.example.music.Firbase.WorkwithFirbase;
 import com.example.music.Notifaction.Notification;
@@ -74,6 +78,8 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
     GradientDrawable[] drawables;
      AudioManager AudioManager;
      LinearLayout linearLayout;
+     DataBase dataBase;
+     LaufendeSong laufendeSong;
 
     public MusicNavie(LinearLayout linearLayout) {
         this.linearLayout=linearLayout;
@@ -92,9 +98,10 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
         songinfos = new ArrayList<>();
         longdruck(songView);
         premtion();
+        dataBase=DataBase.getInstance(view.getContext());
         audioManger();
         seekBar = view.findViewById(R.id.laufm);
-        view.getContext().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+//      view.getContext().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
         view.getContext().startService(new Intent(getActivity().getBaseContext(), onClearFromRecentServic.class));
         mediaPlayer = new MediaPlayer();
         notification = new Notification(view.getContext());
@@ -106,10 +113,11 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
         drawables[0] = (GradientDrawable) stop.getBackground().mutate();
         drawables[1] = (GradientDrawable) next.getBackground().mutate();
         drawables[2] = (GradientDrawable) last.getBackground().mutate();
-        sekk(seekBar);
+      //  sekk(seekBar);
         onClick();
-        current();
+      //  current();
         buttonColor();
+
         if (!saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("")) {
             pullFoto(relativeLayout, view.getContext());
         }
@@ -119,7 +127,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
 
     private void loadSong() {
         Log.i("namesong", "getallsong: " +"");
-        Toast.makeText(getActivity(),"name",Toast.LENGTH_LONG).show();
+
         songinfos = new ArrayList<>();
         Uri allsong = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Log.i("namesong", "getallsong: " +"");
@@ -154,7 +162,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
         }
     }
 
-    private void list(ListView listView, final ArrayList<Songinfo> songinfos) {
+    private void list(final ListView listView, final ArrayList<Songinfo> songinfos) {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -172,8 +180,17 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
                     stop.setImageResource(R.drawable.start);
                     isselect = true;
                     seekBar.setMax(mediaPlayer.getDuration());
-                    linearLayout.setVisibility(View.VISIBLE);
-                    current();
+                   SachenuberAll.linearLayoutm.setVisibility(View.VISIBLE);
+                   SachenuberAll.mediaPlayer.stop();
+                   SachenuberAll.mediaPlayer=mediaPlayer;
+                   SachenuberAll.startb.setImageIcon(Icon.createWithResource("com.example.music",R.drawable.ic_baseline_pause_circle_filled_24));
+                   SachenuberAll.status=true;
+                   Main main=new Main();
+
+                  //  current();
+                    laufendeSong=LaufendeSong.getContext(false);
+                    laufendeSong.LaufendeSong(mediaPlayer,position,songinfos.get(position).getPath());
+                  //  main.laufen();
                     notification.greatNafi(0, songinfos.get(position), R.drawable.ic_baseline_pause_circle_filled_24, position, songinfos.size());
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -192,7 +209,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
         notification.creatchanel();
         notification.greatNafi(0, songinfos.get(sitution), R.drawable.start, sitution, songinfos.size() - 1);
         isselect = true;
-        current();
+      //  current();
 
     }
 
@@ -277,7 +294,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
         //   audioManger();
         if (sorstop) {
             isselect = true;
-            current();
+         //   current();
             mediaPlayer.start();
             stop.setImageResource(R.drawable.start);
             sorstop = false;
@@ -328,7 +345,8 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     musicpos = progress;
-                    mediaPlayer.seekTo(progress);
+                  //  mediaPlayer.seekTo(progress);
+                    //SachenuberAll.mediaPlayer.seekTo(progress);
 
                 } else if (progress == mediaPlayer.getDuration() && isselect) {
                     media();
@@ -344,7 +362,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                mediaPlayer.seekTo(musicpos);
+           //     mediaPlayer.seekTo(musicpos);
 
 
                 ;
@@ -376,10 +394,11 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
     }
     private void current() {
         seekBar.setProgress(mediaPlayer.getCurrentPosition());
+        //SachenuberAll.pos=mediaPlayer.getCurrentPosition();
         runnable = new Runnable() {
             @Override
             public void run() {
-                current();
+            //    current();
             }
         };
         handler.postDelayed(runnable, 1000);
@@ -478,7 +497,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
                         public void onClick(DialogInterface dialog, int which) {
                             listfullen("ok");
                             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MANAGE_DOCUMENTS}, prmistion);
-                            Toast.makeText(view.getContext(), "pre", Toast.LENGTH_LONG).show();
+
                         }
                     }).setNegativeButton("no", new DialogInterface.OnClickListener() {
                 @Override
@@ -555,6 +574,14 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
         super.onStop();
         Toast.makeText(view.getContext(), "onstop", Toast.LENGTH_SHORT).show();
         // hier muss die miderplayer geschpeicher werden
+
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Toast.makeText(view.getContext(), "onDestroy", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -565,8 +592,8 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
                 Log.i("onfuc", "onAudioFocusChange: " + "1");
             } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
                 mediaPlayer.start();
-                sekk(seekBar);
-                current();
+              //  sekk(seekBar);
+               // current();
                 Log.i("onfuc", "onAudioFocusChange: " + "2");
             } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
                 onDestroy();

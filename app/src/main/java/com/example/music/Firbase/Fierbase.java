@@ -248,11 +248,7 @@ public class Fierbase {
         final ArrayList<String> strings=new ArrayList<>();
             do {
             i++;
-            Log.i("songsf", "onSuccess: "+name.get(i).getNamesong().trim());
-                Log.i("songsf", "onSuccess: 0"+name.get(0).getNamesong().trim());
-                Log.i("songsf", "onSuccess: 1"+name.get(1).getNamesong().trim());
-                Log.i("songsf", "onSuccess: "+name.size());
-                Log.i("songsf", "onSuccess: "+i);
+
             StorageReference storageR = storage.getReference().child(firebaseAuth.getUid()).child(name.get(i).getNamesong().trim());
             storageR.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
@@ -282,6 +278,8 @@ public class Fierbase {
         documentReference.set(stringStringMap);
 
     }
+
+
     public void namesHolder( final Context context) {
         //online
         /*
@@ -304,8 +302,8 @@ public class Fierbase {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         //save in database
                         SaveThings saveThings=new SaveThings();
-                        saveThings.setNamesong(document.getId());
-                        dataBase.daoData().insert(saveThings);
+                      //  saveThings.setNamesong(document.getId());
+                     //   dataBase.daoData().insert(saveThings);
                         Log.d("songss", document.getId() + " => " + document.getData());
                     }
                 }

@@ -19,32 +19,38 @@
         app:menu="@menu/bottom">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
+
     <LinearLayout
-          android:visibility="gone"
+
         android:id="@+id/laufendemusic"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/navibut"
         android:gravity="center"
-        android:layout_margin="20dp">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-/>
+         >
 
         <SeekBar
+            android:id="@+id/sekunten"
             android:layout_width="177dp"
-            android:layout_gravity="center"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
 
         </SeekBar>
-        <Button
+
+        <ImageButton
+            android:id="@+id/startunten"
+            android:onClick="startunte"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            />
+            android:src="@drawable/ic_baseline_pause_circle_filled_24" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_skip_next_24" />
 
 
-        </LinearLayout>
+    </LinearLayout>
 
 
 </RelativeLayout>
