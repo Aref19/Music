@@ -35,7 +35,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class SelectViewFragement extends Fragment implements View.OnClickListener  {
+public class SelectViewFragement extends Fragment   {
     View veiw;
     RadioButton radioButton1, radioButton2;
     Spinner spinnerT, spinnerB;
@@ -83,6 +83,7 @@ public class SelectViewFragement extends Fragment implements View.OnClickListene
         userImage(selctimage);
         SpinnerT();
         SpinnerB();
+        Radio();
 
 
         return veiw;
@@ -314,23 +315,39 @@ public class SelectViewFragement extends Fragment implements View.OnClickListene
     }
 
 
-    @Override
-    public void onClick(View v) {
-        boolean check = ((RadioButton) v).isChecked();
+
+    public void Radio() {
+
         Log.i("radio", "UserRad: "+"radio");
-        switch (v.getId()) {
-            case R.id.radioButton1:
+        radioButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 saveInfoUserselect.saveURIImage(SaveInfoUserselect.USER_Image_KEY, "R.drawable.n");
                 linearLayout.setBackgroundResource(R.drawable.n);
-                break;
-            case R.id.radioButton2:
+            }
+        });
+
+        radioButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 Log.i("radio", "UserRad: "+"radio");
                 saveInfoUserselect.saveURIImage(SaveInfoUserselect.USER_Image_KEY,"R.drawable.app");
                 linearLayout.setBackgroundResource(R.drawable.app);
+            }
+        });
+        /*
+        switch (v.getId()) {
+            case R.id.radioButton1:
+
+                break;
+            case R.id.radioButton2:
+
 
                 break;
 
         }
+
+         */
 
     }
 

@@ -1,7 +1,10 @@
 package com.example.music.Video;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.MediaController;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,27 +23,36 @@ import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.music.DatenBank.SaveInfoUserselect;
+import com.example.music.Firbase.WorkwithFirbase;
 import com.example.music.R;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 
-public class VideoFragment extends Fragment {
+public class VideoFragment extends Fragment implements WorkwithFirbase {
     View view;
     RecyclerView recyclerView;
     VideoModel videoModel;
     ArrayList<VideoModel>videoModels;
     RecyclerView.LayoutManager layoutManager;
     MovieAdpter movieAdpter;
+    SaveInfoUserselect saveInfoUserselect;
+    RelativeLayout relativeLayout;
     @Nullable
     @Override
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
           view=inflater.inflate(R.layout.videofragment,container,false);
          recyclerView=view.findViewById(R.id.rec);
+         relativeLayout=view.findViewById(R.id.videolayoutfr);
          videoModels=new ArrayList<>();
         layoutManager = new LinearLayoutManager(view.getContext());
         movieAdpter = new MovieAdpter();
          fullRc();
+         saveInfoUserselect=SaveInfoUserselect.getContext(view.getContext());
+         pullFoto(relativeLayout,view.getContext());
+
 
         return view;
     }
@@ -76,13 +89,59 @@ public class VideoFragment extends Fragment {
             movieAdpter.setonitem(new MovieAdpter.Onitemclic() {
                 @Override
                 public void onitemclic(int postion) {
-                 //   vidershower(postion);
+                    vidershower(postion);
                 }
             });
             MediaController mediaController = new MediaController(view.getContext());
+
     }
+
+
 }
-private class Task extends AsyncTask<String, String, String> {
+
+    private void vidershower(int postion) {
+        Intent intent = new Intent(view.getContext(), ViewshowerActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("path", videoModels.get(postion).getPathVideo());
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    @Override
+    public void pushAudio(UploadTask.TaskSnapshot snapshot, Context context) {
+
+    }
+
+    @Override
+    public void pullFoto(RelativeLayout linearLayout, Context context) {
+        if (saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.n") || saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.app")) {
+            Log.i("draw1", "pullFoto: ");
+            if (saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.n")) {
+                Log.i("draw2", "pullFoto: ");
+                linearLayout.setBackground(getActivity().getDrawable(R.drawable.n));
+            } else if (saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.app")) {
+                Log.i("draw3", "pullFoto: ");
+                linearLayout.setBackground(getActivity().getDrawable(R.drawable.app));
+            }
+        } else if (!saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.n") || saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.app")) {
+            Drawable drawable = BitmapDrawable.createFromPath(saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY));
+            if (drawable == null) {
+               linearLayout.setBackground(getActivity().getDrawable(R.drawable.n));
+                Log.i("draw4", "pullFoto: ");
+
+            } else {
+                linearLayout.setBackground(drawable);
+                Log.i("lesh", "pullFoto: "+drawable);
+            }
+        }
+    }
+
+    @Override
+    public void cutchAduio(String songs, Context context) {
+
+    }
+
+    private class Task extends AsyncTask<String, String, String> {
         ArrayList<VideoModel> videoModels;
         MovieAdpter movieAdpter;
         Context context;
@@ -104,9 +163,11 @@ private class Task extends AsyncTask<String, String, String> {
             movieAdpter.setonitem(new MovieAdpter.Onitemclic() {
                 @Override
                 public void onitemclic(int postion) {
-               //     vidershower(postion);
+                    vidershower(postion);
                 }
             });
             return null;
         }
-    }}
+    }
+
+}

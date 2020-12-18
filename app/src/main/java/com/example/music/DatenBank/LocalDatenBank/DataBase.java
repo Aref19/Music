@@ -10,7 +10,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
-@Database(entities = {SaveThings.class},version = 2)
+@Database(entities = {SaveThings.class,SongLate.class},version = 3)
 public abstract class DataBase extends RoomDatabase {
     private static DataBase INSTANCE;
     public abstract DaoData daoData();

@@ -2,12 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     xmlns:app="http://schemas.android.com/apk/res-auto">
 <FrameLayout
     android:id="@+id/fram"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_above="@+id/navibut"/>
+    android:layout_above="@+id/laufendemusic"/>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navibut"
         android:layout_width="match_parent"
@@ -17,5 +19,38 @@
         app:menu="@menu/bottom">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+    <LinearLayout
+
+        android:id="@+id/laufendemusic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/navibut"
+        android:gravity="center"
+         >
+
+        <SeekBar
+            android:id="@+id/sekunten"
+            android:layout_width="177dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+        </SeekBar>
+
+        <ImageButton
+            android:id="@+id/startunten"
+            android:onClick="startunte"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_pause_circle_filled_24" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_skip_next_24" />
+
+
+    </LinearLayout>
+
 
 </RelativeLayout>
