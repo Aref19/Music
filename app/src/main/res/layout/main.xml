@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:background="?android:attr/windowBackground"
         android:layout_alignParentBottom="true"
+        app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
@@ -44,10 +45,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_baseline_pause_circle_filled_24" />
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_skip_next_24" />
+
 
 
     </LinearLayout>

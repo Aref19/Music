@@ -1,6 +1,7 @@
 package com.example.music.HauptMain;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -13,12 +14,12 @@ import android.content.IntentFilter;
 import android.graphics.drawable.Icon;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -26,7 +27,6 @@ import android.widget.Toast;
 
 import com.example.music.DatenBank.LocalDatenBank.DataBase;
 import com.example.music.DatenBank.LocalDatenBank.SongLate;
-import com.example.music.HauptMain.MusicNavie;
 import com.example.music.Notifaction.Notification;
 import com.example.music.NotificationServiceAction.onClearFromRecentServic;
 import com.example.music.R;
@@ -50,8 +50,10 @@ public class Main extends AppCompatActivity implements AudioManager.OnAudioFocus
     AudioManager mAudioManager;
     MusicNavie musicNavie;
     Songinfo songinfo;
+    
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,12 +66,16 @@ public class Main extends AppCompatActivity implements AudioManager.OnAudioFocus
         SachenuberAll.lauf = seekBar;
         SachenuberAll.startb = button;
          musicNavie=new MusicNavie();
+         SachenuberAll sachenuberAll=new SachenuberAll();
+         sachenuberAll.audioManger(this,this);
         BottomNavigationView bottomNavigationView = findViewById(R.id.navibut);
         bottomNavigationView.setOnNavigationItemSelectedListener(nav);
         getSupportFragmentManager().beginTransaction().replace(R.id.fram, new MusicNavie()).commit();
         registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-       startService(new Intent(this.getBaseContext(), onClearFromRecentServic.class));
+//       startService(new Intent(this.getBaseContext(), onClearFromRecentServic.class));
         dataBase = DataBase.getInstance(this);
+
+
 
 
         button.setImageIcon(Icon.createWithResource("com.example.music", R.drawable.ic_baseline_play_circle_outline_24));
@@ -85,21 +91,15 @@ public class Main extends AppCompatActivity implements AudioManager.OnAudioFocus
         } catch (IOException e) {
             e.printStackTrace();
         }
-<<<<<<< HEAD
-        handler=new Handler();
-       sekk(seekBar);
-       current();
-      SachenuberAll sachenuberAll=new SachenuberAll();
-      sachenuberAll.audioManger(this);
-=======
+
         handler = new Handler();
         sekk(seekBar);
         current();
-        SachenuberAll sachenuberAll = new SachenuberAll();
+
         notification=new Notification(this);
         notification.creatchanel();
 
->>>>>>> ab1ae7b8619fef68d1d62409da5822e1305801fa
+
         //   getSupportFragmentManager().beginTransaction().replace(R.id.fram,new SelectViewFragement()).commit();
     }
 
@@ -159,7 +159,7 @@ public class Main extends AppCompatActivity implements AudioManager.OnAudioFocus
         //    SongLate songLate=new SongLate(SachenuberAll.mediaPlayer.getDuration(),SachenuberAll.mediaPlay);
         laufendeSong = LaufendeSong.getContext(false);
         if (laufendeSong.getMediaPlayer() != null) {
-            SongLate songLate = new SongLate((laufendeSong.getMediaPlayer().getDuration()), laufendeSong.getPath(), laufendeSong.getPostion());
+            SongLate songLate = new SongLate((laufendeSong.getMediaPlayer().getDuration()), laufendeSong.getPath(), laufendeSong.getPostion(),laufendeSong.getSize(),laufendeSong.getSonginfo().getSong_name());
             dataBase.daoData().deltetableSong();
             dataBase.daoData().insertSong(songLate);
         }
@@ -173,7 +173,7 @@ public class Main extends AppCompatActivity implements AudioManager.OnAudioFocus
        /*      musicNavie.onTaskplay();
         */
        if(laufendeSong.getMediaPlayer()==null){
-           notification.greatNafi(0,songinfo,R.drawable.ic_baseline_pause_circle_filled_24,dataBase.daoData().getSongList().getPostion(),dataBase.daoData().getSongList().getPostion());
+           notification.greatNafi(0,songinfo,R.drawable.ic_baseline_pause_circle_filled_24,dataBase.daoData().getSongList().getPostion(),dataBase.daoData().getSongList().getSize());
        }else {
            notification.greatNafi(0,laufendeSong.getSonginfo(),R.drawable.ic_baseline_pause_circle_filled_24,laufendeSong.getPostion(),laufendeSong.getSize());
        }
@@ -187,7 +187,7 @@ public class Main extends AppCompatActivity implements AudioManager.OnAudioFocus
         } else {
           /*  musicNavie.onTaskpause(); */
             if(laufendeSong.getMediaPlayer()==null){
-                notification.greatNafi(0,songinfo,R.drawable.ic_baseline_play_circle_outline_24,dataBase.daoData().getSongList().getPostion(),dataBase.daoData().getSongList().getPostion());
+                notification.greatNafi(0,songinfo,R.drawable.ic_baseline_play_circle_outline_24,dataBase.daoData().getSongList().getPostion(),dataBase.daoData().getSongList().getSize());
             }else {
                 notification.greatNafi(0,laufendeSong.getSonginfo(),R.drawable.ic_baseline_play_circle_outline_24,laufendeSong.getPostion(),laufendeSong.getSize());
             }
@@ -293,12 +293,13 @@ public class Main extends AppCompatActivity implements AudioManager.OnAudioFocus
     public void laufen() throws IOException {
         laufendeSong = LaufendeSong.getContext(false);
         if (dataBase.daoData().getSongList() != null) {
-         SongLate songLate=   dataBase.daoData().getSongList();
-            songinfo=new Songinfo(songLate.getPath(),"von data","von data","von data");
+         SongLate songLate= dataBase.daoData().getSongList();
+            songinfo=new Songinfo(songLate.getPath(),songLate.getNamederSong(),songLate.getNamederSong(),songLate.getNamederSong());
             Log.i("baseunt", "laufen: " + "von data1");
             SachenuberAll.mediaPlayer=new MediaPlayer();
             SachenuberAll.mediaPlayer.setDataSource(dataBase.daoData().getSongList().getPath());
             SachenuberAll.mediaPlayer.prepare();
+
 
             Log.i("baseunt", "laufen: " + "von data3");
 
@@ -329,16 +330,30 @@ public class Main extends AppCompatActivity implements AudioManager.OnAudioFocus
     public void onAudioFocusChange(int focusChange) {
         //   if (isMusicActive) {
         if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-            mediaPlayer.pause();
+            SachenuberAll.mediaPlayer.pause();
             Log.i("onfuc", "onAudioFocusChange: " + "1");
         } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-            mediaPlayer.start();
+            SachenuberAll.mediaPlayer.start();
             sekk(seekBar);
             current();
             Log.i("onfuc", "onAudioFocusChange: " + "2");
         } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-            onDestroy();
             Log.i("onfuc", "onAudioFocusChange: " + "3");
+        }
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public  void audioManger(Context context) {
+
+        try {
+
+            mAudioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
+            mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+            Log.i("exsfrom", "audioManger: " );
+
+
+        } catch (IllegalStateException e) {
+            Log.i("exsfrom", "audioManger: " + e.toString());
         }
 
     }

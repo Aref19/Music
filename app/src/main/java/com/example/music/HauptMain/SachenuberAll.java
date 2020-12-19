@@ -21,18 +21,20 @@ public class SachenuberAll extends Activity implements AudioManager.OnAudioFocus
     public static MediaPlayer mediaPlayer;
     public static boolean status=false;
     public static int pos;
+    public  static  Context context;
+    public  static  AudioManager.OnAudioFocusChangeListener onAudioFocusChangeListener;
     AudioManager mAudioManager;
 
     @Override
     public void onAudioFocusChange(int focusChange) {
         if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-            mediaPlayer.pause();
+            SachenuberAll.mediaPlayer.pause();
             Log.i("onfuc", "onAudioFocusChange: " + "1");
         } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-            mediaPlayer.start();
+            SachenuberAll.mediaPlayer.start();
             Log.i("onfuc", "onAudioFocusChange: " + "2");
         } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-            mediaPlayer.pause();
+            SachenuberAll.mediaPlayer.pause();
             Log.i("onfuc", "onAudioFocusChange: " + "3");
         }
     }
@@ -42,11 +44,12 @@ public class SachenuberAll extends Activity implements AudioManager.OnAudioFocus
         super.onCreate(savedInstanceState);
     }
 
-    public  void audioManger(Context context) {
+    public  void audioManger(Context context,AudioManager.OnAudioFocusChangeListener onAudioFocusChangeListener) {
         try {
 
-            mAudioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
-            mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+
+            mAudioManager = (AudioManager) context.getSystemService(context.AUDIO_SERVICE);
+            mAudioManager.requestAudioFocus(onAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
             Log.i("exsfrom", "audioManger: " );
         } catch (IllegalStateException e) {
             Log.i("exsfrom", "audioManger: " + e.toString());

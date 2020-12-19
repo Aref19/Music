@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,19 +20,20 @@ import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.music.DatenBank.SaveInfoUserselect;
 import com.example.music.Firbase.WorkwithFirbase;
+import com.example.music.HauptMain.SachenuberAll;
 import com.example.music.R;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 
-public class VideoFragment extends Fragment implements WorkwithFirbase {
+public class VideoFragment extends Fragment implements WorkwithFirbase{
     View view;
+    AudioManager mAudioManager;
     RecyclerView recyclerView;
     VideoModel videoModel;
     ArrayList<VideoModel>videoModels;
@@ -52,6 +54,7 @@ public class VideoFragment extends Fragment implements WorkwithFirbase {
          fullRc();
          saveInfoUserselect=SaveInfoUserselect.getContext(view.getContext());
          pullFoto(relativeLayout,view.getContext());
+
 
 
         return view;
@@ -141,11 +144,17 @@ public class VideoFragment extends Fragment implements WorkwithFirbase {
 
     }
 
-    private class Task extends AsyncTask<String, String, String> {
+
+
+
+
+
+    private class Task extends AsyncTask<String, String, String> implements AudioManager.OnAudioFocusChangeListener {
         ArrayList<VideoModel> videoModels;
         MovieAdpter movieAdpter;
         Context context;
         RecyclerView.LayoutManager layoutManager;
+
 
         public Task(ArrayList<VideoModel> videoModels, Context context, RecyclerView.LayoutManager layoutManager) {
             this.videoModels = videoModels;
@@ -164,10 +173,28 @@ public class VideoFragment extends Fragment implements WorkwithFirbase {
                 @Override
                 public void onitemclic(int postion) {
                     vidershower(postion);
+
                 }
+
             });
+            SachenuberAll sachenuberAll=new SachenuberAll();
+            sachenuberAll.audioManger(getActivity(),this);
             return null;
         }
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+            if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                SachenuberAll.mediaPlayer.pause();
+                Log.i("onfuc", "onAudioFocusChange: " + "1");
+            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                SachenuberAll.mediaPlayer.start();
+
+                Log.i("onfuc", "onAudioFocusChange: " + "2");
+            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                Log.i("onfuc", "onAudioFocusChange: " + "3");
+            }
+        }
     }
+
 
 }

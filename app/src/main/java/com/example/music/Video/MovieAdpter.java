@@ -1,16 +1,12 @@
 package com.example.music.Video;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -18,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.music.DatenBank.SaveInfoUserselect;
-import com.example.music.HauptMain.Music;
 import com.example.music.R;
 
 import java.util.ArrayList;

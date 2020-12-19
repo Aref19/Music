@@ -8,32 +8,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.renderscript.ScriptGroup;
 import android.util.Log;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.example.music.DatenBank.LocalDatenBank.DataBase;
 import com.example.music.DatenBank.SaveInfoUserselect;
 import com.example.music.Firbase.WorkwithFirbase;
-import com.example.music.HauptMain.Adapter;
-import com.example.music.HauptMain.Music;
 import com.example.music.R;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Video extends AppCompatActivity implements WorkwithFirbase {
     VideoView videoView;

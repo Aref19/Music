@@ -38,10 +38,10 @@ import java.util.ArrayList;
 public class SelectViewFragement extends Fragment   {
     View veiw;
     RadioButton radioButton1, radioButton2;
-    Spinner spinnerT, spinnerB;
+    Spinner spinnerT;
     ListView listView;
     ImageView imageView,button2;
-    LinearLayout linearLayout;
+    View linearLayout;
     ArrayAdapter adapter;
     ArrayAdapter<String> stringArrayAdapter;
     ArrayList<String> songs = new ArrayList<>();
@@ -58,31 +58,32 @@ public class SelectViewFragement extends Fragment   {
         veiw = inflater.inflate(R.layout.selectviewuser, container, false);
         imageView = veiw.findViewById(R.id.imageView);
         spinnerT = veiw.findViewById(R.id.spinnerT);
-        spinnerB = veiw.findViewById(R.id.spinnerB);
+
         listView = veiw.findViewById(R.id.userlist);
         linearLayout = veiw.findViewById(R.id.backgrounduser);
         radioButton1 = veiw.findViewById(R.id.radioButton1);
         radioButton2 = veiw.findViewById(R.id.radioButton2);
         selctimage=veiw.findViewById(R.id.selectimageUser);
-        button1 = veiw.findViewById(R.id.stop);
-        button2 = veiw.findViewById(R.id.pause);
-        button3 = veiw.findViewById(R.id.start);
+
         textColor = veiw.findViewById(R.id.textcolor);
         songs.add("song1");
         songs.add("song2");
         songs.add("song3");
+        /*
         drawables = new GradientDrawable[3];
         drawables[0] = (GradientDrawable) button1.getBackground().mutate();
         drawables[1] = (GradientDrawable) button2.getBackground().mutate();
         drawables[2] = (GradientDrawable) button3.getBackground().mutate();
+
+         */
         spinners(spinnerT);
-        spinners(spinnerB);
+
         saveInfoUserselect=SaveInfoUserselect.getContext(veiw.getContext());
         spinnerT.setSelection(saveInfoUserselect.loadspinnerSelection(SaveInfoUserselect.USER_Int_Spinnerindex));
-        spinnerB.setSelection(saveInfoUserselect.loadspinnerSelection(SaveInfoUserselect.USER_Intbutton_Spinnerindex));
+
         userImage(selctimage);
         SpinnerT();
-        SpinnerB();
+
         Radio();
 
 
@@ -94,16 +95,11 @@ public class SelectViewFragement extends Fragment   {
                     R.array.colorsarra, android.R.layout.simple_spinner_item);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerT.setAdapter(adapter);
-        } else if (spinner.getId() == R.id.spinnerB) {
-            adapter = ArrayAdapter.createFromResource(veiw.getContext(),
-                    R.array.colorsarrabutton, android.R.layout.simple_spinner_item);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinnerB.setAdapter(adapter);
         }
 
 
     }
-
+/*
     public void SpinnerB() {
 
        spinnerB.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -117,38 +113,39 @@ public class SelectViewFragement extends Fragment   {
                    drawables[1].setColor(Color.parseColor(colorsButton[0]));
                    drawables[2].setColor(Color.parseColor(colorsButton[0]));
                    saveInfoUserselect.saveColorButton(SaveInfoUserselect.USER_ColorB_KEY, colorsButton[0]);
-                /*
+
                 button1.setBackgroundColor(Color.parseColor(colorsButton[0]));
                 button2.setBackgroundColor(Color.parseColor(colorsButton[0]));
                 button3.setBackgroundColor(Color.parseColor(colorsButton[0]));
 
-                 */
+
                } else if (parent.getItemAtPosition(position).equals(colorsnameofButton[1])) {
                    saveInfoUserselect.savesbuttonSelection(SaveInfoUserselect.USER_Intbutton_Spinnerindex,1);
                    drawables[0].setColor(Color.parseColor(colorsButton[1]));
                    drawables[1].setColor(Color.parseColor(colorsButton[1]));
                    drawables[2].setColor(Color.parseColor(colorsButton[1]));
                    saveInfoUserselect.saveColorButton(SaveInfoUserselect.USER_ColorB_KEY, colorsButton[1]);
-                /*
+
                 button3.setBackgroundColor(Color.parseColor(colorsButton[1]));
                 button2.setBackgroundColor(Color.parseColor(colorsButton[1]));
                 button1.setBackgroundColor(Color.parseColor(colorsButton[1]));
 
-                 */
+
 
                    Log.i("spinn1", "onItemSelected: " + parent.getItemAtPosition(position) + colorsname[1]);
+
                } else if (parent.getItemAtPosition(position).equals(colorsnameofButton[2])) {
                    saveInfoUserselect.savesbuttonSelection(SaveInfoUserselect.USER_Intbutton_Spinnerindex,2);
                    drawables[0].setColor(Color.parseColor(colorsButton[2]));
                    drawables[1].setColor(Color.parseColor(colorsButton[2]));
                    drawables[2].setColor(Color.parseColor(colorsButton[2]));
                    saveInfoUserselect.saveColorButton(SaveInfoUserselect.USER_ColorB_KEY, colorsButton[2]);
-                /*
+
                 button3.setBackgroundColor(Color.parseColor(colorsButton[2]));
                 button2.setBackgroundColor(Color.parseColor(colorsButton[2]));
                 button1.setBackgroundColor(Color.parseColor(colorsButton[2]));
 
-                 */
+
                } else if (parent.getItemAtPosition(position).equals(colorsnameofButton[4])) {
                    saveInfoUserselect.savesbuttonSelection(SaveInfoUserselect.USER_Intbutton_Spinnerindex,4);
                    drawables[0].setColor(Color.parseColor(colorsButton[4]));
@@ -160,19 +157,18 @@ public class SelectViewFragement extends Fragment   {
                 button2.setBackgroundColor(Color.parseColor(colorsButton[4]));
                 button1.setBackgroundColor(Color.parseColor(colorsButton[4]));
 
-                 */
                } else if (parent.getItemAtPosition(position).equals(colorsnameofButton[3])) {
                    saveInfoUserselect.savesbuttonSelection(SaveInfoUserselect.USER_Intbutton_Spinnerindex,3);
                    drawables[0].setColor(Color.parseColor(colorsButton[3]));
                    drawables[2].setColor(Color.parseColor(colorsButton[3]));
                    drawables[1].setColor(Color.parseColor(colorsButton[3]));
                    saveInfoUserselect.saveColorButton(SaveInfoUserselect.USER_ColorB_KEY, colorsButton[3]);
-                /*
+
                 button3.setBackgroundColor(Color.parseColor(colorsButton[3]));
                 button2.setBackgroundColor(Color.parseColor(colorsButton[3]));
                 button1.setBackgroundColor(Color.parseColor(colorsButton[3]));
 
-                 */
+
 
                }
            }
@@ -186,6 +182,7 @@ public class SelectViewFragement extends Fragment   {
 
 
     }
+    */
     private void SpinnerT(){
         spinnerT.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
