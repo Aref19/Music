@@ -98,10 +98,12 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
         songinfos = new ArrayList<>();
         longdruck(songView);
         premtion();
+        SachenuberAll sachenuberAll=new SachenuberAll();
+        //sachenuberAll.audioManger(view.getContext());
         dataBase=DataBase.getInstance(view.getContext());
         audioManger();
         seekBar = view.findViewById(R.id.laufm);
-//      view.getContext().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+         view.getContext().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
         view.getContext().startService(new Intent(getActivity().getBaseContext(), onClearFromRecentServic.class));
         mediaPlayer = new MediaPlayer();
         notification = new Notification(view.getContext());

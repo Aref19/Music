@@ -68,7 +68,7 @@ public class Main extends AppCompatActivity implements AudioManager.OnAudioFocus
        sekk(seekBar);
        current();
       SachenuberAll sachenuberAll=new SachenuberAll();
-
+      sachenuberAll.audioManger(this);
         //   getSupportFragmentManager().beginTransaction().replace(R.id.fram,new SelectViewFragement()).commit();
     }
 

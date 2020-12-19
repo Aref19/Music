@@ -121,7 +121,7 @@ public class Music extends AppCompatActivity implements Playble, WorkwithFirbase
         setContentView(R.layout.activity_main);
         seekBar = findViewById(R.id.laufm);
         listView = findViewById(R.id.liedlist);
-SachenuberAll sachenuberAll=new SachenuberAll();
+
 
         handler = new Handler();
         handel = new Handler();
