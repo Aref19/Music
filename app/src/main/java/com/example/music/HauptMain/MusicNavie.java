@@ -57,10 +57,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,AudioManager.OnAudioFocusChangeListener {
+public class MusicNavie extends Fragment implements Playble, WorkwithFirbase {
     ListView songView;
 
-    ImageButton next , last;
+    ImageButton next, last;
     ImageView stop;
     View view;
     ArrayList<Songinfo> songinfos;
@@ -68,7 +68,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
     SeekBar seekBar;
     MediaPlayer mediaPlayer;
     int sitution, lastint, nextint, musicpos;
-    boolean isselect,sorstop,isplaing;
+    boolean isselect, sorstop, isplaing;
     Notification notification;
     Runnable runnable;
     Handler handler;
@@ -76,14 +76,13 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
     int prmistion = 1;
     RelativeLayout relativeLayout;
     GradientDrawable[] drawables;
-     AudioManager AudioManager;
-     LinearLayout linearLayout;
-     DataBase dataBase;
-     LaufendeSong laufendeSong;
+    AudioManager AudioManager;
+    LinearLayout linearLayout;
+    DataBase dataBase;
+    LaufendeSong laufendeSong;
 
-    public MusicNavie(LinearLayout linearLayout) {
-        this.linearLayout=linearLayout;
-    }
+
+
 
     @Nullable
     @Override
@@ -98,24 +97,25 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
         songinfos = new ArrayList<>();
         longdruck(songView);
         premtion();
-        dataBase=DataBase.getInstance(view.getContext());
+        dataBase = DataBase.getInstance(view.getContext());
         audioManger();
         seekBar = view.findViewById(R.id.laufm);
-//      view.getContext().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        view.getContext().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
         view.getContext().startService(new Intent(getActivity().getBaseContext(), onClearFromRecentServic.class));
         mediaPlayer = new MediaPlayer();
         notification = new Notification(view.getContext());
         notification.creatchanel();
         handler = new Handler();
-        saveInfoUserselect=SaveInfoUserselect.getContext(view.getContext());
-        relativeLayout=view.findViewById(R.id.relative);
+        saveInfoUserselect = SaveInfoUserselect.getContext(view.getContext());
+        relativeLayout = view.findViewById(R.id.relative);
         drawables = new GradientDrawable[3];
         drawables[0] = (GradientDrawable) stop.getBackground().mutate();
         drawables[1] = (GradientDrawable) next.getBackground().mutate();
         drawables[2] = (GradientDrawable) last.getBackground().mutate();
-      //  sekk(seekBar);
+       // checkdataBase();
+        //  sekk(seekBar);
         onClick();
-      //  current();
+        //  current();
         buttonColor();
 
         if (!saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("")) {
@@ -126,11 +126,11 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
     }
 
     private void loadSong() {
-        Log.i("namesong", "getallsong: " +"");
+        Log.i("namesong", "getallsong: " + "");
 
         songinfos = new ArrayList<>();
         Uri allsong = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Log.i("namesong", "getallsong: " +"");
+        Log.i("namesong", "getallsong: " + "");
         String selection = MediaStore.Audio.Media.IS_MUSIC + "!=0";
         crusor = getActivity().managedQuery(allsong, null, selection, null, null);
 
@@ -172,25 +172,35 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
                     sitution = position;
                     nextint = position;
                     lastint = position;
-                    mediaPlayer.stop();
-                    mediaPlayer = new MediaPlayer();
-                    mediaPlayer.setDataSource(songinfos.get(position).getPath());
-                    mediaPlayer.prepare();
-                    mediaPlayer.start();
+                    SachenuberAll.mediaPlayer.stop();
+                    SachenuberAll.mediaPlayer = new MediaPlayer();
+                    SachenuberAll.mediaPlayer.setDataSource(songinfos.get(position).getPath());
+                    SachenuberAll.mediaPlayer.prepare();
+                    SachenuberAll.mediaPlayer.start();
                     stop.setImageResource(R.drawable.start);
                     isselect = true;
                     seekBar.setMax(mediaPlayer.getDuration());
-                   SachenuberAll.linearLayoutm.setVisibility(View.VISIBLE);
-                   SachenuberAll.mediaPlayer.stop();
-                   SachenuberAll.mediaPlayer=mediaPlayer;
-                   SachenuberAll.startb.setImageIcon(Icon.createWithResource("com.example.music",R.drawable.ic_baseline_pause_circle_filled_24));
-                   SachenuberAll.status=true;
-                   Main main=new Main();
+                    SachenuberAll.linearLayoutm.setVisibility(View.VISIBLE);
+                    /*
+                    if (SachenuberAll.mediaPlayer != null) {
+                        SachenuberAll.mediaPlayer.stop();
+                        SachenuberAll.mediaPlayer = mediaPlayer;
+                    } else {
+                        SachenuberAll.mediaPlayer = mediaPlayer;
+                    }
 
-                  //  current();
-                    laufendeSong=LaufendeSong.getContext(false);
-                    laufendeSong.LaufendeSong(mediaPlayer,position,songinfos.get(position).getPath());
-                  //  main.laufen();
+                     */
+
+
+                    SachenuberAll.startb.setImageIcon(Icon.createWithResource("com.example.music", R.drawable.ic_baseline_pause_circle_filled_24));
+                    SachenuberAll.status = true;
+
+                    Main main = new Main();
+
+                    //  current();
+                    laufendeSong = LaufendeSong.getContext(false);
+                    laufendeSong.LaufendeSong(SachenuberAll.mediaPlayer, position, songinfos.get(position).getPath(),songinfos.get(position),songinfos.size());
+                    //  main.laufen();
                     notification.greatNafi(0, songinfos.get(position), R.drawable.ic_baseline_pause_circle_filled_24, position, songinfos.size());
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -203,13 +213,15 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
 
     @Override
     public void onTaskplay() {
-        mediaPlayer.start();
+        SachenuberAll.mediaPlayer.start();
         stop.setImageResource(R.drawable.start);
         onTaskplay();
+        laufendeSong = LaufendeSong.getContext(false);
+        laufendeSong.LaufendeSong(SachenuberAll.mediaPlayer, sitution, songinfos.get(sitution).getPath(),songinfos.get(sitution),songinfos.size());
         notification.creatchanel();
         notification.greatNafi(0, songinfos.get(sitution), R.drawable.start, sitution, songinfos.size() - 1);
         isselect = true;
-      //  current();
+        //  current();
 
     }
 
@@ -230,22 +242,23 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
             lastint = (songinfos.size() - 1);
         }
 
-        mediaPlayer.stop();
+        SachenuberAll.mediaPlayer.stop();
         try {
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setDataSource(songinfos.get(lastint).getPath());
-            mediaPlayer.prepare();
-            mediaPlayer.seekTo(0);
-            mediaPlayer.start();
+            SachenuberAll.mediaPlayer= new MediaPlayer();
+            SachenuberAll.mediaPlayer.setDataSource(songinfos.get(lastint).getPath());
+            SachenuberAll.mediaPlayer.prepare();
+            SachenuberAll.mediaPlayer.seekTo(0);
+            SachenuberAll.mediaPlayer.start();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
         stop.setImageResource(R.drawable.stop);
         stop.setImageResource(R.drawable.start);
-
-
+        laufendeSong = LaufendeSong.getContext(false);
+        laufendeSong.LaufendeSong(SachenuberAll.mediaPlayer, sitution, songinfos.get(sitution).getPath(),songinfos.get(sitution),songinfos.size());
         notification.greatNafi(0, songinfos.get(sitution), R.drawable.ic_baseline_pause_circle_filled_24, sitution, songinfos.size() - 1);
+
 
     }
 
@@ -254,6 +267,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
         nextint++;
         lastint++;
         isselect = true;
+        sorstop=false;
         Log.i("warum", "onTaskpause: " + "von hier1");
         //audioManger();
         if (sitution == songinfos.size() - 1) {
@@ -265,13 +279,13 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
             nextint = 0;
         }
 
-        mediaPlayer.stop();
+       SachenuberAll.mediaPlayer.stop();
         try {
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setDataSource(songinfos.get(nextint).getPath());
-            mediaPlayer.prepare();
-            mediaPlayer.seekTo(0);
-            mediaPlayer.start();
+            SachenuberAll.mediaPlayer = new MediaPlayer();
+            SachenuberAll.mediaPlayer.setDataSource(songinfos.get(nextint).getPath());
+            SachenuberAll.mediaPlayer.prepare();
+            SachenuberAll.mediaPlayer.seekTo(0);
+            SachenuberAll.mediaPlayer.start();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -279,7 +293,8 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
         stop.setImageResource(R.drawable.stop);
         stop.setImageResource(R.drawable.start);
         seekBar.setProgress(0);
-
+        laufendeSong = LaufendeSong.getContext(false);
+        laufendeSong.LaufendeSong(SachenuberAll.mediaPlayer, sitution, songinfos.get(sitution).getPath(),songinfos.get(sitution),songinfos.size());
         notification.greatNafi(0, songinfos.get(sitution), R.drawable.ic_baseline_pause_circle_filled_24, sitution, songinfos.size() - 1);
 
 
@@ -287,23 +302,28 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
 
     @Override
     public void onTaskpause() {
-        mediaPlayer.pause();
+        SachenuberAll.mediaPlayer.pause();
         notification.creatchanel();
         Log.i("warum", "onTaskpause: " + "von hier2");
 
         //   audioManger();
         if (sorstop) {
             isselect = true;
-         //   current();
-            mediaPlayer.start();
+            //   current();
+            SachenuberAll.mediaPlayer.start();
             stop.setImageResource(R.drawable.start);
             sorstop = false;
             Log.i("hier", "onTaskpause: " + "hier1");
+            laufendeSong = LaufendeSong.getContext(false);
+            laufendeSong.LaufendeSong(SachenuberAll.mediaPlayer, sitution, songinfos.get(sitution).getPath(),songinfos.get(sitution),songinfos.size());
             notification.greatNafi(0, songinfos.get(sitution), R.drawable.ic_baseline_pause_circle_filled_24, sitution, songinfos.size() - 1);
         } else if (isselect) {
             isselect = false;
             stop.setImageResource(R.drawable.stop);
+            laufendeSong = LaufendeSong.getContext(false);
+            laufendeSong.LaufendeSong(SachenuberAll.mediaPlayer, sitution, songinfos.get(sitution).getPath(),songinfos.get(sitution),songinfos.size());
             notification.greatNafi(0, songinfos.get(sitution), R.drawable.ic_baseline_play_circle_outline_24, sitution, songinfos.size() - 1);
+
             Log.i("hier", "onTaskpause: " + "hier2");
             sorstop = true;
 
@@ -345,7 +365,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     musicpos = progress;
-                  //  mediaPlayer.seekTo(progress);
+                    //  mediaPlayer.seekTo(progress);
                     //SachenuberAll.mediaPlayer.seekTo(progress);
 
                 } else if (progress == mediaPlayer.getDuration() && isselect) {
@@ -362,7 +382,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-           //     mediaPlayer.seekTo(musicpos);
+                //     mediaPlayer.seekTo(musicpos);
 
 
                 ;
@@ -378,11 +398,11 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
             if (sitution >= songinfos.size()) {
                 sitution = 0;
             }
-            mediaPlayer.stop();
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setDataSource(songinfos.get(sitution).getPath());
-            mediaPlayer.prepare();
-            mediaPlayer.start();
+            SachenuberAll.mediaPlayer.stop();
+            SachenuberAll.mediaPlayer = new MediaPlayer();
+            SachenuberAll.mediaPlayer.setDataSource(songinfos.get(sitution).getPath());
+            SachenuberAll.mediaPlayer.prepare();
+            SachenuberAll.mediaPlayer.start();
             Log.i("warum", "onTaskpause: " + "von hier media");
             seekBar.setMax(mediaPlayer.getDuration());
 
@@ -392,13 +412,14 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
 
 
     }
+
     private void current() {
         seekBar.setProgress(mediaPlayer.getCurrentPosition());
         //SachenuberAll.pos=mediaPlayer.getCurrentPosition();
         runnable = new Runnable() {
             @Override
             public void run() {
-            //    current();
+                //    current();
             }
         };
         handler.postDelayed(runnable, 1000);
@@ -436,6 +457,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
     public void cutchAduio(String songs, Context context) {
 
     }
+
     private void buttonColor() {
         if (!saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY).equals("")) {
             drawables[0].setColor(Color.parseColor(saveInfoUserselect.loadColorBu(SaveInfoUserselect.USER_ColorB_KEY)));
@@ -444,6 +466,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
             ;
         }
     }
+
     private void longdruck(ListView listView) {
         Log.i("long", "longdruck: " + "rstrzt");
 
@@ -475,11 +498,12 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
         });
 
     }
+
     private void premtion() {
         boolean sta;
         if (ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.MANAGE_DOCUMENTS) == PackageManager.PERMISSION_GRANTED) {
             loadSong();
-            Log.i("prem", "premtion: "+"von hier");
+            Log.i("prem", "premtion: " + "von hier");
 
         } else {
             requstpremstion();
@@ -507,21 +531,21 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
             }).create().show();
 
         } else {
-            requestPermissions( new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MANAGE_DOCUMENTS}, prmistion);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MANAGE_DOCUMENTS}, prmistion);
 
-            Log.i("prem", "listfullen: "+"ja");
+            Log.i("prem", "listfullen: " + "ja");
         }
     }
 
     private void listfullen(String s) {
-        Log.i("prem", "listfullen: "+s);
+        Log.i("prem", "listfullen: " + s);
         loadSong();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        Log.i("req", "onRequestPermissionsResult: "+requestCode);
+        Log.i("req", "onRequestPermissionsResult: " + requestCode);
         switch (requestCode) {
             case 1:
                 // If request is cancelled, the result arrays are empty.
@@ -537,7 +561,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
                 }
                 return;
         }
-        }
+    }
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -558,11 +582,12 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
             }
         }
     };
+
     public void audioManger() {
         try {
             AudioManager am = (AudioManager) view.getContext().getSystemService(Context.AUDIO_SERVICE);
             am.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-            Log.i("exsfrom", "audioManger: " );
+            Log.i("exsfrom", "audioManger: ");
         } catch (IllegalStateException e) {
             Log.i("exsfrom", "audioManger: " + e.toString());
         }
@@ -583,24 +608,22 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
         super.onDestroy();
         Toast.makeText(view.getContext(), "onDestroy", Toast.LENGTH_SHORT).show();
     }
+    private void checkdataBase()  {
+        if(dataBase.daoData().getSongList()!=null){
+            SongLate songLate=dataBase.daoData().getSongList();
+            SachenuberAll.mediaPlayer=new MediaPlayer();
+            try {
+                SachenuberAll.mediaPlayer.setDataSource(songLate.getPath());
+                SachenuberAll.mediaPlayer.prepare();
+            }catch (Exception e){
 
-    @Override
-    public void onAudioFocusChange(int focusChange) {
-        if (isselect) {
-            if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK ) {
-                mediaPlayer.pause();
-                Log.i("onfuc", "onAudioFocusChange: " + "1");
-            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                mediaPlayer.start();
-              //  sekk(seekBar);
-               // current();
-                Log.i("onfuc", "onAudioFocusChange: " + "2");
-            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                onDestroy();
-                Log.i("onfuc", "onAudioFocusChange: " + "3");
             }
+
         }
 
+
     }
+
+
 }
 

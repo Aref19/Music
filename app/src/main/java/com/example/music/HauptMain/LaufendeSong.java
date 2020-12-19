@@ -6,7 +6,10 @@ public class LaufendeSong {
     private MediaPlayer mediaPlayer;
     private int postion;
     private String path;
+    private int size;
+    private Songinfo songinfo;
     public static LaufendeSong laufendeSong;
+
 
     public LaufendeSong() {
 
@@ -19,10 +22,12 @@ public class LaufendeSong {
         }
            return laufendeSong;
     }
-    public void LaufendeSong(MediaPlayer mediaPlayer, int postion, String path) {
+    public void LaufendeSong(MediaPlayer mediaPlayer, int postion, String path,Songinfo songinfo,int size) {
         this.mediaPlayer = mediaPlayer;
         this.postion = postion;
         this.path = path;
+        this.songinfo=songinfo;
+        this.size=size;
 
     }
 
@@ -56,5 +61,21 @@ public class LaufendeSong {
 
     public static void setLaufendeSong(LaufendeSong laufendeSong) {
         LaufendeSong.laufendeSong = laufendeSong;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public Songinfo getSonginfo() {
+        return songinfo;
+    }
+
+    public void setSonginfo(Songinfo songinfo) {
+        this.songinfo = songinfo;
     }
 }
