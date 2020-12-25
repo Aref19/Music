@@ -9,16 +9,21 @@ import java.util.List;
 @Dao
 public interface DaoData {
     @Insert
-  //  public void insert(SaveThings saveThings);
+    //  public void insert(SaveThings saveThings);
     public void insertSong(SongLate songLate);
+
     @Query("select image from Userselect")
-    byte [] image();
+    byte[] image();
+
     @Query("delete from Userselect")
     void deltetable();
+
     @Query("select * from Userselect")
     List<SaveThings> getlist();
-    @Query("select * from LateSong")
+
+    @Query("select * from LateSong LIMIT 1")
     SongLate getSongList();
+
     @Query("delete from LateSong")
     void deltetableSong();
 

@@ -12,6 +12,7 @@ import android.os.Build;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -89,11 +90,14 @@ public class Notification {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public  void creatchanel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(c, "erste", NotificationManager.IMPORTANCE_LOW);
             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+          //  notificationChannel.setLockscreenVisibility(0);
             notificationManager.createNotificationChannel(notificationChannel);
+
             if(notificationManager!=null){
                 notificationManager.createNotificationChannel(notificationChannel);
             }

@@ -1,51 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="match_parent">
 
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-<FrameLayout
-    android:id="@+id/fram"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_above="@+id/laufendemusic"/>
+    <FrameLayout
+        android:id="@+id/fram"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/laufendemusic" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navibut"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
         android:layout_alignParentBottom="true"
+        android:background="?android:attr/windowBackground"
+        android:outlineAmbientShadowColor="@color/colorAccent"
+        android:outlineSpotShadowColor="@color/aya"
+        app:itemRippleColor="@color/schwarz"
+        app:itemTextColor="@color/schwarz"
         app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom">
-
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
+        app:menu="@menu/bottom"></com.google.android.material.bottomnavigation.BottomNavigationView>
 
     <LinearLayout
-
         android:id="@+id/laufendemusic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/navibut"
-        android:gravity="center"
-         >
+        android:background="@color/schwarz"
+        android:gravity="center">
 
         <SeekBar
             android:id="@+id/sekunten"
             android:layout_width="177dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:progressBackgroundTint="#7B8368"
+            android:progressTint="@color/weiss"
+            android:thumbTint="@color/weiss">
 
         </SeekBar>
 
         <ImageButton
             android:id="@+id/startunten"
-            android:onClick="startunte"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/schwarz"
+            android:onClick="startunte"
             android:src="@drawable/ic_baseline_pause_circle_filled_24" />
-
-
 
 
     </LinearLayout>

@@ -1,9 +1,11 @@
 package com.example.music.Share;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,10 +53,10 @@ public class Uppop extends DialogFragment implements View.OnClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.uppop, container, false);
         share = view.findViewById(R.id.share);
-        friend = view.findViewById(R.id.frind);
-        uploud = view.findViewById(R.id.uplod);
+        friend = view.findViewById(R.id.deletebutton);
+         friend.setOnClickListener(this);
         share.setOnClickListener(this);
-        uploud.setOnClickListener(this);
+        //uploud.setOnClickListener(this);
 
         dataBase = DataBase.getInstance(context);
 
@@ -74,6 +76,7 @@ public class Uppop extends DialogFragment implements View.OnClickListener {
             sendIntent.setType("audio/*");
             Intent shareIntent = Intent.createChooser(sendIntent, null);
             startActivity(shareIntent);
+            /*
         } else if (imageButton.getId() == R.id.uplod) {
             Log.i("sharev", "onClick: " + "share");
             Fierbase fierbase = new Fierbase();
@@ -87,9 +90,21 @@ public class Uppop extends DialogFragment implements View.OnClickListener {
            // saveThings = new SaveThings();
             //saveThings.setNamesong(songinfos.get(pos).getSong_name().trim());
           //  dataBase.daoData().insert(saveThings);
-        } else if (imageButton.getId() == R.id.frind) {
+        }
+
+    }
+
+             */
+         }else if(imageButton.getId()==R.id.deletebutton){
+          deletePlaylistTracks(context,pos,pos);
 
         }
+
+    }
+    public int deletePlaylistTracks(Context context, long playlistId,long audioId) {
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        ContentResolver resolver = context.getContentResolver();
+    return     resolver.delete(uri, MediaStore.Audio.Media.IS_MUSIC + songinfos.get(pos).getPath() , null);
     }
 
 }

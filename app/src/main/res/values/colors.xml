@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorPrimaryDark">#000</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="button">#FFFFFF</color>
     <color name="stop">#DF261B</color>
@@ -10,6 +10,7 @@
     <color name="red">#FF0000</color>
     <color name="balu">#0000FF</color>
     <color name="schwarz">#000</color>
+    <color name="aya">#3764E8</color>
 
 
 </resources>

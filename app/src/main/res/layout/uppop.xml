@@ -1,69 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    android:gravity="center">
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:gravity="center"
+        android:orientation="horizontal">
 
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:id="@+id/share"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_share_24"
-            />
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:id="@+id/uplod"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_cloud_upload_24"
-            />
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:id="@+id/frind"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_group_add_24"
-            />
-
-
-
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="11dp"
-            android:layout_gravity="center"
-            android:text="share"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="11dp"
-            android:text="uploud"/>
+            android:orientation="vertical">
 
-        <TextView
+
+            <ImageButton
+                android:id="@+id/share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_share_24" />
+
+            <ImageButton
+                android:id="@+id/deletebutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_share_24" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="11dp"
-            android:text="add on your frindes" />
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="11dp"
+                android:text="share" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="11dp"
+                android:text="delte" />
+
+
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

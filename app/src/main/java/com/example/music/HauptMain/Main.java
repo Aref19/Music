@@ -50,7 +50,6 @@ public class Main extends AppCompatActivity implements AudioManager.OnAudioFocus
     AudioManager mAudioManager;
     MusicNavie musicNavie;
     Songinfo songinfo;
-    
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -65,20 +64,22 @@ public class Main extends AppCompatActivity implements AudioManager.OnAudioFocus
         mediaPlayer = new MediaPlayer();
         SachenuberAll.lauf = seekBar;
         SachenuberAll.startb = button;
-         musicNavie=new MusicNavie();
-         SachenuberAll sachenuberAll=new SachenuberAll();
-         sachenuberAll.audioManger(this,this);
+        musicNavie = new MusicNavie();
+        SachenuberAll sachenuberAll = new SachenuberAll();
+        //sachenuberAll.audioManger(this, this);
         BottomNavigationView bottomNavigationView = findViewById(R.id.navibut);
         bottomNavigationView.setOnNavigationItemSelectedListener(nav);
         getSupportFragmentManager().beginTransaction().replace(R.id.fram, new MusicNavie()).commit();
-        registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-//       startService(new Intent(this.getBaseContext(), onClearFromRecentServic.class));
+        brod();
+        registerReceiver(SachenuberAll.broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        startService(new Intent(this.getBaseContext(), onClearFromRecentServic.class));
         dataBase = DataBase.getInstance(this);
 
 
-
-
         button.setImageIcon(Icon.createWithResource("com.example.music", R.drawable.ic_baseline_play_circle_outline_24));
+
+        handler = new Handler();
+
         try {
             laufen();
             if (SachenuberAll.mediaPlayer == null) {
@@ -86,17 +87,15 @@ public class Main extends AppCompatActivity implements AudioManager.OnAudioFocus
             } else {
                 seekBar.setMax(SachenuberAll.mediaPlayer.getDuration());
             }
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        handler = new Handler();
         sekk(seekBar);
         current();
 
-        notification=new Notification(this);
+
+        notification = new Notification(this);
         notification.creatchanel();
 
 
@@ -156,46 +155,48 @@ public class Main extends AppCompatActivity implements AudioManager.OnAudioFocus
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         //    SongLate songLate=new SongLate(SachenuberAll.mediaPlayer.getDuration(),SachenuberAll.mediaPlay);
         laufendeSong = LaufendeSong.getContext(false);
         if (laufendeSong.getMediaPlayer() != null) {
-            SongLate songLate = new SongLate((laufendeSong.getMediaPlayer().getDuration()), laufendeSong.getPath(), laufendeSong.getPostion(),laufendeSong.getSize(),laufendeSong.getSonginfo().getSong_name());
+            SongLate songLate = new SongLate((laufendeSong.getMediaPlayer().getDuration()), laufendeSong.getPath(), laufendeSong.getPostion(), laufendeSong.getSize(), laufendeSong.getSonginfo().getSong_name());
             dataBase.daoData().deltetableSong();
             dataBase.daoData().insertSong(songLate);
         }
-
+        SachenuberAll.mediaPlayer.stop();
+        unregisterReceiver(SachenuberAll.broadcastReceiver);
         Toast.makeText(this, "Destroy" + laufendeSong.getPostion(), Toast.LENGTH_LONG).show();
     }
 
 
     public void startunte(View view) throws IOException {
-        if (SachenuberAll.status == false) {
-       /*      musicNavie.onTaskplay();
-        */
-       if(laufendeSong.getMediaPlayer()==null){
-           notification.greatNafi(0,songinfo,R.drawable.ic_baseline_pause_circle_filled_24,dataBase.daoData().getSongList().getPostion(),dataBase.daoData().getSongList().getSize());
-       }else {
-           notification.greatNafi(0,laufendeSong.getSonginfo(),R.drawable.ic_baseline_pause_circle_filled_24,laufendeSong.getPostion(),laufendeSong.getSize());
-       }
 
+        if (SachenuberAll.status == false) {
+            /*      musicNavie.onTaskplay();
+             */
+            if (laufendeSong.getMediaPlayer() == null) {
+                notification.greatNafi(0, songinfo, R.drawable.ic_baseline_pause_circle_filled_24, dataBase.daoData().getSongList().getPostion(), dataBase.daoData().getSongList().getSize());
+            } else {
+                notification.greatNafi(0, laufendeSong.getSonginfo(), R.drawable.ic_baseline_pause_circle_filled_24, laufendeSong.getPostion(), laufendeSong.getSize());
+            }
+
+            Log.i("nexw", "startunte: " + "reagieren" + SachenuberAll.mediaPlayer.getDuration());
             SachenuberAll.mediaPlayer.start();
-            Log.i("nexw", "startunte: " + "reagieren" + SachenuberAll.status);
             SachenuberAll.status = true;
             button.setImageIcon(Icon.createWithResource("com.example.music", R.drawable.ic_baseline_pause_circle_filled_24));
 
 
         } else {
-          /*  musicNavie.onTaskpause(); */
-            if(laufendeSong.getMediaPlayer()==null){
-                notification.greatNafi(0,songinfo,R.drawable.ic_baseline_play_circle_outline_24,dataBase.daoData().getSongList().getPostion(),dataBase.daoData().getSongList().getSize());
-            }else {
-                notification.greatNafi(0,laufendeSong.getSonginfo(),R.drawable.ic_baseline_play_circle_outline_24,laufendeSong.getPostion(),laufendeSong.getSize());
+            /*  musicNavie.onTaskpause(); */
+            if (laufendeSong.getMediaPlayer() == null) {
+                notification.greatNafi(0, songinfo, R.drawable.ic_baseline_play_circle_outline_24, dataBase.daoData().getSongList().getPostion(), dataBase.daoData().getSongList().getSize());
+            } else {
+                notification.greatNafi(0, laufendeSong.getSonginfo(), R.drawable.ic_baseline_play_circle_outline_24, laufendeSong.getPostion(), laufendeSong.getSize());
             }
             SachenuberAll.mediaPlayer.pause();
             SachenuberAll.status = false;
-            Log.i("fort", "startunte: "+"for");
+            Log.i("fort", "startunte: " + "for");
             button.setImageIcon(Icon.createWithResource("com.example.music", R.drawable.ic_baseline_play_circle_outline_24));
-
 
 
         }
@@ -254,54 +255,58 @@ public class Main extends AppCompatActivity implements AudioManager.OnAudioFocus
         handler.postDelayed(runnable, 1000);
 
     }
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+private void brod(){
+
+
+   SachenuberAll.broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getExtras().getString("action");
             switch (action) {
                 case Notification.Action:
                     SachenuberAll.startb.setImageIcon(Icon.createWithResource("com.example.music", R.drawable.ic_baseline_pause_circle_filled_24));
-                    SachenuberAll.status=true;
-                    Log.i("guck", "onReceive: "+"hier1");
+                    SachenuberAll.status = true;
+                    Log.i("guck", "onReceive: " + "hier1");
                     break;
                 case Notification.actionplay:
-                    if(SachenuberAll.status==false){
+                    if (SachenuberAll.status == false) {
                         SachenuberAll.startb.setImageIcon(Icon.createWithResource("com.example.music", R.drawable.ic_baseline_pause_circle_filled_24));
-                        SachenuberAll.status=true;
-                        Log.i("guck", "onReceive: "+"hier2.1");
-                    }else {
+                        SachenuberAll.status = true;
+                        Log.i("guck", "onReceive: " + "hier2.1");
+                    } else {
                         SachenuberAll.startb.setImageIcon(Icon.createWithResource("com.example.music", R.drawable.ic_baseline_play_circle_outline_24));
-                        SachenuberAll.status=false;
-                        Log.i("guck", "onReceive: "+"hier2.2");
+                        SachenuberAll.status = false;
+                        Log.i("guck", "onReceive: " + "hier2.2");
 
                     }
 
 
                     //  onTaskplay();
-                    Log.i("guck", "onReceive: "+"hier2");
+                    Log.i("guck", "onReceive: " + "hier2");
 
                     break;
                 case Notification.actionnext:
                     SachenuberAll.startb.setImageIcon(Icon.createWithResource("com.example.music", R.drawable.ic_baseline_pause_circle_filled_24));
-                    Log.i("guck", "onReceive: "+"hier3");
-                    SachenuberAll.status=true;
+                    Log.i("guck", "onReceive: " + "hier3");
+                    SachenuberAll.status = true;
                     break;
             }
         }
     };
-
+}
     public void laufen() throws IOException {
         laufendeSong = LaufendeSong.getContext(false);
         if (dataBase.daoData().getSongList() != null) {
-         SongLate songLate= dataBase.daoData().getSongList();
-            songinfo=new Songinfo(songLate.getPath(),songLate.getNamederSong(),songLate.getNamederSong(),songLate.getNamederSong());
+            SongLate songLate = dataBase.daoData().getSongList();
+            songinfo = new Songinfo(songLate.getPath(), songLate.getNamederSong(), songLate.getNamederSong(), songLate.getNamederSong());
             Log.i("baseunt", "laufen: " + "von data1");
-            SachenuberAll.mediaPlayer=new MediaPlayer();
-            SachenuberAll.mediaPlayer.setDataSource(dataBase.daoData().getSongList().getPath());
+            SachenuberAll.mediaPlayer = new MediaPlayer();
+            SachenuberAll.mediaPlayer.setDataSource(songLate.getPath());
             SachenuberAll.mediaPlayer.prepare();
+          //  SachenuberAll.mediaPlayer.start();
 
 
-            Log.i("baseunt", "laufen: " + "von data3");
+            Log.i("baseunt", "laufen: " + "von data3" + songLate.getPath());
 
         } else {
 
@@ -329,6 +334,7 @@ public class Main extends AppCompatActivity implements AudioManager.OnAudioFocus
     @Override
     public void onAudioFocusChange(int focusChange) {
         //   if (isMusicActive) {
+        if (SachenuberAll.mediaPlayer == null) return;
         if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
             SachenuberAll.mediaPlayer.pause();
             Log.i("onfuc", "onAudioFocusChange: " + "1");
@@ -342,14 +348,15 @@ public class Main extends AppCompatActivity implements AudioManager.OnAudioFocus
         }
 
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public  void audioManger(Context context) {
+    public void audioManger(Context context) {
 
         try {
 
             mAudioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
             mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
-            Log.i("exsfrom", "audioManger: " );
+            Log.i("exsfrom", "audioManger: ");
 
 
         } catch (IllegalStateException e) {

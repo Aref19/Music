@@ -31,35 +31,35 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 
-public class VideoFragment extends Fragment implements WorkwithFirbase{
+public class VideoFragment extends Fragment implements WorkwithFirbase {
     View view;
     AudioManager mAudioManager;
     RecyclerView recyclerView;
     VideoModel videoModel;
-    ArrayList<VideoModel>videoModels;
+    ArrayList<VideoModel> videoModels;
     RecyclerView.LayoutManager layoutManager;
     MovieAdpter movieAdpter;
     SaveInfoUserselect saveInfoUserselect;
     RelativeLayout relativeLayout;
+
     @Nullable
     @Override
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-          view=inflater.inflate(R.layout.videofragment,container,false);
-         recyclerView=view.findViewById(R.id.rec);
-         relativeLayout=view.findViewById(R.id.videolayoutfr);
-         videoModels=new ArrayList<>();
+        view = inflater.inflate(R.layout.videofragment, container, false);
+        recyclerView = view.findViewById(R.id.rec);
+        relativeLayout = view.findViewById(R.id.videolayoutfr);
+        videoModels = new ArrayList<>();
         layoutManager = new LinearLayoutManager(view.getContext());
         movieAdpter = new MovieAdpter();
-         fullRc();
-         saveInfoUserselect=SaveInfoUserselect.getContext(view.getContext());
-         pullFoto(relativeLayout,view.getContext());
-
-
+        fullRc();
+        saveInfoUserselect = SaveInfoUserselect.getContext(view.getContext());
+        pullFoto(relativeLayout, view.getContext());
 
         return view;
     }
-    private void fullRc(){
+
+    private void fullRc() {
 
         Uri path = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         String[] file = {MediaStore.Video.Media.DATA, MediaStore.Video.Media.DISPLAY_NAME};
@@ -97,10 +97,10 @@ public class VideoFragment extends Fragment implements WorkwithFirbase{
             });
             MediaController mediaController = new MediaController(view.getContext());
 
+        }
+
+
     }
-
-
-}
 
     private void vidershower(int postion) {
         Intent intent = new Intent(view.getContext(), ViewshowerActivity.class);
@@ -129,12 +129,12 @@ public class VideoFragment extends Fragment implements WorkwithFirbase{
         } else if (!saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.n") || saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY).equals("R.drawable.app")) {
             Drawable drawable = BitmapDrawable.createFromPath(saveInfoUserselect.loadImage(SaveInfoUserselect.USER_Image_KEY));
             if (drawable == null) {
-               linearLayout.setBackground(getActivity().getDrawable(R.drawable.n));
+                linearLayout.setBackground(getActivity().getDrawable(R.drawable.n));
                 Log.i("draw4", "pullFoto: ");
 
             } else {
                 linearLayout.setBackground(drawable);
-                Log.i("lesh", "pullFoto: "+drawable);
+                Log.i("lesh", "pullFoto: " + drawable);
             }
         }
     }
@@ -143,10 +143,6 @@ public class VideoFragment extends Fragment implements WorkwithFirbase{
     public void cutchAduio(String songs, Context context) {
 
     }
-
-
-
-
 
 
     private class Task extends AsyncTask<String, String, String> implements AudioManager.OnAudioFocusChangeListener {
@@ -177,10 +173,10 @@ public class VideoFragment extends Fragment implements WorkwithFirbase{
                 }
 
             });
-            SachenuberAll sachenuberAll=new SachenuberAll();
-            sachenuberAll.audioManger(getActivity(),this);
+
             return null;
         }
+
         @Override
         public void onAudioFocusChange(int focusChange) {
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {

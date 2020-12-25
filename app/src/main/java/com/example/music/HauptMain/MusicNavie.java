@@ -93,7 +93,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
         view = inflater.inflate(R.layout.musicfragment, container, false);
         View view2 = inflater.inflate(R.layout.main, container, false);
         songView = view.findViewById(R.id.liedlist);
-
+brod();
 
         songinfos = new ArrayList<>();
         longdruck(songView);
@@ -104,7 +104,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
         dataBase = DataBase.getInstance(view.getContext());
 
         seekBar = view.findViewById(R.id.laufm);
-        view.getContext().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        view.getContext().registerReceiver(SachenuberAll.broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
 
         view.getContext().startService(new Intent(getActivity().getBaseContext(), onClearFromRecentServic.class));
         mediaPlayer = new MediaPlayer();
@@ -182,7 +182,8 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
                     sitution = position;
                     nextint = position;
                     lastint = position;
-                    if(SachenuberAll.mediaPlayer.isPlaying()){
+
+                    if(SachenuberAll.mediaPlayer !=null){
                         SachenuberAll.mediaPlayer.stop();
                     }
                     SachenuberAll.mediaPlayer = new MediaPlayer();
@@ -515,7 +516,8 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
 
     private void premtion() {
         boolean sta;
-        if (ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.MANAGE_DOCUMENTS) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.MANAGE_DOCUMENTS) == PackageManager.PERMISSION_GRANTED&&
+                ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             loadSong();
             Log.i("prem", "premtion: " + "von hier");
 
@@ -526,7 +528,8 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
     }
 
     private void requstpremstion() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.MANAGE_DOCUMENTS)) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.MANAGE_DOCUMENTS)
+        ||ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             new AlertDialog.Builder(view.getContext())
                     .setTitle("premision")
                     .setMessage("dsa")
@@ -545,7 +548,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
             }).create().show();
 
         } else {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MANAGE_DOCUMENTS}, prmistion);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MANAGE_DOCUMENTS,Manifest.permission.WRITE_EXTERNAL_STORAGE}, prmistion);
 
             Log.i("prem", "listfullen: " + "ja");
         }
@@ -577,8 +580,10 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
                 return;
         }
     }
+private void brod(){
 
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+
+    SachenuberAll.broadcastReceiver= new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getExtras().getString("action");
@@ -598,7 +603,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
         }
     };
 
-
+}
 
     @Override
     public void onStop() {
@@ -613,7 +618,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
     public void onDestroy() {
         super.onDestroy();
         Toast.makeText(view.getContext(), "onDestroy", Toast.LENGTH_SHORT).show();
-        view.getContext().unregisterReceiver(broadcastReceiver);
+        view.getContext().unregisterReceiver(SachenuberAll.broadcastReceiver);
     }
     private void checkdataBase()  {
         if(dataBase.daoData().getSongList()!=null){
@@ -648,6 +653,7 @@ public class MusicNavie extends Fragment implements Playble, WorkwithFirbase,Aud
 
     @Override
     public void onAudioFocusChange(int focusChange) {
+        if(SachenuberAll.mediaPlayer == null) return;
         if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
             SachenuberAll.mediaPlayer.pause();
             Log.i("onfuc", "onAudioFocusChange: " + "1");

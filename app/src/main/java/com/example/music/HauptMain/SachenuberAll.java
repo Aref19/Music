@@ -1,6 +1,7 @@
 package com.example.music.HauptMain;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -13,7 +14,7 @@ import android.widget.SeekBar;
 
 import androidx.annotation.Nullable;
 
-public class SachenuberAll extends Activity implements AudioManager.OnAudioFocusChangeListener {
+public class SachenuberAll  implements AudioManager.OnAudioFocusChangeListener {
     public static Button next;
     public static ImageButton  startb;
     public static SeekBar  lauf;
@@ -22,6 +23,7 @@ public class SachenuberAll extends Activity implements AudioManager.OnAudioFocus
     public static boolean status=false;
     public static int pos;
     public  static  Context context;
+    public  static BroadcastReceiver broadcastReceiver;
     public  static  AudioManager.OnAudioFocusChangeListener onAudioFocusChangeListener;
     AudioManager mAudioManager;
 
@@ -39,10 +41,7 @@ public class SachenuberAll extends Activity implements AudioManager.OnAudioFocus
         }
     }
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+
 
     public  void audioManger(Context context,AudioManager.OnAudioFocusChangeListener onAudioFocusChangeListener) {
         try {

@@ -19,6 +19,8 @@
             android:id="@+id/laufm"
             android:layout_width="match_parent"
             android:progressBackgroundTint="@color/stop"
+            android:progressTint="@color/aya"
+            android:thumbTint="@color/aya"
             android:layout_height="wrap_content" />
 
         <LinearLayout
